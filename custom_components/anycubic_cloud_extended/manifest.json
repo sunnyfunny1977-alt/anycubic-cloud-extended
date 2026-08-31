@@ -1,0 +1,25 @@
+{
+  "domain": "anycubic_cloud_extended",
+  "name": "Anycubic Cloud Extended",
+  "codeowners": [
+    "@sunnyfunny1977-alt"
+  ],
+  "config_flow": true,
+  "dependencies": [
+    "file_upload",
+    "frontend",
+    "http",
+    "image",
+    "lovelace",
+    "panel_custom",
+    "websocket_api"
+  ],
+  "documentation": "https://github.com/sunnyfunny1977-alt/anycubic-cloud-extended",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/sunnyfunny1977-alt/anycubic-cloud-extended/issues",
+  "loggers": [],
+  "requirements": [
+    "paho-mqtt>=2.0.0,<3"
+  ],
+  "version": "2.0.0"
+}

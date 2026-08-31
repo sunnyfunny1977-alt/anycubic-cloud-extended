@@ -1,0 +1,410 @@
+# Describes the format for available Anycubic Cloud services
+
+debug_set_light_status:
+  fields:
+    config_entry: &anycubic_config_entry
+      required: true
+      selector:
+        config_entry:
+          integration: anycubic_cloud_extended
+    device_id: &device_id
+      required: false
+      selector:
+        device:
+          integration: anycubic_cloud_extended
+    printer_id: &printer_id
+      required: false
+      selector: &bignum_selector
+        number:
+          min: 0
+          max: 9999999999999999999
+          step: 1
+          mode: box
+    light_type:
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 10
+          step: 1
+          mode: box
+    light_on:
+      required: true
+      selector:
+        boolean:
+
+multi_color_box_set_slot_pla: &multi_color_box_set_slot
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    box_id: &box_id
+      required: false
+      selector:
+        number:
+          min: -1
+          max: 7
+          step: 1
+          mode: box
+    slot_number: &slot_number
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 4
+          step: 1
+          mode: box
+    slot_color_red:
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+          step: 1
+          mode: box
+    slot_color_green:
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+          step: 1
+          mode: box
+    slot_color_blue:
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 255
+          step: 1
+          mode: box
+multi_color_box_set_slot_petg: *multi_color_box_set_slot
+multi_color_box_set_slot_abs: *multi_color_box_set_slot
+multi_color_box_set_slot_pacf: *multi_color_box_set_slot
+multi_color_box_set_slot_pc: *multi_color_box_set_slot
+multi_color_box_set_slot_asa: *multi_color_box_set_slot
+multi_color_box_set_slot_hips: *multi_color_box_set_slot
+multi_color_box_set_slot_pa: *multi_color_box_set_slot
+multi_color_box_set_slot_pla_se: *multi_color_box_set_slot
+multi_color_box_filament_extrude:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    box_id: *box_id
+    slot_number: *slot_number
+    finished:
+      required: false
+      selector:
+        boolean:
+multi_color_box_filament_retract:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    box_id: *box_id
+print_and_upload_save_in_cloud:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    slot_number: &slot_number_list
+      required: false
+      example: [1, 2]
+      selector:
+        object:
+    uploaded_gcode_file: &uploaded_gcode_file
+      required: true
+      selector:
+        file:
+          accept: ".gcode,text/x-gcode,text/plain,application/octet-stream"
+print_and_upload_no_cloud_save:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    slot_number: *slot_number_list
+    uploaded_gcode_file: *uploaded_gcode_file
+print_file_local: &print_file_printer
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    slot_number: *slot_number_list
+    filename:
+      required: true
+      selector:
+        text:
+    path: &file_path
+      required: false
+      selector:
+        text:
+print_file_udisk: *print_file_printer
+delete_file_local: &delete_file_printer
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    filename:
+      required: true
+      selector:
+        text:
+    path: *file_path
+delete_file_udisk: *delete_file_printer
+request_file_list_local: &request_file_list_printer
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    path: *file_path
+request_file_list_udisk: *request_file_list_printer
+delete_file_cloud:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    file_id:
+      required: true
+      selector: *bignum_selector
+migrate_entity_ids:
+  fields:
+    config_entry: *anycubic_config_entry
+    dry_run:
+      required: false
+      default: true
+      selector:
+        boolean:
+change_print_speed_mode:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    speed_mode: &pct_selector
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100
+          step: 1
+          mode: box
+change_print_target_nozzle_temperature:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    temperature: &temp_selector
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 400
+          step: 1
+          mode: box
+change_print_target_hotbed_temperature:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    temperature: *temp_selector
+change_print_fan_speed:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    speed: *pct_selector
+change_print_aux_fan_speed:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    speed: *pct_selector
+change_print_box_fan_speed:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    speed: *pct_selector
+change_print_bottom_layers:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    layers:
+      required: true
+      selector: *bignum_selector
+change_print_bottom_time:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    time:
+      required: true
+      selector: &bigfloat_selector
+        number:
+          min: 0
+          max: 9999999999999999999
+          step: 0.001
+          mode: box
+change_print_off_time:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    time:
+      required: true
+      selector: *bigfloat_selector
+change_print_on_time:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    time:
+      required: true
+      selector: *bigfloat_selector
+
+# --- Filament inventory ---------------------------------------------
+# Carried over unchanged from the standalone Filament Manager.
+
+add_spools:
+  fields:
+    item_id:
+      required: true
+      example: a1b2c3d4e5f6
+      selector:
+        text:
+    count:
+      required: false
+      default: 1
+      selector:
+        number:
+          min: -999
+          max: 999
+          step: 1
+          mode: box
+
+open_spool:
+  fields:
+    item_id:
+      required: true
+      example: a1b2c3d4e5f6
+      selector:
+        text:
+
+set_remaining:
+  fields:
+    item_id:
+      required: true
+      example: a1b2c3d4e5f6
+      selector:
+        text:
+    spool_id:
+      required: false
+      example: f6e5d4c3b2a1
+      selector:
+        text:
+    remaining_grams:
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 100000
+          step: 1
+          unit_of_measurement: g
+          mode: box
+    gross_weight_g:
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 100000
+          step: 1
+          unit_of_measurement: g
+          mode: box
+    note:
+      required: false
+      selector:
+        text:
+
+consume_spool:
+  fields:
+    item_id:
+      required: true
+      example: a1b2c3d4e5f6
+      selector:
+        text:
+    spool_id:
+      required: false
+      example: f6e5d4c3b2a1
+      selector:
+        text:
+
+# --- ACE slot bindings ------------------------------------------------
+# Slot numbers are 1..4 within their box, matching multi_color_box_set_slot_*.
+
+assign_slot_spool:
+  fields:
+    printer_id: &fm_printer_id
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 9999999999999999999
+          step: 1
+          mode: box
+    box_id: &fm_box_id
+      required: false
+      default: 0
+      selector:
+        number:
+          min: -1
+          max: 7
+          step: 1
+          mode: box
+    slot_number: &fm_slot_number
+      required: true
+      selector:
+        number:
+          min: 1
+          max: 4
+          step: 1
+          mode: box
+    item_id:
+      required: true
+      example: a1b2c3d4e5f6
+      selector:
+        text:
+    spool_id:
+      required: false
+      example: f6e5d4c3b2a1
+      selector:
+        text:
+
+clear_slot_spool:
+  fields:
+    printer_id: *fm_printer_id
+    box_id: *fm_box_id
+    slot_number: *fm_slot_number
+
+weigh_slot_spool:
+  fields:
+    printer_id: *fm_printer_id
+    box_id: *fm_box_id
+    slot_number: *fm_slot_number
+    gross_weight_g:
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 100000
+          step: 1
+          unit_of_measurement: g
+          mode: box
+    empty_weight_g:
+      required: false
+      selector:
+        number:
+          min: 0
+          max: 100000
+          step: 1
+          unit_of_measurement: g
+          mode: box

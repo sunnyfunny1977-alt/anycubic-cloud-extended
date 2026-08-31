@@ -1,0 +1,65 @@
+name: "Lint and Build"
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint-python:
+    runs-on: ubuntu-latest
+    name: "Lint: Python"
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v3
+      - name: Set up Python environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Check synchronized version files
+        run: python scripts/sync_version.py --check
+      - name: Check for private local data
+        run: python scripts/check_private_data.py
+      - name: flake8 Lint
+        uses: py-actions/flake8@v2
+        with:
+          path: "custom_components"
+      - name: Run mypy
+        uses: jpetrucciani/mypy-check@master
+        with:
+          path: './custom_components'
+          mypy_flags: '--config-file=mypy.ini'
+          requirements_file: requirements.txt
+          python_version: "3.14"
+      - name: Run mypy
+        uses: isort/isort-action@v1
+        with:
+          configuration: "--settings-path=pyproject.toml"
+      - name: Check translation diff
+        run: |
+          python custom_components/anycubic_cloud_extended/scripts/build_translations.py
+          git diff --exit-code
+      - name: Filament inventory logic tests
+        run: python tests/test_filament_flow.py
+  lint-ts:
+    runs-on: ubuntu-latest
+    name: "Lint & Build: Typescript"
+    steps:
+      - name: Check out source repository
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache-dependency-path: custom_components/anycubic_cloud_extended/frontend_panel/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+        working-directory: custom_components/anycubic_cloud_extended/frontend_panel
+      - name: Run lint
+        run: npm run lint
+        working-directory: custom_components/anycubic_cloud_extended/frontend_panel
+      - name: Build and check diff
+        run: |
+          npm run build && npm run build_card
+          git diff --exit-code
+        working-directory: custom_components/anycubic_cloud_extended/frontend_panel

@@ -1,0 +1,543 @@
+# Anycubic Cloud Extended
+
+[Deutsch](README.md) | [English](README.en.md)
+
+[![Latest release](https://img.shields.io/github/v/release/sunnyfunny1977-alt/anycubic-cloud-extended?label=release)](https://github.com/sunnyfunny1977-alt/anycubic-cloud-extended/releases/latest)
+[![GitHub stars](https://img.shields.io/github/stars/sunnyfunny1977-alt/anycubic-cloud-extended)](https://github.com/sunnyfunny1977-alt/anycubic-cloud-extended/stargazers)
+[![License: GPL-3.0](https://img.shields.io/github/license/sunnyfunny1977-alt/anycubic-cloud-extended)](LICENSE)
+
+[![In HACS oeffnen](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=sunnyfunny1977-alt&repository=anycubic-cloud-extended&category=integration)
+
+Home-Assistant-Integration fuer Anycubic-Cloud-Drucker mit Statussensoren, MQTT-Echtzeitupdates, Druck- und Dateifunktionen, ACE-/Materialverwaltung, optionaler Kameraansicht **und integrierter Filament-Bestandsverwaltung**.
+
+Die Integration wird ueber HACS als benutzerdefiniertes Repository installiert.
+
+> **Eigenstaendige Fork-Linie.** Dieses Repository hat ab **1.0.0** eine eigene Versionszaehlung und ist bewusst von der Nummerierung des Ursprungs-Forks entkoppelt, damit sich Releases und Tags nicht gegenseitig ueberschreiben. Der Funktionsstand entspricht 0.3.8 dieses Repositorys zuzueglich der ACE-Erweiterungen. Releases aus [ljschmitt/hass-anycubic_cloud_v3](https://github.com/ljschmitt/hass-anycubic_cloud_v3) mit gleicher Nummer sind **nicht** identisch.
+
+> 🗓️ **Aktuelles Release: 2.0.0**
+>
+> - Die Integrationen `anycubic_ha_integration` und `filament_manager` sind zu einer
+>   Integration `anycubic_cloud_extended` zusammengefuehrt. Ein Sidebar-Eintrag,
+>   ein Panel; der Filament-Bestand liegt im Reiter **Filament**.
+> - Zu jedem ACE-Slot laesst sich die konkrete Rolle aus dem Bestand waehlen. Die
+>   Auswahl ist auf das Material gefiltert, das der Slot meldet.
+> - Das Rollengewicht wird direkt im Dashboard eingetragen (brutto, Tara wird
+>   abgezogen). Nach jedem Filamentwechsel erinnert die Integration ans Wiegen.
+> - Neue Entitaeten pro Slot: `..._remaining` (Restmenge in Gramm) und
+>   `..._needs_weighing`.
+> - Die Lovelace-Card wird beim Setup automatisch als Ressource registriert.
+> - Vorhandene Daten beider Vorgaenger-Integrationen werden beim ersten Start
+>   uebernommen. Details unter [🧵 Filament-Bestand](#-filament-bestand).
+>
+> Getestet mit **Home Assistant 2026.6.1**, freigegeben ab **Home Assistant 2025.10.0**.
+> MQTT-Echtzeitupdates benoetigen **Slicer Next (Windows)** und dessen **Access-Token**.
+
+➡️ Eigener Fork mit:
+- Fehlerkorrekturen
+- deutschen Texten
+- MQTT-Erweiterungen
+- verbessertem MQTT-Fallback bei Verbindungsproblemen
+
+---
+
+## 📚 Inhalt
+
+- [🧵 Kompatible Drucker](#-kompatible-drucker)
+- [⚙️ Funktionsweise](#-funktionsweise)
+- [🧵 Filament-Bestand](#-filament-bestand)
+- [🎨 Frontend-Card](#-frontend-card)
+- [🖼️ Galerie](#-galerie)
+- [🧩 Features](#-features)
+- [🧪 Muster-Dashboard](#-muster-dashboard)
+- [📷 Kamera / Nebenansicht](#-kamera--nebenansicht)
+- [📦 Installation über HACS (empfohlen)](#-installation-über-hacs-empfohlen)
+- [🖐️ Manuelle Installation](#-manuelle-installation)
+- [⚠️ Sicherheit und Haftung](#️-sicherheit-und-haftung)
+- [🔐 Token auslesen (Slicer Next)](#-token-auslesen-slicer-next)
+- [🌐 Web-Login (ohne MQTT, nur Polling)](#-web-login-ohne-mqtt-nur-polling)
+- [📥 Releases](#-releases)
+- [🙌 Mitwirkende](#-mitwirkende)
+- [📄 Lizenz](#-lizenz)
+- [💬 Feedback / Probleme](#-feedback--probleme)
+- [✅ Kompatibilität](#-kompatibilität)
+
+---
+
+## 🧵 Kompatible Drucker
+
+### Getestet / rueckgemeldet
+
+- ✅ Kobra 3 Combo
+- ✅ Kobra X (Basisfunktionen; ACE-/Materialanzeige fuer bekannte 4-Farben-Setups verbessert; Kameralicht-Entity getestet)
+- ✅ Kobra S1 (Basisfunktionen rueckgemeldet; Kamera und Chamber-Light noch offen)
+- ✅ Kobra 2, 2 Max, 2 Pro
+- ✅ Photon Mono M5s (Basis)
+- ✅ Anycubic M7 Pro (Basis)
+
+### Zum Testen / Rueckmeldung gesucht
+
+- 🧪 Weitere noch nicht bestaetigte Modelle
+
+Wenn du ein noch nicht bestaetigtes Modell testest, bitte Rueckmeldung geben: Wird das Geraet angelegt, welche Entitaeten funktionieren, gibt es MQTT- oder Kamera-Auffaelligkeiten? Bitte keine Tokens, privaten IPs, Seriennummern oder persoenlichen Daten in Issues hochladen.
+
+---
+
+## ⚙️ Funktionsweise
+
+- Cloud-Polling: alle **1 Minute**
+- MQTT (Echtzeit): **mehrfach pro Sekunde**
+- Erfordert **Slicer Next Token** für MQTT-Zugriff
+
+
+---
+
+## 🧵 Filament-Bestand
+
+Der frühere eigenständige **Filament Manager** ist Teil dieser Integration. Er
+läuft im Hintergrund und wird über den Reiter **Filament** im Anycubic-Panel
+bedient — ein einziger Sidebar-Eintrag statt zwei.
+
+### Rolle einem ACE-Slot zuordnen
+
+Ein Klick auf einen ACE-Slot im Panel oder in der Lovelace-Card öffnet den
+Slot-Dialog. Neben Materialtyp und Farbe steht dort jetzt die Auswahl der
+konkreten Rolle aus dem Bestand:
+
+- Die Liste ist auf das gefiltert, was tatsächlich im Slot steckt. Meldet der
+  ACE `PLA`, erscheinen `PLA`, `PLA+`, `Silk PLA` und `Wood PLA` — kein PETG.
+- Passt die automatische Zuordnung bei einem eigenen Materialnamen nicht, lässt
+  sich im Admin-Bereich pro Material ein **ACE-Materialtyp** hinterlegen. Leer
+  bedeutet „aus dem Namen ableiten", was für alle mitgelieferten Materialien
+  stimmt.
+- Ist noch keine Rolle geöffnet, aber eine ungeöffnete vorhanden, öffnet
+  **Neue Rolle öffnen** sie in einem Schritt und ordnet sie zu.
+
+### Gewicht eintragen
+
+Im selben Dialog wird das **Bruttogewicht** eingetragen — also das, was die
+Waage mit aufgelegter Rolle anzeigt. Die Restmenge ergibt sich aus
+`brutto − Leergewicht der Spule`. Ist für den Spulentyp noch kein Leergewicht
+hinterlegt, fragt der Dialog es einmalig ab; es gilt danach für alle Rollen
+desselben Herstellers, Materials und derselben Spulengröße, und bereits
+gewogene Rollen werden automatisch nachgerechnet.
+
+**Zuordnen & wiegen** schreibt beides in den Bestand. Der Knopf ist bewusst
+getrennt von **Speichern**: Speichern schickt Materialtyp und Farbe an den
+Drucker, Zuordnen & wiegen schreibt in den Bestand. Beides kann unabhängig
+fehlschlagen.
+
+### Erinnerung nach dem Wechsel
+
+Beim Zuordnen wird festgehalten, was im Slot steckte (Materialtyp, Farbe, SKU).
+Erkennt die Integration, dass sich das geändert hat, wird die Zuordnung als
+*zu prüfen* markiert und die Erinnerung ausgelöst — genau dafür ist der
+Mechanismus da: Nach jedem Wechsel soll neu gewogen werden, damit der Bestand
+stimmt.
+
+Sichtbar wird das an drei Stellen:
+
+| Ort | Was |
+|---|---|
+| Slot im Panel/Card | Waage-Symbol, bei erkanntem Wechsel ein Warndreieck |
+| `binary_sensor.<drucker>_ace_slot_N_needs_weighing` | `on`, solange gewogen werden muss |
+| `sensor.<...>_filament_spools_to_weigh` | Anzahl offener Wiegevorgänge, mit Slot-Liste als Attribut |
+
+Zusätzlich gibt es `sensor.<drucker>_ace_slot_N_remaining` mit der Restmenge in
+Gramm — als Messwert, also mit Verlauf und Statistik.
+
+Kurzzeitige Aussetzer sind eingeplant: Der ACE meldet während eines
+Filamentwechsels für ein paar Sekunden einen leeren Slot. Die Zuordnung wird
+deshalb nie automatisch gelöscht, sondern nur markiert, und eine Rückkehr zum
+bekannten Filament hebt die Markierung von selbst wieder auf. Die
+Wiege-Erinnerung bleibt bis zum tatsächlichen Wiegen bestehen.
+
+### Services
+
+Für Automationen und NFC-Tags stehen dieselben Aktionen als Services bereit:
+
+| Service | Zweck |
+|---|---|
+| `anycubic_cloud_extended.assign_slot_spool` | Rolle einem Slot zuordnen |
+| `anycubic_cloud_extended.clear_slot_spool` | Zuordnung lösen |
+| `anycubic_cloud_extended.weigh_slot_spool` | Bruttogewicht buchen |
+| `anycubic_cloud_extended.add_spools` | Ungeöffnete Rollen zu-/abbuchen |
+| `anycubic_cloud_extended.open_spool` | Rolle öffnen |
+| `anycubic_cloud_extended.set_remaining` | Restmenge setzen |
+| `anycubic_cloud_extended.consume_spool` | Aufgebrauchte Rolle entfernen |
+
+### Umstieg von den beiden Einzel-Integrationen
+
+Beim ersten Start liest diese Integration die Daten der Vorgänger ein, sofern
+vorhanden:
+
+- `filament_manager` → kompletter Bestand inklusive Hersteller, Materialien,
+  Spulentypen und Restmengen (auch aus älteren Storage-Versionen).
+- `anycubic_ha_integration` → der gemerkte aktive ACE-Slot je Box, damit nach
+  dem Umstieg nicht bis zum nächsten Filamentwechsel unbekannt ist, welcher
+  Slot zuletzt gefördert hat.
+
+Die alten Daten werden dabei **nicht** verändert oder gelöscht, und vom
+Filament-Bestand wird zusätzlich eine unangetastete Kopie abgelegt. Solange die
+alte `filament_manager`-Integration noch eingerichtet ist, weist eine
+Reparaturmeldung darauf hin, sie zu entfernen — zwei parallel laufende Bestände
+würden auseinanderlaufen.
+
+> Die Entity-IDs ändern sich durch den Domainwechsel. Bestehende Automationen
+> und Dashboards, die Entitäten der Vorgänger-Integrationen ansprechen, müssen
+> einmalig angepasst werden.
+
+### Card-Optionen
+
+Die Lovelace-Card wird beim Setup automatisch als Ressource registriert. Drei
+Optionen steuern den Filament-Teil:
+
+| Option | Standard | Wirkung |
+|---|---|---|
+| `showFilamentInventory` | `true` | Rollenname und Restmenge unter den Slots |
+| `showWeighingReminder` | `true` | Warnsymbol „bitte wiegen" |
+| `allowSpoolAssignment` | `true` | Zuordnen und Wiegen im Dialog erlaubt |
+
+Für ein Gäste-Dashboard lässt sich `allowSpoolAssignment` abschalten. Wer soll
+zuordnen und wiegen dürfen, steuert daneben die Option **Nicht-Admins dürfen
+Rollen zuordnen und wiegen** in den Integrationsoptionen.
+
+---
+
+## 🎨 Frontend-Card
+
+Empfohlen fuer diese Integration ist der passende Anycubic-Card-Fork:
+
+➡️ [ljschmitt/hass-anycubic_card](https://github.com/ljschmitt/hass-anycubic_card)
+
+Die urspruengliche [Anycubic-Karte fuer Home Assistant](https://github.com/WaresWichall/hass-anycubic_card) ist eine separate Dashboard-/Lovelace-Card und wurde fuer die originale Anycubic-Integration gebaut. Dieser Fork bleibt naeher an den Entity-IDs und Zusatzfunktionen dieser Integration. Bitte fuer neue Setups bevorzugt den Fork verwenden, damit Dashboard-Card und Integration denselben Stand erwarten.
+
+Die Integration selbst bringt weiterhin ein eigenes Home-Assistant-Panel mit. Die externe Card ist optional und muss separat in HACS als Dashboard-/Frontend-Card installiert werden.
+
+### Entity-IDs und externe Karten
+
+Home Assistant kann Entity-IDs aus lokalisierten Anzeigenamen erzeugen. Dadurch konnten auf deutsch eingestellten Systemen z. B. Entity-IDs mit deutschen Begriffen entstehen, waehrend externe Dashboard-Karten haeufig englische Standardnamen erwarten.
+
+Ab Version **0.2.5** schlagen neue Anycubic-Entities stabile englische Entity-IDs vor. Entity-Anzeigenamen bleiben ebenfalls Englisch und orientieren sich an den vom Anycubic-/Dashboard-Card-Umfeld erwarteten Namen. Deutsche Uebersetzungen werden fuer Konfiguration, Services, Panel-/Card-UI und Dokumentation verwendet, aber nicht fuer Entity-Namen.
+
+Ab Version **0.2.6** bleiben die Print-Button-Entity-IDs bewusst beim vom Dashboard-Plugin erwarteten Format `pause_print`, `resume_print` und `cancel_print`. Die Sensor-Kompatibilitaet bleibt davon unberuehrt.
+
+Bestehende Entity-IDs werden bewusst **nicht automatisch** umbenannt, weil das vorhandene Dashboards, Automationen oder Skripte brechen koennte. Wer bestehende lokalisierte Entity-IDs auf die stabilen englischen Namen umstellen moechte, kann den Dienst `anycubic_cloud_extended.migrate_entity_ids` verwenden:
+
+1. In Home Assistant **Entwicklerwerkzeuge -> Dienste** oeffnen
+2. Dienst `anycubic_cloud_extended.migrate_entity_ids` auswaehlen
+3. Zuerst mit `dry_run: true` ausfuehren und die geplanten Umbenennungen im Home-Assistant-Log pruefen
+4. Nur wenn die geplanten Aenderungen passen, erneut mit `dry_run: false` ausfuehren
+5. Danach eigene Dashboards, Karten, Automationen und Skripte pruefen
+
+Der Dienst benennt nur Entity-Registry-Eintraege dieser Integration um. Er legt keine Kameras an, loescht keine Entities und veraendert keine persoenlichen Home-Assistant-Einstellungen ausser den bewusst migrierten Entity-IDs.
+
+---
+
+## 🖼️ Galerie
+
+<img width="300" alt="Anycubic Kobra 3 status panel" src="screenshots/kobra3-1.png">
+<img width="300" alt="Anycubic ACE material display" src="screenshots/anycubic-ace-ui.gif">
+<img width="300" alt="Anycubic Kobra 2 Pro status card" src="screenshots/kobra2-2.png">
+<img width="300" alt="Anycubic print service" src="screenshots/kobra3-print.png">
+<img width="200" alt="Anycubic Kobra 2 status card" src="screenshots/kobra2-1.png">
+
+---
+
+## 🧩 Features
+
+- Mehrere Drucker gleichzeitig
+- Druckstart / Pause / Fortsetzen / Abbruch (via Services & UI)
+- Vorbereiteter Druckstart aus lokalen und USB-Dateilisten mit optionaler ACE-Slotnummernliste
+- ACE-Slot-Verwaltung (Farbe, Presets, Services)
+- Sensor `ACE Active Filament`: zeigt dauerhaft das aktuell gefoerderte Filament, auch zwischen zwei Farbwechseln
+- Eigener Sensor je ACE-Slot (`ACE Slot 1`–`4`, bei zweiter Box zusaetzlich `Secondary ACE Slot 1`–`4`) mit Materialtyp und Farbe als Zustand, z. B. `PLA #FF0000` — frei im Dashboard platzierbar
+- Dateimanager (MQTT benötigt)
+- Sensoren: Temp, Speed, Fan, Job-Fortschritt, Name, Zeit, …
+- Firmware-Update-Entitäten
+- MQTT-Aktivität automatisch während Druck (oder dauerhaft)
+- Frontend-Panel mit Status, Nebenansicht + Dateimanager
+- Native Kameralicht-Entity fuer Drucker, die das Anycubic-Kamera-/Lichtkommando unterstuetzen
+- Spulen-Trocknung & Materialmanagement (ACE)
+- Konfigurierbarer MQTT-Modus („nur beim Drucken“, dauerhaft, deaktiviert)
+
+---
+
+## 🧪 Muster-Dashboard
+
+> 📄 **Installationsanleitung als PDF:** [`docs/Anycubic-HA-Integration-Installationsanleitung.pdf`](docs/Anycubic-HA-Integration-Installationsanleitung.pdf) — Installation, Token, Einrichtung und Uebernahme dieses Dashboards auf vier Seiten, inklusive der Hinweise zur Kamera und zur Anzeige-statt-Bedienung-Auslegung. Erzeugt mit [`docs/build_guide.py`](docs/build_guide.py).
+
+Ein vollstaendiges Beispiel-Dashboard liegt als [`examples/dashboard-kobra-s1.yaml`](examples/dashboard-kobra-s1.yaml) bei. Es zeigt Kamera, Druckfortschritt, Temperaturen, ACE-Slots mit Farbringen, aktives Filament, Luefter, Geschwindigkeit und Firmware-Updates.
+
+Einfuegen ueber **Dashboard → Stift → Drei-Punkte-Menue → Raw-Konfigurationseditor**, den Block unter `views:` einhaengen.
+
+### ⚠️ Die Kameraflaeche nutzt eine externe Kamera
+
+Das ist der wichtigste Punkt an diesem Muster: **Die Kameraflaeche zeigt nicht den Anycubic-Cloudstream.**
+
+Der Cloudstream laeuft ueber Agora-RTC, ist verschluesselt und benoetigt das Agora-Browser-SDK. Er laesst sich deshalb nicht als Home-Assistant-`camera.*`-Entity abbilden und bleibt dem mitgelieferten Anycubic-Panel vorbehalten. Details dazu unter [Kamera / Nebenansicht](#-kamera--nebenansicht).
+
+Im Originalaufbau dieses Musters haengt an der Stelle eine **SONOFF CAM-S1**, die als eigene `camera.*`-Entity in Home Assistant eingebunden ist. Jede beliebige Kamera mit einer `camera.*`-Entity funktioniert genauso, etwa eine MJPEG- oder RTSP-Kamera oder die integrierte Drucker-Webcam unter alternativer Firmware wie Rinkhals.
+
+Im YAML steht dafuer der Platzhalter `camera.drucker_kamera`. Ohne passende Kamera-Entity bleibt die Flaeche leer, der Rest des Dashboards funktioniert unabhaengig davon.
+
+### Helfer und Automationen
+
+Einige Elemente des Musters brauchen Home-Assistant-Helfer. Sie liegen fertig unter [`examples/helpers/`](examples/helpers/) und nennen im Dateikopf jeweils, wo sie gebraucht werden:
+
+| Datei | Wird gebraucht fuer | Ohne sie |
+|---|---|---|
+| [`template-sensoren.yaml`](examples/helpers/template-sensoren.yaml) | Uhrzeit, Datum und Druckinfo im Kamerabild | Kamerabild bleibt nutzbar, die Einblendung fehlt |
+| [`input-number-helfer.yaml`](examples/helpers/input-number-helfer.yaml) | die beiden Temperatur-Schieberegler | Die Regler erscheinen nicht |
+| [`automationen.yaml`](examples/helpers/automationen.yaml) | Kameralicht-Auto-Aus, Uebertragen des Temperatur-Offsets an den Drucker | Licht bleibt an; die Regler aendern nur Helferwerte |
+
+Alle drei sind **optional** — das Dashboard laeuft auch ohne sie, einzelne Elemente bleiben dann aber wirkungslos. In `automationen.yaml` sind vor dem Einfuegen zwei Platzhalter zu ersetzen: `DEINE_DRUCKER_DEVICE_ID` und `DEINE_CONFIG_ENTRY_ID`.
+
+> ⚠️ Die Automation `kobra_temperatur_offset_anwenden` ist die **einzige** Stelle im Beispielpaket, die aktiv Werte an den Drucker sendet. Alles andere ist Anzeige. Vor dem Einsatz bewusst pruefen.
+
+### Weitere Voraussetzungen
+
+- HACS-Card **button-card** (`custom:button-card`) — ohne sie bleiben die meisten Karten leer
+- Optional drei Template-Helfer fuer die Einblendung im Kamerabild sowie zwei `input_number`-Helfer fuer die Temperatur-Feinjustierung; welche genau, steht im Kopf der YAML-Datei
+- Die Entity-IDs enthalten den Druckernamen, im Muster `anycubic_kobra_s1`. Heisst dein Drucker anders, vor dem Einfuegen per Suchen-und-Ersetzen anpassen
+
+---
+
+## 📷 Kamera / Nebenansicht
+
+Die Nebenansicht bietet standardmaessig den Anycubic-Cloud-Kamerastream des ausgewaehlten Druckers an. Fuer normale Anycubic-Firmware muss dafuer nichts weiter eingerichtet werden.
+
+Der Kamerastream wird bewusst **nicht automatisch im Hintergrund gestartet**. Erst wenn in der Nebenansicht der Play-Button gedrueckt wird, wird die lokale Kameraquelle bzw. die Anycubic-Cloud-Kamerasession angefragt. Beim Stoppen, Verlassen der Ansicht oder Wechsel auf einen anderen Drucker wird der Stream wieder beendet.
+
+Bei Druckern mit alternativer Firmware oder lokaler Kamera-Bruecke, z. B. Rinkhals/Moonraker, kann optional pro Drucker eine Home-Assistant-`camera.*`-Entity verwendet werden. Das ueberschreibt nicht die Standardkamera fuer alle Drucker, sondern nur den jeweils gemappten Drucker.
+
+Hinweis zum Anycubic-Cloudstream: Der verschluesselte WebRTC-Stream benoetigt im Browser einen sicheren Kontext, also z. B. HTTPS, Home Assistant Cloud oder localhost. Wenn Home Assistant nur ueber unverschluesseltes HTTP aufgerufen wird, kann der Browser die Kamera blockieren. Eine lokale Home-Assistant-`camera.*`-Entity wird dagegen ueber den Home-Assistant-Kameraproxy geladen und ist deshalb der sauberste Weg fuer lokale Streams.
+
+### Kameralicht
+
+Drucker, die das Anycubic-Kamera-/Lichtkommando unterstuetzen, erhalten eine native Home-Assistant-`light.*`-Entity, z. B. `light.anycubic_printer_camera_light`. Diese Entity schaltet das Kameralicht des Druckers ueber die Anycubic-Cloud-/MQTT-Befehle, so wie es auch im Slicer-Print-Setting angezeigt wird.
+
+Diese native Entity ist nicht dasselbe wie die optionale `lightEntityId` in der externen Dashboard-Card. `lightEntityId` verweist auf eine beliebige vorhandene Home-Assistant-Lichtquelle, z. B. eine Raumlampe. Die native Kameralicht-Entity gehoert dagegen zum Anycubic-Drucker selbst.
+
+Da Anycubic die Lichtfunktion nicht bei jedem Modell gleich in der Funktionsliste deklariert, wird die Entity bei Druckern mit Kamera-/Video-Funktion oder offizieller `VIDEO_LIGHT`-/`BOX_LIGHT`-Funktion angelegt. Wenn ein Drucker den Befehl nicht unterstuetzt oder offline ist, kann das Schalten fehlschlagen oder unverfuegbar bleiben.
+
+Fuer gezielte Modelltests gibt es den Diagnose-Dienst `anycubic_cloud_extended.debug_set_light_status`. Er sendet das Anycubic-Lichtkommando mit einem expliziten `light_type` an einen ausgewaehlten Drucker und ist nur fuer kontrollierte Tests gedacht, z. B. wenn geklaert werden muss, welcher Lichtkanal bei einem Modell Kopflicht oder Kameralicht schaltet.
+
+### Integrierte Rinkhals/Moonraker-Webcam als HA-Kamera anlegen
+
+Die integrierte Rinkhals-Webcam wird von Moonraker meist als MJPEG-Stream angeboten:
+
+```text
+Snapshot: http://<drucker-ip>:4409/webcam/?action=snapshot
+Stream:   http://<drucker-ip>:4409/webcam/?action=stream
+```
+
+In Home Assistant:
+
+1. **Einstellungen -> Geraete & Dienste -> Integration hinzufuegen**
+2. **MJPEG IP Camera** suchen und auswaehlen
+3. Als **MJPEG URL** die Stream-URL eintragen
+4. Als **Still Image URL** die Snapshot-URL eintragen
+5. Optional einen Namen vergeben, z. B. `Printer Webcam`
+6. Nach dem Anlegen die Entity-ID pruefen, z. B. `camera.printer_webcam`
+
+> Hinweis: Wenn beim Einrichten mit **Generic Camera** zwar der Snapshot angezeigt wird, der Stream aber nur laedt, ist das fuer diese Moonraker-URL normal. Die `/webcam/?action=stream`-Adresse ist ein MJPEG-HTTP-Stream und gehoert in Home Assistant zur **MJPEG IP Camera**-Integration. **Generic Camera** ist eher fuer Snapshot plus separate RTSP-/Streaming-Quelle geeignet.
+
+> Wichtig: Nicht die Fluidd-Webcam-Ansicht oder eine go2rtc-Raumkamera-URL eintragen, wenn die integrierte Drucker-Webcam verwendet werden soll. Fuer Rinkhals ist die integrierte Kamera in der Regel der `/webcam/`-Pfad des Druckers.
+
+### Kamera einem bestimmten Drucker zuordnen
+
+Anschliessend wird die Kamera im Anycubic-Panel nur fuer diesen Drucker gemappt. Die Home-Assistant-Bereichs- oder Geraetezuordnung der Kamera reicht dafuer nicht aus; sie dient nur der Home-Assistant-Organisation.
+
+Das Mapping gehoert in die **Panel-Kartenkonfiguration** der Anycubic-Integration:
+
+1. **Einstellungen -> Geraete & Dienste -> Anycubic HA Integration**
+2. Beim Integrationseintrag **Konfigurieren** auswaehlen
+3. **Panel-Kartenkonfiguration** oeffnen
+4. Falls dort `null` steht, den Inhalt durch die YAML-Konfiguration ersetzen
+
+Die Drucker-ID fuer den Schluessel kann direkt aus der Anycubic-Panel-URL abgelesen werden. Wenn die URL z. B. so aussieht:
+
+```text
+/anycubic_cloud_extended/<printer-panel-id>/main
+```
+
+dann ist `<printer-panel-id>` der Schluessel fuer `cameraEntityIds`.
+
+Die Kamera-Entity-ID findest du in Home Assistant auf der Kamera-Entity, z. B. `camera.printer_webcam`.
+
+```yaml
+cameraEntityIds:
+  "<printer-panel-id>": camera.printer_webcam
+```
+
+Der Schluessel kann ausserdem die Anycubic-Drucker-ID bzw. Seriennummer sein. Alternativ kann die Home-Assistant-Device-ID des Druckers verwendet werden.
+
+Beispiel mit mehreren Druckern:
+
+```yaml
+cameraEntityIds:
+  "<first-printer-panel-id>": camera.first_printer_webcam
+  "<second-printer-panel-id>": camera.second_printer_webcam
+```
+
+Drucker ohne Eintrag in `cameraEntityIds` verwenden weiterhin automatisch den Anycubic-Cloud-Kamerastream.
+
+Fuer einfache Setups mit nur einer Kamera kann weiterhin die bestehende Option `cameraEntityId` verwendet werden. `cameraEntityIds` hat Vorrang und ist fuer mehrere Drucker die empfohlene Variante.
+
+---
+
+## 📦 Installation über HACS (empfohlen)
+
+1. **HACS → Integrationen → ⋯ → Custom Repositories**
+2. Repository:  
+   https://github.com/sunnyfunny1977-alt/anycubic-cloud-extended  
+   Kategorie: **Integration**
+3. **Daten neu laden**
+4. Integration in HACS suchen:  
+   **Anycubic HA Integration**
+5. Installieren → Home Assistant **neustarten**
+6. **Einstellungen → Geräte & Dienste → Integration hinzufügen**
+
+> ⚠️ Wähle als Auth-Methode: **Slicer Next (Windows)**  
+> und füge den **Access-Token** ein (siehe unten).
+
+Updates werden von HACS nur dann automatisch angeboten, wenn diese Integration als HACS-Custom-Repository installiert wurde. Bei manueller ZIP-Installation muss die Integration auch manuell aktualisiert werden.
+
+### Brand-/Icon-Hinweis
+
+Home Assistant 2026.3 und neuer kann Brand-Bilder direkt aus `custom_components/anycubic_cloud_extended/brand/` laden. Diese Integration liefert dafuer `icon.png`, `logo.png`, `dark_icon.png` und `dark_logo.png` mit.
+
+Wenn Home Assistant selbst das Icon korrekt zeigt, HACS in der Download-Liste aber weiterhin ein Platzhalter-Icon anzeigt, liegt das an der HACS-/Brands-CDN-Anzeige und nicht an den lokalen Brand-Dateien der Integration. Direkte Aufrufe von `/api/brands/integration/anycubic_cloud_extended/icon.png` benoetigen ausserdem eine gueltige Home-Assistant-Authentifizierung; ohne Token ist ein `403 Forbidden` normal.
+
+---
+
+## 🖐️ Manuelle Installation
+
+1. Repository als ZIP herunterladen  
+2. Entpacken nach:  
+   /config/custom_components/anycubic_cloud_extended/
+3. Home Assistant neu starten
+4. Integration hinzufügen wie oben
+
+Manuell installierte Versionen erhalten keine automatische Update-Anzeige in HACS. Fuer automatische Update-Hinweise bitte die Installation ueber HACS als Custom Repository verwenden.
+
+---
+
+## ⚠️ Sicherheit und Haftung
+
+Diese Integration steuert und liest 3D-Drucker ueber Anycubic Cloud, Services und optional MQTT. Die Nutzung erfolgt auf eigene Verantwortung.
+
+Ich uebernehme keine Haftung fuer Schaeden am 3D-Drucker, an angeschlossenem Zubehoer, an Filament, Druckobjekten oder der Umgebung. Bitte alle Funktionen vorsichtig verwenden, neue Versionen gruendlich testen und insbesondere Steuerbefehle wie Druckstart, Pause, Abbruch, Temperatur-, ACE- und Materialslot-Aenderungen aufmerksam pruefen.
+
+Fuer die Anycubic-MQTT-Verbindung sind die im Projekt enthaltenen Anycubic-TLS-Client-Zertifikatsdateien erforderlich. Sie gehoeren zur Anycubic-Protokollanbindung und enthalten keine benutzerspezifischen Home-Assistant- oder Anycubic-Zugangsdaten. Eigene Tokens, Logs, Screenshots mit Tokens oder lokale Konfigurationsdateien sollten niemals in Issues, Pull Requests oder Releases hochgeladen werden.
+
+Fehler, Verbesserungsvorschlaege und Erfahrungen mit weiteren Druckermodellen koennen gerne ueber GitHub Issues gemeldet werden.
+
+---
+
+## 🔐 Token auslesen (Slicer Next)
+
+1. **Slicer Next starten und eingeloggt lassen**
+2. PowerShell-Skript fuer Slicer Next 1.4.1.2+ (durchsucht alle Logdateien, waehlt den zeitlich neuesten Access-Token und kopiert ihn in die Zwischenablage):
+   ```powershell
+   $logDir = Join-Path $env:AppData 'AnycubicSlicerNext\log'
+   $hit = Get-ChildItem $logDir -Filter 'debug_*.log' | Select-String -Pattern 'accessToken\s*=\s*([^,\s]+)' | ForEach-Object { $ts = [datetime]::MinValue; if ($_.Line -match '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})') { $ts = [datetime]::ParseExact($Matches[1],'yyyy-MM-dd HH:mm:ss',$null) }; [pscustomobject]@{ Time=$ts; Token=$_.Matches[0].Groups[1].Value; File=$_.Filename } } | Sort-Object Time | Select-Object -Last 1
+   if (-not $hit) { throw 'Kein accessToken gefunden - im Slicer einmal ab- und wieder anmelden.' }
+   $hit.Token | Set-Clipboard
+   "OK - $($hit.File) ($($hit.Time)), $($hit.Token.Length) Zeichen kopiert."
+   ```
+3. Das Skript liegt auch als Datei im Repository: [`scripts/anycubic-token.ps1`](scripts/anycubic-token.ps1) — herunterladen und in PowerShell ausfuehren, statt es zu kopieren.
+4. Alternative fuer aeltere Slicer-Versionen mit Klartext-Token in der `.conf`:
+   ```powershell
+   $path = "$env:AppData\AnycubicSlicerNext\AnycubicSlicerNext.conf"; 
+   (Select-String -Path $path -Pattern '"access_token"\s*:\s*"([^"]+)"').Matches.Groups[1].Value | Set-Clipboard
+   ```
+5. In Integration einfügen → fertig
+
+> Hinweis: Der aktuelle Slicer-Next-Token ist ein JWT und besteht aus drei durch Punkte getrennten Teilen. Die Integration entfernt Anführungszeichen, Whitespace und kann auch Log-Zeilen wie `accessToken = ...` verarbeiten.
+
+---
+
+## 🌐 Web-Login (ohne MQTT, nur Polling)
+
+1. [Anycubic Cloud öffnen](https://cloud-universe.anycubic.com/file)  
+2. Developer Tools → Konsole:  
+   ```js
+   window.localStorage["XX-Token"]
+   ```
+3. Token kopieren → Integration einfügen
+
+> ⚠️ Hinweis: Diese Methode unterstützt **kein MQTT**, nur 1-Minuten-Updates.
+
+---
+
+## 📥 Releases
+
+➡️ [Letztes Release ansehen](https://github.com/sunnyfunny1977-alt/anycubic-cloud-extended/releases/latest)
+
+### Beta-/Test-Releases
+
+Groessere oder riskantere Aenderungen koennen zuerst als GitHub **Pre-release** veroeffentlicht werden, z. B. `v0.3.1-beta.1`. Diese Versionen sind fuer Tester gedacht und sollten in HACS bewusst ueber die Versionsauswahl installiert werden. Stabile Nutzer sollten beim neuesten normalen Release bleiben.
+
+Wenn HACS eine neue Beta- oder Stable-Version nicht sofort anbietet, in HACS das Repository neu laden bzw. die verfuegbaren Versionen aktualisieren. Das Integration-Panel in Home Assistant zeigt die Version des installierten Frontend-Bundles; nach einem Update kann ein Home-Assistant-Neustart und Browser-Cache-Refresh noetig sein, bis die Anzeige aktualisiert ist.
+
+Branch-Strategie:
+
+- `master` ist der stabile Branch fuer normale Releases, z. B. `v0.3.0`
+- `beta` ist der Test-Branch fuer riskantere Aenderungen und Beta-Pre-releases, z. B. `v0.3.1-beta.1`
+- Nach erfolgreichem Beta-Test werden die Aenderungen nach `master` uebernommen und als normales Release veroeffentlicht
+
+Beta-Releases sind besonders sinnvoll fuer:
+
+- neue Druckerfunktionen wie Kameralicht, ACE-/Materiallogik oder Dateidruck
+- Aenderungen an MQTT-Handling oder Cloud-Kommandos
+- neue Frontend-/Dashboard-Funktionen
+
+Bitte bei Beta-Feedback keine Tokens, privaten IPs, Seriennummern, Drucker-IDs oder Screenshots mit persoenlichen Daten in Issues hochladen.
+
+### Maintainer-Hinweis
+
+Die Projektversion wird zentral in `Version` gepflegt. Vor einem Release:
+
+```powershell
+python scripts/sync_version.py
+python scripts/sync_version.py --check
+python scripts/check_private_data.py
+python scripts/check_release_version.py
+cd custom_components/anycubic_cloud_extended/frontend_panel
+npm run build
+npm run build_card
+```
+
+Danach immer die echten Diffs pruefen, weil der Frontend-Build `eslint --fix` ausfuehrt und dadurch auch reine Formatierungs- oder Zeilenenden-Aenderungen entstehen koennen.
+
+Vor dem Veroeffentlichen eines stabilen Releases oder Beta-Pre-releases sollte zusaetzlich der GitHub-Workflow **Release Gate** manuell gestartet werden. Er prueft Version-Sync, private lokale Daten und ob der geplante `v<Version>`-Tag bzw. das passende GitHub-Release bereits existiert. Bei einem Tag-Push prueft derselbe Workflow, ob der Tag zur Version im Repository passt.
+
+Der Release-Check erwartet stabile Versionen auf `master` bzw. `main` und Pre-release-Versionen auf `beta`.
+
+---
+
+## 🙌 Mitwirkende
+
+- [@sunnyfunny1977-alt](https://github.com/sunnyfunny1977-alt) (dieser Fork)
+- [@ljschmitt](https://github.com/ljschmitt) (Fork, auf dem dieser aufbaut)
+- [@WaresWichall](https://github.com/WaresWichall) (Original-Entwicklung)
+
+---
+
+## 📄 Lizenz
+
+GNU General Public License v3.0. Siehe [LICENSE](LICENSE).
+
+---
+
+## 💬 Feedback / Probleme
+
+➡️ [Issue öffnen](https://github.com/sunnyfunny1977-alt/anycubic-cloud-extended/issues)
+
+---
+
+## ✅ Kompatibilität
+
+- Home Assistant 2025.10.0 oder neuer
+- Getestet mit Home Assistant 2026.6.1
