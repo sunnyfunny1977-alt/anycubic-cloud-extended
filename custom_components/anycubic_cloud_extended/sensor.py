@@ -33,6 +33,7 @@ from .const import (
     PrinterEntityType,
 )
 from .entity import AnycubicCloudEntity, AnycubicCloudEntityDescription
+from .filament.sensor import async_setup_filament_sensors
 from .helpers import printer_attributes_for_key, printer_state_for_key
 
 if TYPE_CHECKING:
@@ -401,6 +402,10 @@ async def async_setup_entry(
             + GLOBAL_SENSOR_TYPES
         ),
     )
+
+    # The filament inventory sensors live in the filament sub-package, which
+    # platform forwarding cannot reach on its own.
+    await async_setup_filament_sensors(hass, entry, async_add_entities)
 
 
 class AnycubicSensor(AnycubicCloudEntity, SensorEntity):

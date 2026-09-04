@@ -118,12 +118,16 @@ SENSORS: tuple[FilamentSensorDescription, ...] = (
 )
 
 
-async def async_setup_entry(
+async def async_setup_filament_sensors(
     hass: HomeAssistant,
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the Filament Manager sensors.
+
+    Called from the integration's own `sensor.py`, not by Home Assistant.
+    Platform forwarding only ever looks for `<integration>/sensor.py`, so a
+    module in a sub-package is never discovered on its own.
 
     There is one inventory no matter how many cloud accounts are configured,
     so these are created for the first config entry only. Any later entry
