@@ -162,9 +162,23 @@ class AnycubicCloudServiceCall:
                 "Could not find Anycubic Cloud config entry."
             )
 
-        coordinator: AnycubicCloudDataUpdateCoordinator = self.hass.data[DOMAIN][entry.entry_id][
-            COORDINATOR
-        ]
+        if entry.domain != DOMAIN:
+            # Reachable while a predecessor Anycubic integration is still set
+            # up: its config entry exists, so the lookup above succeeds, but it
+            # is not ours. Without this the next line raises a bare KeyError.
+            raise ServiceValidationError(
+                f"Config entry {entry_id} belongs to '{entry.domain}', not "
+                f"'{DOMAIN}'. Select a printer from the {DOMAIN} integration."
+            )
+
+        entry_data = self.hass.data.get(DOMAIN, {}).get(entry.entry_id)
+
+        if not entry_data:
+            raise ServiceValidationError(
+                f"The Anycubic Cloud config entry {entry_id} is not loaded."
+            )
+
+        coordinator: AnycubicCloudDataUpdateCoordinator = entry_data[COORDINATOR]
 
         return coordinator
 

@@ -4,6 +4,7 @@ import {
   intervalToDuration as dfnsIntervalToDuration,
 } from "date-fns";
 
+import { platform } from "./const";
 import { fireEvent } from "./fire_event";
 import {
   AnycubicCardConfig,
@@ -158,11 +159,28 @@ export function getEntityStateBinary(
 }
 
 export function getPrinterDevices(hass: HomeAssistant): HassDeviceList {
+  // Only printers belonging to *this* integration. A predecessor Anycubic
+  // integration can still be installed alongside during a migration, and its
+  // devices carry the same manufacturer. Offering those here would send every
+  // service call to this domain with the other integration's config entry id,
+  // which fails deep inside the service handler.
+  //
+  // Device ownership is derived from the entity registry: a device is ours if
+  // any of its entities was created by this platform. `dev.config_entries`
+  // cannot answer this on its own — it holds ids, not domains.
+  const ownDeviceIds = new Set<string>();
+  for (const key in hass.entities) {
+    const entity = hass.entities[key];
+    if (entity.platform === platform && entity.device_id) {
+      ownDeviceIds.add(entity.device_id);
+    }
+  }
+
   const printers: HassDeviceList = {};
   for (const key in hass.devices) {
     const dev = hass.devices[key];
 
-    if (dev.manufacturer === "Anycubic") {
+    if (dev.manufacturer === "Anycubic" && ownDeviceIds.has(dev.id)) {
       printers[dev.id] = dev;
     }
   }
