@@ -49,8 +49,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         store = FilamentStore(hass)
         await store.async_load()
         domain_data[DATA_FILAMENT_STORE] = store
-        if store.imported_from_legacy:
-            await async_check_legacy_integrations(hass)
+
+    # Checked on every setup rather than only after an import: a predecessor
+    # integration that is still configured keeps causing problems for as long
+    # as it exists, and the check clears its own issues once it is gone.
+    await async_check_legacy_integrations(hass)
 
     if not domain_data.get(DATA_WEBSOCKET_REGISTERED):
         async_register_websocket_api(hass)

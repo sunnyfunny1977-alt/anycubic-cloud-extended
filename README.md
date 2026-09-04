@@ -177,14 +177,40 @@ vorhanden:
   Slot zuletzt gefördert hat.
 
 Die alten Daten werden dabei **nicht** verändert oder gelöscht, und vom
-Filament-Bestand wird zusätzlich eine unangetastete Kopie abgelegt. Solange die
-alte `filament_manager`-Integration noch eingerichtet ist, weist eine
-Reparaturmeldung darauf hin, sie zu entfernen — zwei parallel laufende Bestände
-würden auseinanderlaufen.
+Filament-Bestand wird zusätzlich eine unangetastete Kopie abgelegt.
 
-> Die Entity-IDs ändern sich durch den Domainwechsel. Bestehende Automationen
-> und Dashboards, die Entitäten der Vorgänger-Integrationen ansprechen, müssen
-> einmalig angepasst werden.
+> ### ⚠️ Die alte Anycubic-Integration muss weichen
+>
+> `anycubic_ha_integration` und diese Integration melden sich am **selben**
+> Anycubic-Cloud-Konto an, und die Cloud erlaubt nur **eine Sitzung pro Konto**.
+> Beide erneuern den Access-Token unabhängig voneinander; wer zuletzt erneuert,
+> entwertet den Token des anderen. Die Verliererin scheitert dann mit
+> `Authentication failed. Check credentials.` — was wie ein falscher Token
+> aussieht, aber keiner ist. Ein frisch geholter Token hilft nicht, die nächste
+> Erneuerung bricht ihn wieder.
+>
+> **Entferne die alte Integration**, sobald die neue eingerichtet ist. Eine
+> Reparaturmeldung weist darauf hin, solange beide vorhanden sind.
+>
+> Der Filament-Teil ist davon nicht betroffen: der Import liest die alte
+> `filament_manager`-Storage-Datei nur und kollidiert mit nichts. Auch diese
+> Integration sollte danach entfernt werden, weil sonst zwei Bestände parallel
+> geführt werden und auseinanderlaufen.
+
+**Entity-IDs übernehmen.** Durch den Domainwechsel legt die neue Integration
+eigene Entitäten an. Wenn du die alte Integration entfernst, werden deren
+Entity-IDs frei, und du kannst die der neuen darauf umbenennen — dann laufen
+bestehende Automationen und Dashboards unverändert weiter. Die `unique_id` ist
+in beiden Integrationen dieselbe (`{MAC}-{key}`), das Mapping ist also eindeutig.
+In dieser Reihenfolge:
+
+1. Neue Integration einrichten und Datenübernahme prüfen.
+2. Alte Anycubic-Integration entfernen (gibt die Entity-IDs frei).
+3. Entitäten der neuen Integration auf die alten IDs umbenennen.
+4. Service-Aufrufe in Automationen von `anycubic_ha_integration.*` auf
+   `anycubic_cloud_extended.*` umstellen — dabei auch `config_entry` und
+   `device_id` in den betroffenen Aktionen aktualisieren, die zeigen sonst auf
+   den gelöschten Eintrag.
 
 ### Card-Optionen
 

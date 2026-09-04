@@ -1416,6 +1416,10 @@
     "legacy_filament_manager_present": {
       "title": "Der eigenständige Filament Manager ist noch installiert",
       "description": "Dein Filament-Bestand wurde nach Anycubic Cloud Extended übernommen. Die alte Integration `{legacy_domain}` ist weiterhin eingerichtet, und solange beide laufen, führen sie zwei getrennte Bestände, die auseinanderlaufen. Entferne die alte Integration, um die Migration abzuschließen — ihre gespeicherten Daten bleiben unangetastet erhalten."
+    },
+    "legacy_anycubic_integration_present": {
+      "title": "Die vorherige Anycubic-Integration ist noch installiert",
+      "description": "`{legacy_domain}` und Anycubic Cloud Extended melden sich am selben Anycubic-Cloud-Konto an, und die Cloud erlaubt nur eine Sitzung pro Konto. Beide erneuern den Access-Token unabhängig voneinander — wer zuletzt erneuert, entwertet den anderen, der dann mit \"Authentication failed. Check credentials.\" scheitert. Ein neuer Token hilft nicht, die nächste Erneuerung bricht ihn wieder. Entferne eine der beiden Integrationen. Die Entity-IDs der entfernten werden frei, sodass du die der verbleibenden darauf umbenennen kannst und Automationen und Dashboards weiterlaufen."
     }
   }
 }

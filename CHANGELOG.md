@@ -47,11 +47,29 @@ ACE can point at a specific roll in the cupboard.
   active ACE slot from `anycubic_ha_integration`. Nothing in the old stores is
   modified or deleted, and an untouched copy of the inventory is kept. A repair
   issue asks for the old Filament Manager to be removed while both are set up.
+- **The previous Anycubic integration must be removed.** It signs in to the same
+  cloud account, and Anycubic allows one session per account: both integrations
+  refresh the access token independently and whichever refreshes last
+  invalidates the other, which then fails with "Authentication failed. Check
+  credentials.". A repair issue explains this, because the message otherwise
+  reads as a bad token and a fresh one does not help. Removing the old
+  integration frees its entity ids, so the new entities can be renamed onto
+  them and existing automations and dashboards keep working.
 - The static path now serves the whole `dist` directory rather than a single
   file, so the card and the printer images are reachable through it.
 
 ### Fixed
 
+- The printer list no longer offers devices belonging to a predecessor Anycubic
+  integration. Both create a device for the same printer with manufacturer
+  "Anycubic", so picking the wrong one sent service calls to this domain
+  carrying the other integration's config entry id, and the handler raised a
+  bare KeyError. Ownership now comes from the entity registry, and the service
+  handler validates the entry's domain before using it.
+- The filament inventory sensors are created at all. `filament/sensor.py` was
+  never executed: platform forwarding only looks for `<integration>/sensor.py`,
+  so a module of that name in a sub-package is not discovered. Nothing errored;
+  the entities were simply absent.
 - The panel is no longer removed when one of several config entries is
   unloaded; teardown waits for the last one.
 - Browser back/forward inside the panel works again — the location handler

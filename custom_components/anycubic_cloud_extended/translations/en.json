@@ -1416,6 +1416,10 @@
     "legacy_filament_manager_present": {
       "title": "The standalone Filament Manager is still installed",
       "description": "Your filament inventory has been imported into Anycubic Cloud Extended. The old `{legacy_domain}` integration is still set up, and while both are loaded they keep two separate copies of the inventory that will drift apart. Remove the old integration to finish the migration; its stored data is left untouched."
+    },
+    "legacy_anycubic_integration_present": {
+      "title": "The previous Anycubic integration is still installed",
+      "description": "`{legacy_domain}` and Anycubic Cloud Extended sign in to the same Anycubic cloud account, and the cloud allows only one session per account. Each integration refreshes the access token on its own, so whichever refreshes last invalidates the other, which then fails with \"Authentication failed. Check credentials.\". A new token does not help \u00e2\u20ac\u201d the next refresh breaks it again. Remove one of the two integrations. Entity IDs of the one you remove become free, so you can rename the survivor's entities to match and keep your automations and dashboards working."
     }
   }
 }
