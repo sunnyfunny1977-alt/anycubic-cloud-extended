@@ -68,6 +68,17 @@ STORAGE_VERSION = 1
 STORAGE_KEY_ACE_STATE = f"{DOMAIN}_ace_state"
 ACE_STATE_SAVE_DELAY = 10
 
+# Values the printer only ever sends by MQTT push. Neither the HTTP poll nor
+# the project data carries them, so they are unknown after a restart until the
+# printer happens to push again -- and it only pushes when the value changes,
+# which for a fan held at a steady speed can be a very long time.
+STORAGE_KEY_PUSH_STATE = f"{DOMAIN}_push_state"
+PUSH_STATE_SAVE_DELAY = 10
+PUSH_ONLY_PRINTER_VALUES = (
+    "aux_fan_speed_pct",
+    "box_fan_level",
+)
+
 # --- Legacy storage keys (pre-merge integrations), read once for import ---
 LEGACY_STORAGE_KEY = "anycubic_ha_integration"
 LEGACY_STORAGE_KEY_ACE_STATE = "anycubic_ha_integration_ace_state"

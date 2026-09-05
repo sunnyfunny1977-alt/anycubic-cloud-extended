@@ -56,7 +56,10 @@ from .const import (
     MQTT_SCAN_INTERVAL,
     PRINT_JOB_STARTED_UPDATE_DELAY,
     STORAGE_KEY,
+    PUSH_ONLY_PRINTER_VALUES,
+    PUSH_STATE_SAVE_DELAY,
     STORAGE_KEY_ACE_STATE,
+    STORAGE_KEY_PUSH_STATE,
     STORAGE_VERSION,
     PrinterEntityType,
 )
@@ -123,8 +126,10 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         )
         self._unregistered_descriptors: dict[int, dict[str, list[AnycubicCloudEntityDescription]]] = dict()
         self._ace_state_store: Store[dict[str, Any]] = Store(hass, STORAGE_VERSION, STORAGE_KEY_ACE_STATE)
+        self._push_state_store: Store[dict[str, Any]] = Store(hass, STORAGE_VERSION, STORAGE_KEY_PUSH_STATE)
         self._slot_binding = SlotBindingManager(hass)
         self._ace_active_slots_saved: dict[str, Any] | None = None
+        self._push_state: dict[str, dict[str, Any]] = dict()
         super().__init__(
             hass,
             LOGGER,
@@ -310,8 +315,8 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "print_speed_pct": printer.latest_project_print_speed_pct,
             "job_z_thick": printer.latest_project_z_thick,
             "fan_speed_pct": printer.latest_project_fan_speed_pct,
-            "aux_fan_speed_pct": printer.aux_fan_speed_pct,
-            "box_fan_level": printer.box_fan_level,
+            "aux_fan_speed_pct": self._push_only_value(printer, "aux_fan_speed_pct"),
+            "box_fan_level": self._push_only_value(printer, "box_fan_level"),
             "job_model_height": printer.latest_project_print_model_height,
             "job_anti_alias_count": printer.latest_project_print_anti_alias_count,
             "job_on_time": printer.latest_project_print_on_time,
@@ -471,6 +476,7 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._slot_binding.reconcile_and_enrich(data_dict)
 
         self._save_ace_active_slots_if_changed()
+        self._save_push_state_if_changed()
 
         return data_dict
 
@@ -491,6 +497,82 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self.data = self._build_coordinator_data()
         self.last_update_success = True
         self.async_update_listeners()
+
+    def _push_only_value(self, printer: AnycubicPrinter, name: str) -> Any:
+        """Return a push-only printer value, or the last one that was pushed.
+
+        `aux_fan_speed_pct` and `box_fan_level` reach the integration solely
+        through an MQTT fan message or a print-status `settings` block. The
+        HTTP poll does not carry them and the project data does not model
+        them, so after a restart they are `None` -- and because the printer
+        pushes only when a value actually changes, a fan running at a steady
+        speed leaves both sensors unavailable indefinitely.
+
+        Serving the remembered value is not stale data: for a value that only
+        ever arrives on change, the last one pushed *is* the current one until
+        the printer says otherwise. The ACE state store already makes exactly
+        this trade for the latched active slot.
+
+        An offline printer is the one case where the remembered value would be
+        a lie, so nothing is returned then.
+        """
+        live = getattr(printer, name, None)
+
+        if live is not None:
+            return live
+
+        if not printer.printer_online:
+            return None
+
+        return self._push_state.get(str(printer.id), dict()).get(name)
+
+    @callback
+    def _save_push_state_if_changed(self) -> None:
+        """Persist push-only values so they survive a restart."""
+        changed = False
+
+        for printer_id, printer in self._anycubic_printers.items():
+            remembered = self._push_state.setdefault(str(printer_id), dict())
+
+            for name in PUSH_ONLY_PRINTER_VALUES:
+                value = getattr(printer, name, None)
+
+                # A missing value never overwrites a remembered one -- it only
+                # means the printer has not pushed since the last restart.
+                if value is None or remembered.get(name) == value:
+                    continue
+
+                remembered[name] = value
+                changed = True
+
+        if not changed:
+            return
+
+        self._push_state_store.async_delay_save(
+            lambda: self._push_state,
+            PUSH_STATE_SAVE_DELAY,
+        )
+
+    async def _restore_push_state(self) -> None:
+        """Reload the push-only values written by a previous run."""
+        try:
+            stored = await self._push_state_store.async_load()
+
+            if not stored:
+                return
+
+            for printer_id, values in stored.items():
+                if not isinstance(values, dict):
+                    continue
+
+                self._push_state[str(printer_id)] = {
+                    name: values[name]
+                    for name in PUSH_ONLY_PRINTER_VALUES
+                    if values.get(name) is not None
+                }
+
+        except Exception as error:
+            LOGGER.warning(f"Could not restore stored Anycubic push-only values: {error}")
 
     def _ace_active_slots_data(self) -> dict[str, Any]:
         """Serialise the latched ACE slots for storage."""
@@ -1031,6 +1113,7 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 await self._setup_anycubic_api_connection()
                 await self._setup_anycubic_printer_objects()
                 await self._restore_ace_active_slots()
+                await self._restore_push_state()
                 self.hass.create_task(
                     self._async_request_missing_multi_color_box_info_after_startup(),
                     f"Anycubic coordinator {self.entry.entry_id} missing multi-color info startup request",

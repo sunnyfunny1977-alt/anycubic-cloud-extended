@@ -70,6 +70,15 @@ ACE can point at a specific roll in the cupboard.
   never executed: platform forwarding only looks for `<integration>/sensor.py`,
   so a module of that name in a sub-package is not discovered. Nothing errored;
   the entities were simply absent.
+- `Aux Fan Speed` and `Box Fan Level` no longer go unavailable after every
+  restart. Both reach the integration only through an MQTT fan message or a
+  print-status `settings` block — the HTTP poll does not carry them and the
+  project data does not model them — and the printer pushes only when a value
+  changes, so a fan held at a steady speed left both sensors unavailable
+  indefinitely. The last pushed value is now remembered across restarts, the
+  same trade the ACE state store already makes for the latched active slot.
+  For a value that only ever arrives on change, the last one pushed is the
+  current one; an offline printer is the exception and still reports nothing.
 - The panel is no longer removed when one of several config entries is
   unloaded; teardown waits for the last one.
 - Browser back/forward inside the panel works again — the location handler
