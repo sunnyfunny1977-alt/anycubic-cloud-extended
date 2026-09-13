@@ -105,6 +105,29 @@ Beide zeigen dieselben Daten — es gibt genau einen Bestand. Der eigenständige
 Eintrag hat sein eigenes, kleines Frontend-Bundle: wer nur eine Rolle wiegen
 will, lädt nicht das komplette Drucker-Panel samt Kamera-SDK.
 
+#### Bestand und Setup-Dialog
+
+Der Bestand ist **eine** Ansicht, nicht zwei. Die Karten zeigen Restmengen,
+Fortschritt und Stammdaten; **Neuer Eintrag** sitzt in der Kopfzeile, und jede
+Karte hat einen **Setup**-Knopf. Der öffnet den Dialog, in dem alles zu diesem
+Eintrag passiert:
+
+| Abschnitt | Inhalt |
+| --- | --- |
+| Stammdaten | Hersteller, Sorte, Farbe, Durchmesser, Nettogewicht, Lagerort, Preis, Kaufdatum, Temperaturen, Notizen |
+| Bestand | OVP-Zähler (±) und **Rolle anbrechen** |
+| Leergewicht der Rolle | Tara der Rollensorte — gilt für alle Farben derselben Hersteller-/Sorten-/Größen-Kombination |
+| Angebrochene Rollen | Je Rolle Restmenge, Wiegewert und Notiz, dazu **Aufgebraucht** |
+
+Zwei Dinge schreiben sofort, ohne Speichern: der OVP-Zähler und die Felder der
+angebrochenen Rollen (beim Verlassen des Feldes oder mit Enter). Alles andere
+geht mit **Speichern** raus. **Löschen** liegt links in der Fußzeile des
+Dialogs, nicht auf den Karten — ein Fehlklick in der Liste kann so nichts
+vernichten.
+
+Das Leergewicht wird erst beim Speichern geschrieben. Nach dem ersten Eintragen
+also einmal speichern, danach nimmt das Feld für den Wiegewert einen Wert an.
+
 ### Rolle einem ACE-Slot zuordnen
 
 Ein Klick auf einen ACE-Slot im Panel oder in der Lovelace-Card öffnet den

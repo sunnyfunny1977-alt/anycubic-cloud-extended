@@ -44,6 +44,19 @@ ACE can point at a specific roll in the cupboard.
 
 - Domain is `anycubic_cloud_extended`. Entity IDs change accordingly;
   automations and dashboards referring to the predecessors need adjusting once.
+- **Inventory and Manage are one view.** They listed the same entries twice, one
+  read-only and one with the buttons, so weighing a spool meant finding it,
+  switching tabs and finding it again. The cards now carry a **Setup** button
+  that opens a dialog holding everything the manage view could do: master data,
+  the sealed-spool stepper, opening a spool, the weighing fields, the spool
+  type's empty weight and deleting the entry. **New entry** moved into the
+  inventory header.
+  - The sealed count is a stepper in the dialog rather than a form field, so
+    saving a form that was opened before the last step can no longer revert it.
+  - The empty weight is editable here too, not only in the admin area — without
+    it the weighing field in this very dialog would be a dead end.
+  - A confirmation raised from the dialog returns to it afterwards, including
+    when it is dismissed with Escape or a click outside.
 - The inventory is reachable two ways: as a **Filament** tab in the Anycubic
   panel, next to the ACE slots it binds spools to, and as its own sidebar entry
   **Filament Manager** at `/anycubic-filament`. Stock keeping has nothing to do

@@ -1,5 +1,9 @@
 /**
- * The default view: a read-only overview of the whole inventory.
+ * The inventory view: the whole stock, and the way into every entry.
+ *
+ * It used to be read-only next to a separate manage view that listed the same
+ * entries again. The list is gone; each card now carries a Setup button that
+ * opens the dialog where the entry is actually worked on.
  */
 
 import { t } from "../i18n.js";
@@ -11,7 +15,9 @@ import {
   fmtNumber,
   fmtWeight,
   html,
+  icon,
   progressBar,
+  raw,
   swatch,
 } from "../ui.js";
 import {
@@ -94,7 +100,7 @@ function filterBar(data, filters) {
   </div>`;
 }
 
-function itemCard(item, lookup) {
+function itemCard(item, lookup, isAdmin) {
   const net = Number(item.spool_net_weight_g || 0);
   const sealed = Number(item.sealed_count || 0);
   const open = item.open_spools || [];
@@ -155,30 +161,54 @@ function itemCard(item, lookup) {
     })}
     ${meta.length ? html`<div class="meta">${meta.map((line) => html`<span>${line}</span>`)}</div>` : ""}
     ${item.notes ? html`<div class="meta"><span>${item.notes}</span></div>` : ""}
+
+    <div class="card-actions">
+      <button
+        class="btn secondary"
+        data-action="setup-item"
+        data-item="${item.id}"
+        ${raw(isAdmin ? "" : "disabled")}
+      >
+        ${icon("pencil")} ${t("overview.setup")}
+      </button>
+    </div>
   </div>`;
 }
 
-/** Render the overview. */
+/** Render the inventory. */
 export function renderOverview(ctx) {
-  const { data, state, lookup } = ctx;
+  const { data, state, lookup, isAdmin } = ctx;
   const items = data.items || [];
 
+  const header = html`<div class="section-title">
+    <span>${t("overview.title")}</span>
+    <span class="spacer"></span>
+    <button class="btn" data-action="new-item" ${raw(isAdmin ? "" : "disabled")}>
+      ${icon("plus")} ${t("overview.new_item")}
+    </button>
+  </div>`;
+
+  const notice = isAdmin
+    ? ""
+    : html`<div class="card" style="margin-bottom:12px">${t("readonly.notice")}</div>`;
+
   if (!items.length) {
-    return html`${summaryStrip(data.summary)}
+    return html`${header} ${notice} ${summaryStrip(data.summary)}
     ${emptyState({
       emoji: "🧵",
       title: t("overview.empty.title"),
       text: t("overview.empty.text"),
-      actionLabel: ctx.isAdmin ? t("overview.empty.action") : "",
-      action: "goto-manage",
+      actionLabel: isAdmin ? t("overview.empty.action") : "",
+      action: "new-item",
     })}`;
   }
 
   const visible = filterAndSort(items, state.filters, lookup);
 
-  return html`${summaryStrip(data.summary)} ${filterBar(data, state.filters)}
+  return html`${header} ${notice} ${summaryStrip(data.summary)}
+  ${filterBar(data, state.filters)}
   ${visible.length
-    ? html`<div class="grid">${visible.map((item) => itemCard(item, lookup))}</div>`
+    ? html`<div class="grid">${visible.map((item) => itemCard(item, lookup, isAdmin))}</div>`
     : emptyState({
         emoji: "🔍",
         title: t("overview.no_match.title"),

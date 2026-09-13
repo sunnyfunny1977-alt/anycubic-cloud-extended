@@ -102,6 +102,8 @@ export const panelStyles = `
     display: flex;
     align-items: center;
     gap: 8px;
+    /* Title plus action button does not fit a narrow panel on one line. */
+    flex-wrap: wrap;
   }
   .section-title:first-child { margin-top: 0; }
   .section-title .spacer { flex: 1; }
@@ -259,6 +261,15 @@ export const panelStyles = `
   }
 
   .spool-card { display: flex; flex-direction: column; gap: 10px; }
+
+  /* Pushed to the bottom edge of the card so the button sits in the same
+     place on every card, however much metadata the entry carries. */
+  .card-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: auto;
+    padding-top: 2px;
+  }
 
   .spool-head { display: flex; align-items: flex-start; gap: 12px; }
 

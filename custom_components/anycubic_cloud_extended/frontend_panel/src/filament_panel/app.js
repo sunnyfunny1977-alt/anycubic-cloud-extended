@@ -19,11 +19,7 @@ import {
   setFormatting,
 } from "./ui.js";
 import { renderOverview } from "./views/overview.js";
-import {
-  itemDialogBody,
-  newItemValues,
-  renderManage,
-} from "./views/manage.js";
+import { newItemValues, setupDialogBody } from "./views/setup.js";
 import {
   manufacturerDialogBody,
   materialDialogBody,
@@ -35,7 +31,7 @@ import {
 // The websocket namespace of the merged integration. `platform` is the single
 // place the domain is written down on the frontend side.
 const WS = `${platform}/filament`;
-const VIEWS = ["overview", "manage", "admin"];
+const VIEWS = ["overview", "admin"];
 
 const EMPTY_DATA = {
   manufacturers: [],
@@ -75,8 +71,6 @@ class FilamentManagerPanel extends HTMLElement {
     this._state = {
       view: "overview",
       filters: { q: "", manufacturer: "", material: "", condition: "", sort: "manufacturer" },
-      manageFilters: { q: "", sort: "manufacturer" },
-      expanded: new Set(),
     };
     this._dialog = null;
 
@@ -184,7 +178,10 @@ class FilamentManagerPanel extends HTMLElement {
         (message) => {
           if (message && message.snapshot) {
             this._data = message.snapshot;
-            if (this._ready) this._renderApp();
+            if (this._ready) {
+              this._renderApp();
+              this._refreshOpenDialog();
+            }
           }
         },
         { type: `${WS}/subscribe` }
@@ -222,21 +219,12 @@ class FilamentManagerPanel extends HTMLElement {
   _renderApp() {
     const app = this.shadowRoot.getElementById("app");
     const active = this.shadowRoot.activeElement;
-    const focusAttr = active && active.dataset
-      ? (active.dataset.filter ? "data-filter" : active.dataset.mfilter ? "data-mfilter" : null)
-      : null;
-    const focusKey = focusAttr
-      ? (focusAttr === "data-filter" ? active.dataset.filter : active.dataset.mfilter)
-      : null;
+    const focusKey = active && active.dataset ? active.dataset.filter || null : null;
     const caret = focusKey && active.selectionStart !== undefined ? active.selectionStart : null;
 
     const ctx = this._context();
-    const view =
-      this._state.view === "manage"
-        ? renderManage(ctx)
-        : this._state.view === "admin"
-          ? renderAdmin(ctx)
-          : renderOverview(ctx);
+    const view = this._state.view === "admin" ? renderAdmin(ctx) : renderOverview(ctx);
+    const tabs = VIEWS.filter((name) => name !== "admin" || this._isAdmin);
 
     app.innerHTML = String(html`
       <div class="app-header">
@@ -246,25 +234,27 @@ class FilamentManagerPanel extends HTMLElement {
           </button>
           <div class="title">${t("app.title")}</div>
         </div>
-        <div class="tabs" role="tablist">
-          ${VIEWS.filter((name) => name !== "admin" || this._isAdmin).map(
-            (name) => html`<button
-              class="tab"
-              role="tab"
-              data-action="goto"
-              data-view="${name}"
-              aria-selected="${this._state.view === name ? "true" : "false"}"
-            >
-              ${t(`tab.${name}`)}
-            </button>`
-          )}
-        </div>
+        ${tabs.length > 1
+          ? html`<div class="tabs" role="tablist">
+              ${tabs.map(
+                (name) => html`<button
+                  class="tab"
+                  role="tab"
+                  data-action="goto"
+                  data-view="${name}"
+                  aria-selected="${this._state.view === name ? "true" : "false"}"
+                >
+                  ${t(`tab.${name}`)}
+                </button>`
+              )}
+            </div>`
+          : ""}
       </div>
       <div class="content">${view}</div>
     `);
 
     if (focusKey) {
-      const restored = app.querySelector(`[${focusAttr}="${focusKey}"]`);
+      const restored = app.querySelector(`[data-filter="${focusKey}"]`);
       if (restored) {
         restored.focus();
         if (caret !== null && restored.setSelectionRange) {
@@ -278,7 +268,7 @@ class FilamentManagerPanel extends HTMLElement {
     }
   }
 
-  _renderOverlay(force = false) {
+  _renderOverlay(force = false, focusFirst = false) {
     const container = this.shadowRoot.getElementById("overlay");
     const key = this._dialog
       ? `${this._dialog.kind}:${this._dialog.id || "new"}:${this._dialog.error || ""}`
@@ -296,8 +286,27 @@ class FilamentManagerPanel extends HTMLElement {
     let actions;
 
     if (this._dialog.kind === "item") {
-      body = itemDialogBody(values, this._data);
-      actions = dialogActions({ confirmLabel: t("action.save") });
+      const item = this._dialog.mode === "edit" ? this._findItem(this._dialog.id) : null;
+
+      if (this._dialog.mode === "edit" && !item) {
+        // Deleted from somewhere else while the dialog was open; there is
+        // nothing left for the body to render.
+        this._closeDialog();
+        return;
+      }
+
+      // Recorded from what is actually on screen, so the snapshot handler can
+      // tell a stock change from a change it should ignore.
+      this._dialog.signature = this._itemSignature(item);
+      body = setupDialogBody(values, this._data, this._lookup, item, this._isAdmin);
+      actions = dialogActions({
+        confirmLabel: t("action.save"),
+        extra: item
+          ? html`<button class="btn danger text" data-action="delete-item" data-item="${item.id}">
+              ${t("action.delete")}
+            </button>`
+          : "",
+      });
     } else if (this._dialog.kind === "manufacturer") {
       body = manufacturerDialogBody(values, this._data, this._lookup);
       actions = dialogActions({ confirmLabel: t("action.save") });
@@ -316,8 +325,47 @@ class FilamentManagerPanel extends HTMLElement {
       dialog({ title: this._dialog.title, body, actions, error: this._dialog.error })
     );
 
+    if (!focusFirst) return;
+
     const firstField = container.querySelector("[data-field]");
     if (firstField) firstField.focus();
+  }
+
+  /**
+   * What an open setup dialog needs a repaint for: a spool opened or consumed,
+   * or the sealed count stepped. Field values are deliberately not part of it.
+   */
+  _itemSignature(item) {
+    if (!item) return "";
+    return `${item.sealed_count}|${(item.open_spools || [])
+      .map((spool) => spool.id)
+      .join(",")}`;
+  }
+
+  /**
+   * Bring an open setup dialog up to date with a pushed snapshot.
+   *
+   * Not on every push: the spool fields save on change and the gross-weight
+   * field renders empty by design, so repainting while somebody is typing in
+   * the dialog would throw away what they had entered. A structural change is
+   * always worth the repaint; anything else waits until the dialog is idle.
+   */
+  _refreshOpenDialog() {
+    const state = this._dialog;
+    if (!state || state.kind !== "item" || state.mode !== "edit") return;
+
+    const item = this._findItem(state.id);
+    if (!item) {
+      this._closeDialog();
+      return;
+    }
+
+    const active = this.shadowRoot.activeElement;
+    const typing = Boolean(active && active.closest && active.closest(".overlay"));
+
+    if (this._itemSignature(item) === state.signature && typing) return;
+
+    this._renderOverlay(true);
   }
 
   _toast(message, isError = false) {
@@ -352,11 +400,19 @@ class FilamentManagerPanel extends HTMLElement {
 
   _openDialog(config) {
     this._dialog = { error: "", ...config };
-    this._renderOverlay(true);
+    this._renderOverlay(true, true);
   }
 
+  /**
+   * Close the top dialog.
+   *
+   * A confirmation replaces the dialog it was raised from, so it carries a
+   * `previous` back to it. Handling that here rather than in the handler covers
+   * cancel, the backdrop and Escape in one place -- otherwise abandoning a
+   * confirmation would silently throw away the setup dialog behind it.
+   */
   _closeDialog() {
-    this._dialog = null;
+    this._dialog = (this._dialog && this._dialog.previous) || null;
     this._renderOverlay(true);
   }
 
@@ -366,8 +422,8 @@ class FilamentManagerPanel extends HTMLElement {
     this._renderOverlay(true);
   }
 
-  _confirm({ title, text, confirmLabel, onConfirm }) {
-    this._openDialog({ kind: "confirm", title, text, confirmLabel, onConfirm });
+  _confirm({ previous, title, text, confirmLabel, onConfirm }) {
+    this._openDialog({ kind: "confirm", previous, title, text, confirmLabel, onConfirm });
   }
 
   /** Message shown when master data is still referenced by entries. */
@@ -388,6 +444,17 @@ class FilamentManagerPanel extends HTMLElement {
       this._closeDialog();
       return;
     }
+    // A spool field saves on change. Committing the form here would close the
+    // dialog and, because of preventDefault, swallow the value just typed.
+    if (
+      event.key === "Enter" &&
+      event.target.closest &&
+      event.target.closest(".spool-edit")
+    ) {
+      event.preventDefault();
+      event.target.blur();
+      return;
+    }
     if (
       event.key === "Enter" &&
       this._dialog &&
@@ -406,17 +473,15 @@ class FilamentManagerPanel extends HTMLElement {
       this._renderApp();
       return true;
     }
-    if (target.dataset.mfilter) {
-      this._state.manageFilters[target.dataset.mfilter] = target.value;
-      this._renderApp();
-      return true;
-    }
     return false;
   }
 
   /** Dialog fields are kept in state without re-rendering, so focus survives. */
   _captureDialogField(target) {
     if (!this._dialog || !target.dataset.field || !target.closest(".overlay")) return false;
+    // A spool editor inside the dialog writes straight to its own record; it
+    // must not be mistaken for part of the entry's form.
+    if (target.closest(".spool-edit")) return false;
     this._dialog.values[target.dataset.field] = target.value;
     return true;
   }
@@ -433,7 +498,7 @@ class FilamentManagerPanel extends HTMLElement {
     if (!target || !target.dataset) return;
     if (this._applyFilter(target)) return;
     if (this._captureDialogField(target)) return;
-    // Inline editing of an opened spool in the manage view.
+    // Inline editing of an opened spool, inside the setup dialog.
     const editor = target.closest(".spool-edit");
     if (editor && target.dataset.field) {
       this._call({
@@ -470,12 +535,6 @@ class FilamentManagerPanel extends HTMLElement {
           new CustomEvent("hass-toggle-menu", { bubbles: true, composed: true })
         ),
       goto: (dataset) => this._navigate(dataset.view),
-      "goto-manage": () => this._navigate("manage"),
-
-      "reset-manage-filters": () => {
-        this._state.manageFilters = { q: "", sort: "manufacturer" };
-        this._renderApp();
-      },
 
       "reset-filters": () => {
         this._state.filters = {
@@ -497,9 +556,10 @@ class FilamentManagerPanel extends HTMLElement {
           values: newItemValues(this._data),
         }),
 
-      "edit-item": (dataset) => {
+      "setup-item": (dataset) => {
         const item = this._findItem(dataset.item);
         if (!item) return;
+        const spoolType = this._lookup.spoolTypeFor(item);
         this._openDialog({
           kind: "item",
           mode: "edit",
@@ -512,13 +572,15 @@ class FilamentManagerPanel extends HTMLElement {
             color_hex: item.color_hex,
             diameter: item.diameter,
             spool_net_weight_g: item.spool_net_weight_g,
-            sealed_count: item.sealed_count,
             location: item.location,
             price: item.price ?? "",
             purchase_date: item.purchase_date ?? "",
             nozzle_temp: item.nozzle_temp ?? "",
             bed_temp: item.bed_temp ?? "",
             notes: item.notes,
+            ...(spoolType
+              ? { [`spool_type__${spoolType.id}`]: spoolType.empty_weight_g ?? "" }
+              : {}),
           },
         });
       },
@@ -527,8 +589,8 @@ class FilamentManagerPanel extends HTMLElement {
         const item = this._findItem(dataset.item);
         if (!item) return;
         this._confirm({
-          title: t("manage.delete_title"),
-          text: t("manage.delete_text", { name: itemLabel(item, this._lookup) }),
+          title: t("setup.delete_title"),
+          text: t("setup.delete_text", { name: itemLabel(item, this._lookup) }),
           onConfirm: async () => {
             await this._call({ type: `${WS}/item/delete`, item_id: item.id });
             this._toast(t("toast.deleted"));
@@ -557,26 +619,17 @@ class FilamentManagerPanel extends HTMLElement {
       },
 
       "open-spool": (dataset) => {
-        this._state.expanded.add(dataset.item);
         ws({ type: `${WS}/spool/open`, item_id: dataset.item });
-      },
-
-      "toggle-spools": (dataset) => {
-        if (this._state.expanded.has(dataset.item)) {
-          this._state.expanded.delete(dataset.item);
-        } else {
-          this._state.expanded.add(dataset.item);
-        }
-        this._renderApp();
       },
 
       "consume-spool": (dataset) => {
         const item = this._findItem(dataset.item);
         if (!item) return;
         this._confirm({
-          title: t("manage.consume_title"),
-          text: t("manage.consume_text", { name: itemLabel(item, this._lookup) }),
-          confirmLabel: t("manage.consume"),
+          previous: this._dialog,
+          title: t("setup.consume_title"),
+          text: t("setup.consume_text", { name: itemLabel(item, this._lookup) }),
+          confirmLabel: t("setup.consume"),
           onConfirm: async () => {
             await this._call({
               type: `${WS}/spool/consume`,

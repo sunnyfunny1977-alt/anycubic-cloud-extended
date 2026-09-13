@@ -5,7 +5,6 @@
         "app.title": "Filament Manager",
         "app.loading": "Wird geladen …",
         "tab.overview": "Übersicht",
-        "tab.manage": "Verwalten",
         "tab.admin": "Admin",
         "action.save": "Speichern",
         "action.cancel": "Abbrechen",
@@ -18,7 +17,7 @@
         "error.in_use": "Wird noch verwendet und kann daher nicht gelöscht werden.",
         "error.not_found": "Der Datensatz wurde nicht gefunden.",
         "error.no_sealed_spools": "Es ist keine OVP-Rolle mehr vorhanden.",
-        "error.no_empty_weight": "Für diese Rollensorte ist kein Leergewicht hinterlegt. Trage es im Admin-Bereich beim Hersteller nach.",
+        "error.no_empty_weight": "Für diese Rollensorte ist kein Leergewicht hinterlegt. Trage es im Setup des Eintrags nach.",
         "error.invalid_data": "Bitte alle Pflichtfelder ausfüllen.",
         "error.not_loaded": "Der Filament Manager ist nicht geladen.",
         "error.unauthorized": "Dafür werden Administratorrechte benötigt.",
@@ -55,28 +54,25 @@
         "label.empty_weight": "Leergewicht",
         "label.opened_at": "Angebrochen am",
         "label.spool_index": "Rolle {index}",
+        "overview.title": "Bestand",
+        "overview.new_item": "Neuer Eintrag",
+        "overview.setup": "Setup",
         "overview.empty.title": "Noch kein Filament erfasst",
-        "overview.empty.text": "Lege deinen ersten Eintrag im Bereich Verwalten an.",
-        "overview.empty.action": "Zum Bereich Verwalten",
+        "overview.empty.text": "Erfasse deine erste Rolle — Hersteller und Sorten sind bereits vorbelegt.",
+        "overview.empty.action": "Neuer Eintrag",
         "overview.no_match.title": "Keine Treffer",
         "overview.no_match.text": "Für die gewählten Filter gibt es keine Einträge.",
         "overview.no_match.action": "Filter zurücksetzen",
-        "manage.title": "Bestand verwalten",
-        "manage.new_item": "Neuer Eintrag",
-        "manage.sealed_count": "OVP-Rollen",
-        "manage.open_spool": "Rolle anbrechen",
-        "manage.open_spools_title": "Angebrochene Rollen",
-        "manage.no_open_spools": "Keine angebrochene Rolle",
-        "manage.consume": "Aufgebraucht",
-        "manage.show_spools": "Angebrochene Rollen anzeigen",
-        "manage.hide_spools": "Angebrochene Rollen ausblenden",
-        "manage.copy_id": "ID für Automationen kopieren",
-        "manage.empty.title": "Noch kein Filament erfasst",
-        "manage.empty.text": "Erfasse deine erste Rolle — Hersteller und Sorten sind bereits vorbelegt.",
-        "manage.delete_title": "Eintrag löschen?",
-        "manage.delete_text": "{name} wird mit allen angebrochenen Rollen entfernt. Das lässt sich nicht rückgängig machen.",
-        "manage.consume_title": "Rolle als aufgebraucht markieren?",
-        "manage.consume_text": "Die angebrochene Rolle von {name} wird aus dem Bestand entfernt.",
+        "setup.sealed_count": "OVP-Rollen",
+        "setup.open_spool": "Rolle anbrechen",
+        "setup.open_spools_title": "Angebrochene Rollen",
+        "setup.no_open_spools": "Keine angebrochene Rolle",
+        "setup.consume": "Aufgebraucht",
+        "setup.copy_id": "ID für Automationen kopieren",
+        "setup.delete_title": "Eintrag löschen?",
+        "setup.delete_text": "{name} wird mit allen angebrochenen Rollen entfernt. Das lässt sich nicht rückgängig machen.",
+        "setup.consume_title": "Rolle als aufgebraucht markieren?",
+        "setup.consume_text": "Die angebrochene Rolle von {name} wird aus dem Bestand entfernt.",
         "dialog.item.new": "Neuer Filament-Eintrag",
         "dialog.item.edit": "Eintrag bearbeiten",
         "field.manufacturer": "Hersteller",
@@ -104,7 +100,7 @@
         "field.temp_hint": "Leer lassen, um den Standard der Sorte zu verwenden.",
         "field.remaining_hint": "Die Restmenge wird in Gramm geführt; der Prozentwert ergibt sich daraus und lässt sich nicht direkt ändern.",
         "field.gross_weight_hint": "Komplette Rolle wiegen und den Wert hier eintragen — die Restmenge in Gramm ergibt sich daraus.",
-        "field.gross_weight_disabled": "Hinterlege das Leergewicht beim Hersteller in den Stammdaten, dann kannst du hier den Wiegewert eingeben.",
+        "field.gross_weight_disabled": "Trage zuerst das Leergewicht weiter oben ein und speichere einmal, dann lässt sich hier der Wiegewert eingeben.",
         "admin.title": "Stammdaten",
         "admin.manufacturers": "Hersteller",
         "admin.materials": "Filament-Sorten",
@@ -137,13 +133,16 @@
         "label.not_measured": "noch nicht gewogen",
         "field.ace_material_type": "ACE-Materialtyp",
         "field.ace_material_type_auto": "Automatisch (aus dem Namen)",
-        "field.ace_material_type_hint": "Nur nötig, wenn die automatische Zuordnung zum Filament im ACE-Slot nicht passt."
+        "field.ace_material_type_hint": "Nur nötig, wenn die automatische Zuordnung zum Filament im ACE-Slot nicht passt.",
+        "setup.section_stock": "Bestand",
+        "setup.section_tare": "Leergewicht der Rolle",
+        "setup.tare_hint": "Gilt für alle Farben dieser Rollensorte. Nach dem Eintragen einmal speichern — danach nimmt das Feld für den Wiegewert unten einen Wert an.",
+        "setup.no_spool_type": "Noch keine Rollensorte zu diesem Eintrag."
       },
       en: {
         "app.title": "Filament Manager",
         "app.loading": "Loading …",
         "tab.overview": "Overview",
-        "tab.manage": "Manage",
         "tab.admin": "Admin",
         "action.save": "Save",
         "action.cancel": "Cancel",
@@ -156,7 +155,7 @@
         "error.in_use": "Still in use and therefore cannot be deleted.",
         "error.not_found": "The record was not found.",
         "error.no_sealed_spools": "There is no sealed spool left.",
-        "error.no_empty_weight": "No empty weight is set for this spool type. Add it in the admin area on the manufacturer.",
+        "error.no_empty_weight": "No empty weight is set for this spool type. Add it in the entry's setup dialog.",
         "error.invalid_data": "Please fill in all required fields.",
         "error.not_loaded": "Filament Manager is not loaded.",
         "error.unauthorized": "This requires administrator rights.",
@@ -193,28 +192,25 @@
         "label.empty_weight": "Empty weight",
         "label.opened_at": "Opened on",
         "label.spool_index": "Spool {index}",
+        "overview.title": "Inventory",
+        "overview.new_item": "New entry",
+        "overview.setup": "Setup",
         "overview.empty.title": "No filament recorded yet",
-        "overview.empty.text": "Create your first entry in the manage area.",
-        "overview.empty.action": "Go to manage",
+        "overview.empty.text": "Add your first spool — manufacturers and types are already prepared.",
+        "overview.empty.action": "New entry",
         "overview.no_match.title": "No matches",
         "overview.no_match.text": "No entries match the selected filters.",
         "overview.no_match.action": "Reset filters",
-        "manage.title": "Manage inventory",
-        "manage.new_item": "New entry",
-        "manage.sealed_count": "Sealed spools",
-        "manage.open_spool": "Open a spool",
-        "manage.open_spools_title": "Opened spools",
-        "manage.no_open_spools": "No opened spool",
-        "manage.consume": "Used up",
-        "manage.show_spools": "Show opened spools",
-        "manage.hide_spools": "Hide opened spools",
-        "manage.copy_id": "Copy ID for automations",
-        "manage.empty.title": "No filament recorded yet",
-        "manage.empty.text": "Add your first spool — manufacturers and types are already prepared.",
-        "manage.delete_title": "Delete entry?",
-        "manage.delete_text": "{name} will be removed together with all opened spools. This cannot be undone.",
-        "manage.consume_title": "Mark spool as used up?",
-        "manage.consume_text": "The opened spool of {name} will be removed from the inventory.",
+        "setup.sealed_count": "Sealed spools",
+        "setup.open_spool": "Open a spool",
+        "setup.open_spools_title": "Opened spools",
+        "setup.no_open_spools": "No opened spool",
+        "setup.consume": "Used up",
+        "setup.copy_id": "Copy ID for automations",
+        "setup.delete_title": "Delete entry?",
+        "setup.delete_text": "{name} will be removed together with all opened spools. This cannot be undone.",
+        "setup.consume_title": "Mark spool as used up?",
+        "setup.consume_text": "The opened spool of {name} will be removed from the inventory.",
         "dialog.item.new": "New filament entry",
         "dialog.item.edit": "Edit entry",
         "field.manufacturer": "Manufacturer",
@@ -242,7 +238,7 @@
         "field.temp_hint": "Leave empty to use the default of the filament type.",
         "field.remaining_hint": "The remaining amount is kept in grams; the percentage follows from it and cannot be edited directly.",
         "field.gross_weight_hint": "Weigh the whole spool and enter the reading — the remaining grams follow from it.",
-        "field.gross_weight_disabled": "Set the empty weight on the manufacturer in the master data, then you can enter a reading here.",
+        "field.gross_weight_disabled": "Enter the empty weight above and save once, then you can enter a reading here.",
         "admin.title": "Master data",
         "admin.manufacturers": "Manufacturers",
         "admin.materials": "Filament types",
@@ -275,7 +271,11 @@
         "label.not_measured": "not measured yet",
         "field.ace_material_type": "ACE material type",
         "field.ace_material_type_auto": "Automatic (from the name)",
-        "field.ace_material_type_hint": "Only needed when the automatic match against the filament in an ACE slot gets it wrong."
+        "field.ace_material_type_hint": "Only needed when the automatic match against the filament in an ACE slot gets it wrong.",
+        "setup.section_stock": "Stock",
+        "setup.section_tare": "Empty spool weight",
+        "setup.tare_hint": "Applies to every colour of this spool type. Save once after entering it — the reading field below then accepts a value.",
+        "setup.no_spool_type": "No spool type for this entry yet."
       }
     },
     n = Object.keys(t);
@@ -311,33 +311,14 @@
       a = Number(t || 0);
     return null == n || a <= 0 ? null : Math.round(10 * Math.min(100, Math.max(0, Number(n) / a * 100))) / 10;
   }
-  function m(e) {
+  function p(e) {
     const t = Number(e.spool_net_weight_g || 0);
     return Number(e.sealed_count || 0) * t + (e.open_spools || []).reduce((e, t) => e + function (e) {
       const t = e.remaining_grams;
       return null == t ? 0 : Number(t);
     }(t), 0);
   }
-  function p(e, t, n) {
-    const a = (t.q || "").trim().toLowerCase(),
-      i = e.filter(e => {
-        if (t.manufacturer && e.manufacturer_id !== t.manufacturer) return !1;
-        if (t.material && e.material_id !== t.material) return !1;
-        if ("sealed" === t.condition && Number(e.sealed_count || 0) < 1) return !1;
-        if ("open" === t.condition && (e.open_spools || []).length < 1) return !1;
-        if (!a) return !0;
-        return [n.manufacturerName(e.manufacturer_id), n.materialName(e.material_id), e.color_name, e.location, e.notes].join(" ").toLowerCase().includes(a);
-      }),
-      o = {
-        manufacturer: (e, t) => n.manufacturerName(e.manufacturer_id).localeCompare(n.manufacturerName(t.manufacturer_id)) || n.materialName(e.material_id).localeCompare(n.materialName(t.material_id)),
-        material: (e, t) => n.materialName(e.material_id).localeCompare(n.materialName(t.material_id)) || n.manufacturerName(e.manufacturer_id).localeCompare(n.manufacturerName(t.manufacturer_id)),
-        color: (e, t) => (e.color_name || "").localeCompare(t.color_name || ""),
-        remaining: (e, t) => m(e) - m(t),
-        updated: (e, t) => String(t.updated_at || "").localeCompare(String(e.updated_at || ""))
-      }[t.sort || "manufacturer"];
-    return i.slice().sort((e, t) => o(e, t) || (e.color_name || "").localeCompare(t.color_name || ""));
-  }
-  class u {
+  class m {
     constructor(e) {
       this.value = e;
     }
@@ -345,53 +326,50 @@
       return this.value;
     }
   }
-  function h(e) {
+  function u(e) {
     return String(e).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
   }
   function _(e) {
-    return null == e || !1 === e || !0 === e ? "" : e instanceof u ? e.value : Array.isArray(e) ? e.map(_).join("") : h(e);
+    return null == e || !1 === e || !0 === e ? "" : e instanceof m ? e.value : Array.isArray(e) ? e.map(_).join("") : u(e);
   }
-  const g = e => new u(String(e));
-  function f(e, ...t) {
+  const h = e => new m(String(e));
+  function g(e, ...t) {
     let n = e[0];
     for (let a = 0; a < t.length; a += 1) n += _(t[a]) + e[a + 1];
-    return new u(n);
+    return new m(n);
   }
-  let b = "en",
+  let f = "en",
     v = "EUR";
-  function y(e, t = 0) {
-    return null == e || Number.isNaN(Number(e)) ? "–" : new Intl.NumberFormat(b, {
+  function b(e, t = 0) {
+    return null == e || Number.isNaN(Number(e)) ? "–" : new Intl.NumberFormat(f, {
       minimumFractionDigits: t,
       maximumFractionDigits: t
     }).format(Number(e));
   }
-  function w(e) {
+  function y(e) {
     if (null == e) return "–";
     const t = Number(e);
-    return t >= 1e3 ? `${y(t / 1e3, 2)} kg` : `${y(t, 0)} g`;
+    return t >= 1e3 ? `${b(t / 1e3, 2)} kg` : `${b(t, 0)} g`;
   }
-  function x(e) {
+  function w(e) {
     if (null == e || "" === e) return "–";
     try {
-      return new Intl.NumberFormat(b, {
+      return new Intl.NumberFormat(f, {
         style: "currency",
         currency: v
       }).format(Number(e));
     } catch {
-      return `${y(e, 2)} ${v}`;
+      return `${b(e, 2)} ${v}`;
     }
   }
-  function $(e) {
+  function x(e) {
     if (!e) return "–";
     const t = new Date(e);
-    return Number.isNaN(t.getTime()) ? "–" : new Intl.DateTimeFormat(b, {
+    return Number.isNaN(t.getTime()) ? "–" : new Intl.DateTimeFormat(f, {
       dateStyle: "medium"
     }).format(t);
   }
-  function k(e) {
-    return `${y(e, Number(e) % 1 == 0 ? 0 : 2)} mm`;
-  }
-  const z = {
+  const $ = {
     plus: "M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z",
     minus: "M19,13H5V11H19V13Z",
     pencil: "M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z",
@@ -403,9 +381,9 @@
     menu: "M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z",
     scissors: "M19,3L13,9L15,11L22,4V3M12,12.5A0.5,0.5 0 0,1 11.5,12A0.5,0.5 0 0,1 12,11.5A0.5,0.5 0 0,1 12.5,12A0.5,0.5 0 0,1 12,12.5M6,20A2,2 0 0,1 4,18C4,16.89 4.9,16 6,16A2,2 0 0,1 8,18C8,19.11 7.1,20 6,20M6,8A2,2 0 0,1 4,6C4,4.89 4.9,4 6,4A2,2 0 0,1 8,6C8,7.11 7.1,8 6,8M9.64,7.64C9.87,7.14 10,6.59 10,6A4,4 0 0,0 6,2A4,4 0 0,0 2,6A4,4 0 0,0 6,10C6.59,10 7.14,9.87 7.64,9.64L10,12L7.64,14.36C7.14,14.13 6.59,14 6,14A4,4 0 0,0 2,18A4,4 0 0,0 6,22A4,4 0 0,0 10,18C10,17.41 9.87,16.86 9.64,16.36L12,14L19,21H22V20L9.64,7.64Z"
   };
-  function L(e, t = 20) {
-    const n = z[e];
-    return n ? f`<svg
+  function k(e, t = 20) {
+    const n = $[e];
+    return n ? g`<svg
     viewBox="0 0 24 24"
     width="${t}"
     height="${t}"
@@ -413,27 +391,27 @@
     aria-hidden="true"
   >
     <path d="${n}"></path>
-  </svg>` : g("");
+  </svg>` : h("");
   }
-  function N(e, t = !1) {
+  function z(e, t = !1) {
     const n = function (e) {
       const t = String(e || "").replace("#", "");
       if (6 !== t.length) return .5;
       const [n, a, i] = [0, 2, 4].map(e => parseInt(t.slice(e, e + 2), 16) / 255);
       return .2126 * n + .7152 * a + .0722 * i;
     }(e) > .75 ? "rgba(0,0,0,.35)" : "rgba(0,0,0,.12)";
-    return f`<span
+    return g`<span
     class="swatch ${t ? "small" : ""}"
     style="background:${e}; border-color:${n}"
   ></span>`;
   }
-  function A(e, t, n) {
-    return f`<label class="field">
+  function N(e, t, n) {
+    return g`<label class="field">
     <span class="label-text">${e}</span>
-    ${t} ${n ? f`<span class="hint">${n}</span>` : ""}
+    ${t} ${n ? g`<span class="hint">${n}</span>` : ""}
   </label>`;
   }
-  function S({
+  function L({
     name: e,
     label: t,
     value: n = "",
@@ -445,20 +423,20 @@
     step: s,
     title: d = "",
     disabled: c = !1,
-    extraClass: m = ""
+    extraClass: p = ""
   }) {
-    const p = [void 0 !== r ? `min="${h(r)}"` : "", void 0 !== l ? `max="${h(l)}"` : "", void 0 !== s ? `step="${h(s)}"` : "", d ? `title="${h(d)}"` : "", c ? "disabled" : ""].join(" ");
-    return A(t, f`<input
-    class="${m}"
+    const m = [void 0 !== r ? `min="${u(r)}"` : "", void 0 !== l ? `max="${u(l)}"` : "", void 0 !== s ? `step="${u(s)}"` : "", d ? `title="${u(d)}"` : "", c ? "disabled" : ""].join(" ");
+    return N(t, g`<input
+    class="${p}"
     type="${a}"
     name="${e}"
     data-field="${e}"
     value="${n ?? ""}"
     placeholder="${i}"
-    ${g(p)}
+    ${h(m)}
   />`, o);
   }
-  function C({
+  function A({
     name: e,
     label: t,
     value: n = "",
@@ -466,78 +444,78 @@
     hint: i = "",
     placeholder: o = ""
   }) {
-    return A(t, f`<select name="${e}" data-field="${e}">
-    ${o ? f`<option value="" ${g(n ? "" : "selected")}>${o}</option>` : ""}
-    ${a.map(e => f`<option
+    return N(t, g`<select name="${e}" data-field="${e}">
+    ${o ? g`<option value="" ${h(n ? "" : "selected")}>${o}</option>` : ""}
+    ${a.map(e => g`<option
           value="${e.value}"
-          ${g(String(e.value) === String(n) ? "selected" : "")}
+          ${h(String(e.value) === String(n) ? "selected" : "")}
         >
           ${e.label}
         </option>`)}
   </select>`, i);
   }
-  function E(e) {
+  function S(e) {
     const t = Math.max(0, Math.min(100, Number(e) || 0));
-    if (null == e) return f`<span class="bar unknown"></span>`;
-    return f`<span class="bar ${t <= 15 ? "low" : t <= 40 ? "mid" : ""}"><span style="width:${t}%"></span></span>`;
+    if (null == e) return g`<span class="bar unknown"></span>`;
+    return g`<span class="bar ${t <= 15 ? "low" : t <= 40 ? "mid" : ""}"><span style="width:${t}%"></span></span>`;
   }
-  function D({
+  function E({
     emoji: e,
     title: t,
     text: n,
     actionLabel: a,
     action: i
   }) {
-    return f`<div class="empty">
+    return g`<div class="empty">
     <div class="big">${e}</div>
     <h3>${t}</h3>
     <p>${n}</p>
-    ${a ? f`<button class="btn" data-action="${i}">${a}</button>` : ""}
+    ${a ? g`<button class="btn" data-action="${i}">${a}</button>` : ""}
   </div>`;
   }
-  function M({
+  function C({
     confirmLabel: e,
     danger: t = !1,
     extra: n
   }) {
-    return f`${n || ""}
+    return g`${n || ""}
     <span class="spacer"></span>
     <button class="btn text" data-action="dialog-cancel">${r("action.cancel")}</button>
     <button class="btn ${t ? "danger" : ""}" data-action="dialog-confirm">
       ${e}
     </button>`;
   }
-  function H(e) {
-    return f`<div class="summary">
+  function D(e) {
+    return g`<div class="summary">
     ${[{
-      value: y(e.total_spools),
+      value: b(e.total_spools),
       label: r("stat.total_spools")
     }, {
-      value: y(e.sealed_spools),
+      value: b(e.sealed_spools),
       label: r("stat.sealed")
     }, {
-      value: y(e.open_spools),
+      value: b(e.open_spools),
       label: r("stat.open")
     }, {
-      value: w(e.total_grams),
+      value: y(e.total_grams),
       label: r("stat.weight")
     }, {
-      value: x(e.inventory_value),
+      value: w(e.inventory_value),
       label: r("stat.value")
     }, {
-      value: y(e.entry_count),
+      value: b(e.entry_count),
       label: r("stat.entries")
-    }].map(e => f`<div class="stat">
+    }].map(e => g`<div class="stat">
         <div class="value">${e.value}</div>
         <div class="label">${e.label}</div>
       </div>`)}
   </div>`;
   }
-  function F(e, t) {
-    const n = Number(e.spool_net_weight_g || 0),
-      a = Number(e.sealed_count || 0),
-      i = e.open_spools || [],
-      o = function (e, t) {
+  function M(e, t, n) {
+    const a = Number(e.spool_net_weight_g || 0),
+      i = Number(e.sealed_count || 0),
+      o = e.open_spools || [],
+      l = function (e, t) {
         const n = t.material(e.material_id);
         return {
           nozzle: e.nozzle_temp ?? n?.nozzle_temp ?? null,
@@ -546,71 +524,104 @@
           bedIsDefault: null === e.bed_temp || void 0 === e.bed_temp
         };
       }(e, t),
-      l = s(e, t),
-      d = [e.location ? `${r("label.location")}: ${e.location}` : "", null != l ? `${r("label.empty_weight")}: ${y(l)} g` : "", null !== o.nozzle ? `${r("label.nozzle")}: ${o.nozzle} °C` : "", null !== o.bed ? `${r("label.bed")}: ${o.bed} °C` : "", null !== e.price && void 0 !== e.price ? `${r("label.price")}: ${x(e.price)}` : "", e.purchase_date ? `${r("label.purchased")}: ${$(e.purchase_date)}` : ""].filter(Boolean);
-    return f`<div class="card spool-card">
+      d = s(e, t),
+      m = [e.location ? `${r("label.location")}: ${e.location}` : "", null != d ? `${r("label.empty_weight")}: ${b(d)} g` : "", null !== l.nozzle ? `${r("label.nozzle")}: ${l.nozzle} °C` : "", null !== l.bed ? `${r("label.bed")}: ${l.bed} °C` : "", null !== e.price && void 0 !== e.price ? `${r("label.price")}: ${w(e.price)}` : "", e.purchase_date ? `${r("label.purchased")}: ${x(e.purchase_date)}` : ""].filter(Boolean);
+    return g`<div class="card spool-card">
     <div class="spool-head">
-      ${N(e.color_hex)}
+      ${z(e.color_hex)}
       <div class="spool-title">
         <div class="name">
           ${t.manufacturerName(e.manufacturer_id)}
           ${t.materialName(e.material_id)}
         </div>
         <div class="sub">
-          ${e.color_name || "–"} · ${k(e.diameter)} ·
-          ${y(n)} g
+          ${e.color_name || "–"} · ${(u = e.diameter, `${b(u, Number(u) % 1 == 0 ? 0 : 2)} mm`)} ·
+          ${b(a)} g
         </div>
       </div>
-      <div class="chip muted">${w(m(e))}</div>
+      <div class="chip muted">${y(p(e))}</div>
     </div>
 
     <div class="chips">
-      ${a > 0 ? f`<span class="chip sealed">${r("label.sealed", {
-      count: a
+      ${i > 0 ? g`<span class="chip sealed">${r("label.sealed", {
+      count: i
     })}</span>` : ""}
-      ${i.length > 0 ? f`<span class="chip open">${r("label.open_spools", {
-      count: i.length
+      ${o.length > 0 ? g`<span class="chip open">${r("label.open_spools", {
+      count: o.length
     })}</span>` : ""}
       ${0 === function (e) {
       return Number(e.sealed_count || 0) + (e.open_spools || []).length;
-    }(e) ? f`<span class="chip muted">${r("label.no_stock")}</span>` : ""}
+    }(e) ? g`<span class="chip muted">${r("label.no_stock")}</span>` : ""}
     </div>
 
-    ${i.map((e, t) => {
-      const a = c(e, n),
+    ${o.map((e, t) => {
+      const n = c(e, a),
         i = null !== e.remaining_grams && void 0 !== e.remaining_grams;
-      return f`<div class="open-row">
+      return g`<div class="open-row">
         <span class="chip muted">${r("label.spool_index", {
         index: t + 1
       })}</span>
-        ${E(a)}
+        ${S(n)}
         <span class="amount">
-          ${i ? `${y(a, 0)} % · ${y(e.remaining_grams)} g` : r("label.not_measured")}
+          ${i ? `${b(n, 0)} % · ${b(e.remaining_grams)} g` : r("label.not_measured")}
         </span>
       </div>`;
     })}
-    ${d.length ? f`<div class="meta">${d.map(e => f`<span>${e}</span>`)}</div>` : ""}
-    ${e.notes ? f`<div class="meta"><span>${e.notes}</span></div>` : ""}
+    ${m.length ? g`<div class="meta">${m.map(e => g`<span>${e}</span>`)}</div>` : ""}
+    ${e.notes ? g`<div class="meta"><span>${e.notes}</span></div>` : ""}
+
+    <div class="card-actions">
+      <button
+        class="btn secondary"
+        data-action="setup-item"
+        data-item="${e.id}"
+        ${h(n ? "" : "disabled")}
+      >
+        ${k("pencil")} ${r("overview.setup")}
+      </button>
+    </div>
   </div>`;
+    var u;
   }
-  function R(e) {
+  function H(e) {
     const {
         data: t,
         state: n,
-        lookup: a
+        lookup: a,
+        isAdmin: i
       } = e,
-      i = t.items || [];
-    if (!i.length) return f`${H(t.summary)}
-    ${D({
+      o = t.items || [],
+      l = g`<div class="section-title">
+    <span>${r("overview.title")}</span>
+    <span class="spacer"></span>
+    <button class="btn" data-action="new-item" ${h(i ? "" : "disabled")}>
+      ${k("plus")} ${r("overview.new_item")}
+    </button>
+  </div>`,
+      s = i ? "" : g`<div class="card" style="margin-bottom:12px">${r("readonly.notice")}</div>`;
+    if (!o.length) return g`${l} ${s} ${D(t.summary)}
+    ${E({
       emoji: "🧵",
       title: r("overview.empty.title"),
       text: r("overview.empty.text"),
-      actionLabel: e.isAdmin ? r("overview.empty.action") : "",
-      action: "goto-manage"
+      actionLabel: i ? r("overview.empty.action") : "",
+      action: "new-item"
     })}`;
-    const o = p(i, n.filters, a);
-    return f`${H(t.summary)} ${function (e, t) {
-      return f`<div class="filters">
+    const d = function (e, t, n) {
+      const a = (t.q || "").trim().toLowerCase(),
+        i = e.filter(e => (!t.manufacturer || e.manufacturer_id === t.manufacturer) && (!t.material || e.material_id === t.material) && !("sealed" === t.condition && Number(e.sealed_count || 0) < 1) && !("open" === t.condition && (e.open_spools || []).length < 1) && (!a || [n.manufacturerName(e.manufacturer_id), n.materialName(e.material_id), e.color_name, e.location, e.notes].join(" ").toLowerCase().includes(a))),
+        o = {
+          manufacturer: (e, t) => n.manufacturerName(e.manufacturer_id).localeCompare(n.manufacturerName(t.manufacturer_id)) || n.materialName(e.material_id).localeCompare(n.materialName(t.material_id)),
+          material: (e, t) => n.materialName(e.material_id).localeCompare(n.materialName(t.material_id)) || n.manufacturerName(e.manufacturer_id).localeCompare(n.manufacturerName(t.manufacturer_id)),
+          color: (e, t) => (e.color_name || "").localeCompare(t.color_name || ""),
+          remaining: (e, t) => p(e) - p(t),
+          updated: (e, t) => String(t.updated_at || "").localeCompare(String(e.updated_at || ""))
+        }[t.sort || "manufacturer"];
+      return i.slice().sort((e, t) => o(e, t) || (e.color_name || "").localeCompare(t.color_name || ""));
+    }(o, n.filters, a);
+    return g`${l} ${s} ${D(t.summary)}
+  ${function (e, t) {
+      return g`<div class="filters">
     <div class="grow">
       <input
         type="search"
@@ -622,7 +633,7 @@
     </div>
     <select data-filter="manufacturer" aria-label="${r("filter.manufacturer")}">
       <option value="">${r("filter.manufacturer")}: ${r("filter.all")}</option>
-      ${e.manufacturers.map(e => f`<option
+      ${e.manufacturers.map(e => g`<option
           value="${e.id}"
           ${t.manufacturer === e.id ? " selected" : ""}
         >
@@ -631,7 +642,7 @@
     </select>
     <select data-filter="material" aria-label="${r("filter.material")}">
       <option value="">${r("filter.material")}: ${r("filter.all")}</option>
-      ${e.materials.map(e => f`<option
+      ${e.materials.map(e => g`<option
           value="${e.id}"
           ${t.material === e.id ? " selected" : ""}
         >
@@ -648,13 +659,13 @@
       </option>
     </select>
     <select data-filter="sort" aria-label="${r("filter.sort")}">
-      ${["manufacturer", "material", "color", "remaining", "updated"].map(e => f`<option value="${e}" ${t.sort === e ? " selected" : ""}>
+      ${["manufacturer", "material", "color", "remaining", "updated"].map(e => g`<option value="${e}" ${t.sort === e ? " selected" : ""}>
           ${r("filter.sort")}: ${r(`sort.${e}`)}
         </option>`)}
     </select>
   </div>`;
     }(t, n.filters)}
-  ${o.length ? f`<div class="grid">${o.map(e => F(e, a))}</div>` : D({
+  ${d.length ? g`<div class="grid">${d.map(e => M(e, a, i))}</div>` : E({
       emoji: "🔍",
       title: r("overview.no_match.title"),
       text: r("overview.no_match.text"),
@@ -662,134 +673,37 @@
       action: "reset-filters"
     })}`;
   }
-  const T = [200, 250, 500, 750, 1e3, 2e3, 3e3],
-    V = [1.75, 2.85, 3];
-  function B(e, t) {
-    const {
-        lookup: n,
-        state: a,
-        isAdmin: i
-      } = t,
-      o = s(e, n),
-      l = null != o,
-      d = Number(e.sealed_count || 0),
-      p = e.open_spools || [],
-      u = a.expanded.has(e.id);
-    return f`<div class="row" data-item="${e.id}">
-    <div class="row-main">
-      ${N(e.color_hex)}
-      <div class="grow">
-        <div class="name">
-          ${n.manufacturerName(e.manufacturer_id)}
-          ${n.materialName(e.material_id)} · ${e.color_name || "–"}
-        </div>
-        <div class="sub hint">
-          ${k(e.diameter)} · ${y(e.spool_net_weight_g)} g ·
-          ${w(m(e))}${l ? ` · ${r("label.empty_weight")} ${y(o)} g` : ""}${e.location ? ` · ${e.location}` : ""}
-        </div>
-      </div>
-
-      <div class="row-actions">
-        <span class="hint">${r("manage.sealed_count")}</span>
-        <span class="counter">
-          <button
-            class="icon-btn plain"
-            data-action="sealed-minus"
-            data-item="${e.id}"
-            title="-1"
-            ${g(!i || d < 1 ? "disabled" : "")}
-          >
-            ${L("minus")}
-          </button>
-          <span class="num">${d}</span>
-          <button
-            class="icon-btn plain"
-            data-action="sealed-plus"
-            data-item="${e.id}"
-            title="+1"
-            ${g(i ? "" : "disabled")}
-          >
-            ${L("plus")}
-          </button>
-        </span>
-
-        <button
-          class="btn secondary"
-          data-action="open-spool"
-          data-item="${e.id}"
-          ${g(!i || d < 1 ? "disabled" : "")}
-        >
-          ${r("manage.open_spool")}
-        </button>
-
-        <button
-          class="btn text"
-          data-action="toggle-spools"
-          data-item="${e.id}"
-          title="${r(u ? "manage.hide_spools" : "manage.show_spools")}"
-          ${g(p.length ? "" : "disabled")}
-        >
-          ${L(u ? "chevronUp" : "chevronDown")}
-          ${p.length ? r("label.open_spools", {
-      count: p.length
-    }) : r("manage.no_open_spools")}
-        </button>
-
-        <button
-          class="icon-btn"
-          data-action="edit-item"
-          data-item="${e.id}"
-          title="${r("action.edit")}"
-          ${g(i ? "" : "disabled")}
-        >
-          ${L("pencil")}
-        </button>
-        <button
-          class="icon-btn danger"
-          data-action="delete-item"
-          data-item="${e.id}"
-          title="${r("action.delete")}"
-          ${g(i ? "" : "disabled")}
-        >
-          ${L("delete")}
-        </button>
-        <button
-          class="id-badge"
-          data-action="copy-id"
-          data-id="${e.id}"
-          title="${r("manage.copy_id")}"
-        >
-          ${e.id}
-        </button>
-      </div>
+  const R = [200, 250, 500, 750, 1e3, 2e3, 3e3],
+    F = [1.75, 2.85, 3],
+    T = "margin:8px 0 4px";
+  function V(e, t) {
+    const n = e.open_spools || [],
+      a = null != t;
+    return g`<div class="span-2">
+    <div class="section-title" style="${T}">${r("setup.open_spools_title")}</div>
+    <div class="hint">
+      ${r("field.remaining_hint")}
+      ${a ? ` ${r("field.gross_weight_hint")}` : ` ${r("field.gross_weight_disabled")}`}
     </div>
-
-    ${u && p.length ? f`<div class="sub-list">
-          <div class="section-title" style="margin:0">
-            ${r("manage.open_spools_title")}
-          </div>
-          <div class="hint">
-            ${r("field.remaining_hint")}
-            ${l ? ` ${r("field.gross_weight_hint")}` : ` ${r("field.gross_weight_disabled")}`}
-          </div>
-          ${p.map((t, n) => function (e, t, n, a) {
+    ${n.length ? g`<div class="sub-list">
+          ${n.map((n, a) => function (e, t, n, a) {
       const i = null != a,
         o = c(t, Number(e.spool_net_weight_g || 0));
-      return f`<div class="spool-edit" data-item="${e.id}" data-spool="${t.id}">
+      return g`<div class="spool-edit" data-item="${e.id}" data-spool="${t.id}">
     <div class="grow">
       <div class="open-row">
         <span class="chip muted">${r("label.spool_index", {
         index: n + 1
       })}</span>
-        ${E(o)}
-        <span class="amount">${null === o ? "–" : `${y(o, 0)} %`}</span>
+        ${S(o)}
+        <span class="amount">${null === o ? "–" : `${b(o, 0)} %`}</span>
       </div>
       <div class="hint">
-        ${r("label.opened_at")}: ${$(t.opened_at)}
+        ${r("label.opened_at")}: ${x(t.opened_at)}
       </div>
     </div>
     <div class="num-field">
-      ${S({
+      ${L({
         name: "remaining_grams",
         label: r("field.remaining_grams"),
         type: "number",
@@ -799,7 +713,7 @@
       })}
     </div>
     <div class="num-field">
-      ${S({
+      ${L({
         name: "gross_weight_g",
         label: r("field.gross_weight"),
         type: "number",
@@ -812,7 +726,7 @@
       })}
     </div>
     <div class="grow">
-      ${S({
+      ${L({
         name: "note",
         label: r("field.note"),
         value: t.note
@@ -824,16 +738,17 @@
       data-item="${e.id}"
       data-spool="${t.id}"
     >
-      ${r("manage.consume")}
+      ${r("setup.consume")}
     </button>
   </div>`;
-    }(e, t, n, o))}
-        </div>` : ""}
+    }(e, n, a, t))}
+        </div>` : g`<div class="hint">${r("setup.no_open_spools")}</div>`}
   </div>`;
   }
-  function I(e, t) {
-    return f`<div class="form-grid">
-    ${C({
+  function I(e, t, n, a, i) {
+    const o = a ? s(a, n) : null;
+    return g`<div class="form-grid">
+    ${A({
       name: "manufacturer_id",
       label: r("field.manufacturer"),
       value: e.manufacturer_id,
@@ -843,7 +758,7 @@
         label: e.name
       }))
     })}
-    ${C({
+    ${A({
       name: "material_id",
       label: r("field.material"),
       value: e.material_id,
@@ -863,9 +778,9 @@
       hexValue: i,
       placeholder: o
     }) {
-      return f`<div class="color-field">
+      return g`<div class="color-field">
     <div class="grow">
-      ${S({
+      ${L({
         name: e,
         label: n,
         value: a,
@@ -884,26 +799,32 @@
     })}
     </div>
 
-    ${C({
+    ${A({
       name: "diameter",
       label: r("field.diameter"),
       value: e.diameter,
-      options: V.map(e => ({
+      options: F.map(e => ({
         value: e,
         label: `${e} mm`
       }))
     })}
-    ${C({
+    ${A({
       name: "spool_net_weight_g",
       label: r("field.net_weight"),
       value: e.spool_net_weight_g,
-      options: T.map(e => ({
+      options: R.map(e => ({
         value: e,
         label: `${e} g`
       }))
     })}
 
-    ${S({
+    ${L({
+      name: "location",
+      label: r("field.location"),
+      value: e.location,
+      placeholder: r("field.location_placeholder")
+    })}
+    ${a ? "" : L({
       name: "sealed_count",
       label: r("field.sealed_count"),
       type: "number",
@@ -911,14 +832,8 @@
       step: 1,
       value: e.sealed_count
     })}
-    ${S({
-      name: "location",
-      label: r("field.location"),
-      value: e.location,
-      placeholder: r("field.location_placeholder")
-    })}
 
-    ${S({
+    ${L({
       name: "price",
       label: r("field.price"),
       type: "number",
@@ -926,14 +841,14 @@
       step: .01,
       value: e.price
     })}
-    ${S({
+    ${L({
       name: "purchase_date",
       label: r("field.purchase_date"),
       type: "date",
       value: e.purchase_date
     })}
 
-    ${S({
+    ${L({
       name: "nozzle_temp",
       label: r("field.nozzle_temp"),
       type: "number",
@@ -943,7 +858,7 @@
       value: e.nozzle_temp,
       hint: r("field.temp_hint")
     })}
-    ${S({
+    ${L({
       name: "bed_temp",
       label: r("field.bed_temp"),
       type: "number",
@@ -961,7 +876,7 @@
       value: n = "",
       hint: a = ""
     }) {
-      return A(t, f`<textarea name="${e}" data-field="${e}">
+      return N(t, g`<textarea name="${e}" data-field="${e}">
 ${n || ""}</textarea
   >`, a);
     }({
@@ -970,23 +885,105 @@ ${n || ""}</textarea
       value: e.notes
     })}
     </div>
+
+    ${a ? function (e, t) {
+      const n = Number(e.sealed_count || 0);
+      return g`<div class="span-2">
+    <div class="section-title" style="${T}">${r("setup.section_stock")}</div>
+    <div class="row-main">
+      <div class="grow">
+        <div class="name">${r("setup.sealed_count")}</div>
+        <div class="sub hint">${r("label.sealed", {
+        count: n
+      })}</div>
+      </div>
+      <span class="counter">
+        <button
+          class="icon-btn plain"
+          data-action="sealed-minus"
+          data-item="${e.id}"
+          title="-1"
+          ${h(!t || n < 1 ? "disabled" : "")}
+        >
+          ${k("minus")}
+        </button>
+        <span class="num">${n}</span>
+        <button
+          class="icon-btn plain"
+          data-action="sealed-plus"
+          data-item="${e.id}"
+          title="+1"
+          ${h(t ? "" : "disabled")}
+        >
+          ${k("plus")}
+        </button>
+      </span>
+      <button
+        class="btn secondary"
+        data-action="open-spool"
+        data-item="${e.id}"
+        ${h(!t || n < 1 ? "disabled" : "")}
+      >
+        ${r("setup.open_spool")}
+      </button>
+    </div>
+  </div>`;
+    }(a, i) : ""}
+    ${a ? function (e, t, n) {
+      const a = n.spoolTypeFor(e),
+        i = a ? g`<div class="tare-list">
+        <div class="tare-row">
+          <div class="grow">
+            <div class="name">
+              ${n.manufacturerName(a.manufacturer_id)}
+              ${n.materialName(a.material_id)} ·
+              ${b(a.net_weight_g)} g
+            </div>
+          </div>
+          <div class="num-field">
+            ${L({
+          name: `spool_type__${a.id}`,
+          label: r("field.empty_weight_short"),
+          type: "number",
+          min: 0,
+          step: .1,
+          value: t[`spool_type__${a.id}`]
+        })}
+          </div>
+        </div>
+      </div>` : g`<div class="hint">${r("setup.no_spool_type")}</div>`;
+      return g`<div class="span-2">
+    <div class="section-title" style="${T}">${r("setup.section_tare")}</div>
+    <div class="hint">${r("setup.tare_hint")}</div>
+    ${i}
+  </div>`;
+    }(a, e, n) : ""}
+    ${a ? V(a, o) : ""}
+    ${a ? g`<div class="span-2">
+          <div class="hint">
+            ID:
+            <button class="id-badge" data-action="copy-id" data-id="${a.id}" title="${r("setup.copy_id")}">
+              ${a.id}
+            </button>
+          </div>
+        </div>` : ""}
   </div>`;
   }
-  function P({
+  function B({
     entry: e,
     subtitle: t,
     usage: n,
     editAction: a,
     deleteAction: i
   }) {
-    return f`<div class="row">
+    return g`<div class="row">
     <div class="row-main">
       <div class="grow">
         <div class="name">${e.name}</div>
         <div class="sub hint">${t}</div>
       </div>
       <div class="row-actions">
-        ${(o = n, 0 === o ? f`<span class="chip muted">${r("admin.unused")}</span>` : f`<span class="chip">${r(1 === o ? "admin.used_in_one" : "admin.used_in", {
+        ${(o = n, 0 === o ? g`<span class="chip muted">${r("admin.unused")}</span>` : g`<span class="chip">${r(1 === o ? "admin.used_in_one" : "admin.used_in", {
       count: o
     })}</span>`)}
         <button
@@ -995,23 +992,23 @@ ${n || ""}</textarea
           data-id="${e.id}"
           title="${r("action.edit")}"
         >
-          ${L("pencil")}
+          ${k("pencil")}
         </button>
         <button
           class="icon-btn danger"
           data-action="${i}"
           data-id="${e.id}"
           title="${r("action.delete")}"
-          ${g(n > 0 ? "disabled" : "")}
+          ${h(n > 0 ? "disabled" : "")}
         >
-          ${L("delete")}
+          ${k("delete")}
         </button>
       </div>
     </div>
   </div>`;
     var o;
   }
-  function q(e, t) {
+  function P(e, t) {
     const n = (t.spool_types || []).filter(t => t.manufacturer_id === e.id),
       a = n.filter(e => null === e.empty_weight_g || void 0 === e.empty_weight_g).length,
       i = e.website || "—";
@@ -1024,12 +1021,12 @@ ${n || ""}</textarea
     return `${null !== e.nozzle_temp || null !== e.bed_temp ? r("admin.temps", {
       nozzle: e.nozzle_temp ?? "–",
       bed: e.bed_temp ?? "–"
-    }) : r("admin.no_temps")}${null !== e.density && void 0 !== e.density ? ` · ${y(e.density, 2)} g/cm³` : ""}`;
+    }) : r("admin.no_temps")}${null !== e.density && void 0 !== e.density ? ` · ${b(e.density, 2)} g/cm³` : ""}`;
   }
   const j = ["PLA", "PETG", "ABS", "PACF", "PC", "ASA", "HIPS", "PA", "PLA_SE"];
-  const W = "anycubic_cloud_extended/filament",
-    K = ["overview", "manage", "admin"],
-    Z = {
+  const q = "anycubic_cloud_extended/filament",
+    W = ["overview", "admin"],
+    K = {
       manufacturers: [],
       materials: [],
       spool_types: [],
@@ -1051,11 +1048,11 @@ ${n || ""}</textarea
         by_manufacturer: {}
       }
     };
-  class G extends HTMLElement {
+  class Z extends HTMLElement {
     constructor() {
       super(), this.attachShadow({
         mode: "open"
-      }), this._hass = null, this._narrow = !1, this._panel = null, this._route = null, this._ready = !1, this._data = Z, this._unsubscribe = null, this._toastTimer = null, this._overlayKey = "", this._state = {
+      }), this._hass = null, this._narrow = !1, this._panel = null, this._route = null, this._ready = !1, this._data = K, this._unsubscribe = null, this._toastTimer = null, this._overlayKey = "", this._state = {
         view: "overview",
         filters: {
           q: "",
@@ -1063,13 +1060,8 @@ ${n || ""}</textarea
           material: "",
           condition: "",
           sort: "manufacturer"
-        },
-        manageFilters: {
-          q: "",
-          sort: "manufacturer"
-        },
-        expanded: new Set()
-      }, this._dialog = null, this.shadowRoot.innerHTML = '\n      <style>\n  :host {\n    display: block;\n    height: 100%;\n    background: var(--primary-background-color, #fafafa);\n    color: var(--primary-text-color, #212121);\n    font-family: var(--paper-font-body1_-_font-family, Roboto, sans-serif);\n    -moz-osx-font-smoothing: grayscale;\n    -webkit-font-smoothing: antialiased;\n  }\n\n  * { box-sizing: border-box; }\n\n  .app-header {\n    position: sticky;\n    top: 0;\n    z-index: 4;\n    background: var(--app-header-background-color, var(--primary-color, #03a9f4));\n    color: var(--app-header-text-color, #fff);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.16));\n  }\n\n  .toolbar {\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    height: 56px;\n    padding: 0 12px;\n    font-size: 20px;\n    font-weight: 400;\n  }\n\n  .toolbar .title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n\n  .menu-button {\n    display: none;\n    background: none;\n    border: none;\n    color: inherit;\n    cursor: pointer;\n    padding: 8px;\n    border-radius: 50%;\n    line-height: 0;\n  }\n  :host([narrow]) .menu-button { display: block; }\n  .menu-button:hover { background: rgba(255, 255, 255, 0.12); }\n\n  .tabs {\n    display: flex;\n    gap: 4px;\n    padding: 0 8px;\n    overflow-x: auto;\n    scrollbar-width: none;\n  }\n  .tabs::-webkit-scrollbar { display: none; }\n\n  .tab {\n    appearance: none;\n    background: none;\n    border: none;\n    border-bottom: 3px solid transparent;\n    color: inherit;\n    opacity: 0.72;\n    cursor: pointer;\n    font-size: 14px;\n    font-weight: 500;\n    letter-spacing: 0.4px;\n    padding: 12px 16px;\n    text-transform: uppercase;\n    white-space: nowrap;\n  }\n  .tab:hover { opacity: 1; }\n  .tab[aria-selected="true"] { opacity: 1; border-bottom-color: currentColor; }\n\n  .content {\n    max-width: 1240px;\n    margin: 0 auto;\n    padding: 16px;\n  }\n\n  /* ---------------- cards ---------------- */\n\n  .card {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));\n    border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, transparent);\n    padding: 16px;\n  }\n\n  .section-title {\n    font-size: 16px;\n    font-weight: 500;\n    margin: 24px 0 12px;\n    display: flex;\n    align-items: center;\n    gap: 8px;\n  }\n  .section-title:first-child { margin-top: 0; }\n  .section-title .spacer { flex: 1; }\n\n  /* ---------------- summary strip ---------------- */\n\n  .summary {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n    gap: 12px;\n    margin-bottom: 16px;\n  }\n\n  .stat {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));\n    padding: 14px 16px;\n  }\n  .stat .value {\n    font-size: 26px;\n    font-weight: 500;\n    line-height: 1.15;\n    color: var(--primary-text-color);\n  }\n  .stat .label {\n    font-size: 12px;\n    letter-spacing: 0.4px;\n    text-transform: uppercase;\n    color: var(--secondary-text-color, #727272);\n    margin-top: 4px;\n  }\n\n  /* ---------------- filter bar ---------------- */\n\n  .filters {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 8px;\n    align-items: center;\n    margin-bottom: 16px;\n  }\n  .filters .grow { flex: 1 1 200px; min-width: 160px; }\n\n  /* ---------------- form controls ---------------- */\n\n  input[type="text"],\n  input[type="number"],\n  input[type="date"],\n  input[type="search"],\n  select,\n  textarea {\n    width: 100%;\n    font: inherit;\n    font-size: 14px;\n    color: var(--primary-text-color);\n    background: var(--card-background-color, #fff);\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 8px;\n    padding: 9px 10px;\n  }\n  textarea { resize: vertical; min-height: 64px; }\n  input:disabled, select:disabled, textarea:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n    background: var(--divider-color, #e0e0e0);\n  }\n  input:focus, select:focus, textarea:focus {\n    outline: none;\n    border-color: var(--primary-color, #03a9f4);\n    box-shadow: 0 0 0 1px var(--primary-color, #03a9f4);\n  }\n  input[type="color"] {\n    width: 48px;\n    height: 40px;\n    padding: 2px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 8px;\n    background: var(--card-background-color, #fff);\n    cursor: pointer;\n  }\n  label.field { display: block; }\n  label.field > .label-text {\n    display: block;\n    font-size: 12px;\n    font-weight: 500;\n    color: var(--secondary-text-color, #727272);\n    margin-bottom: 4px;\n  }\n  .hint {\n    font-size: 12px;\n    color: var(--secondary-text-color, #727272);\n    margin-top: 4px;\n  }\n\n  button {\n    font: inherit;\n    cursor: pointer;\n  }\n\n  .btn {\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    gap: 6px;\n    border: none;\n    border-radius: 8px;\n    font-size: 14px;\n    font-weight: 500;\n    padding: 9px 16px;\n    background: var(--primary-color, #03a9f4);\n    color: var(--text-primary-color, #fff);\n  }\n  .btn:hover { filter: brightness(1.08); }\n  .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }\n\n  .btn.secondary {\n    background: transparent;\n    color: var(--primary-color, #03a9f4);\n    border: 1px solid var(--divider-color, #e0e0e0);\n  }\n  .btn.text {\n    background: transparent;\n    color: var(--primary-color, #03a9f4);\n    padding: 8px 10px;\n  }\n  .btn.danger { background: var(--error-color, #db4437); color: #fff; }\n  .btn.danger.text { background: transparent; color: var(--error-color, #db4437); }\n\n  .icon-btn {\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    width: 34px;\n    height: 34px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 50%;\n    background: transparent;\n    color: var(--primary-text-color);\n    font-size: 18px;\n    line-height: 1;\n    flex: 0 0 auto;\n  }\n  .icon-btn:hover { background: var(--divider-color, #e0e0e0); }\n  .icon-btn:disabled { opacity: 0.35; cursor: not-allowed; background: transparent; }\n  .icon-btn.plain { border: none; }\n  .icon-btn.danger { color: var(--error-color, #db4437); }\n\n  /* ---------------- inventory cards ---------------- */\n\n  .grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));\n    gap: 12px;\n  }\n\n  .spool-card { display: flex; flex-direction: column; gap: 10px; }\n\n  .spool-head { display: flex; align-items: flex-start; gap: 12px; }\n\n  .swatch {\n    width: 40px;\n    height: 40px;\n    border-radius: 50%;\n    flex: 0 0 auto;\n    border: 2px solid var(--divider-color, #e0e0e0);\n    box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.18);\n  }\n  .swatch.small { width: 26px; height: 26px; border-width: 1px; }\n\n  .spool-title { flex: 1; min-width: 0; }\n  .spool-title .name {\n    font-size: 15px;\n    font-weight: 500;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n  .spool-title .sub {\n    font-size: 13px;\n    color: var(--secondary-text-color, #727272);\n    margin-top: 2px;\n  }\n\n  .chips { display: flex; flex-wrap: wrap; gap: 6px; }\n  .chip {\n    display: inline-flex;\n    align-items: center;\n    gap: 4px;\n    font-size: 12px;\n    font-weight: 500;\n    padding: 3px 9px;\n    border-radius: 999px;\n    background: var(--divider-color, #e0e0e0);\n    color: var(--primary-text-color);\n    white-space: nowrap;\n  }\n  .chip.sealed { background: rgba(3, 169, 244, 0.16); color: var(--primary-color, #03a9f4); }\n  .chip.open { background: rgba(255, 152, 0, 0.18); color: #e08600; }\n  .chip.muted { background: transparent; border: 1px solid var(--divider-color, #e0e0e0); color: var(--secondary-text-color, #727272); }\n\n  .bar {\n    position: relative;\n    height: 8px;\n    border-radius: 999px;\n    background: var(--divider-color, #e0e0e0);\n    overflow: hidden;\n  }\n  .bar > span {\n    position: absolute;\n    inset: 0 auto 0 0;\n    border-radius: 999px;\n    background: var(--primary-color, #03a9f4);\n  }\n  .bar.unknown {\n    background: repeating-linear-gradient(\n      45deg,\n      var(--divider-color, #e0e0e0) 0 6px,\n      transparent 6px 12px\n    );\n  }\n  .bar.low > span { background: var(--error-color, #db4437); }\n  .bar.mid > span { background: var(--warning-color, #ffa600); }\n\n  .open-row {\n    display: flex;\n    align-items: center;\n    gap: 10px;\n    font-size: 13px;\n  }\n  .open-row .bar { flex: 1; }\n  .open-row .amount { color: var(--secondary-text-color, #727272); white-space: nowrap; }\n\n  .meta {\n    font-size: 12px;\n    color: var(--secondary-text-color, #727272);\n    display: flex;\n    flex-wrap: wrap;\n    gap: 4px 14px;\n  }\n\n  /* ---------------- lists (manage / admin) ---------------- */\n\n  .list { display: flex; flex-direction: column; gap: 8px; }\n\n  .row {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));\n    padding: 12px 14px;\n  }\n  .row-main {\n    display: flex;\n    align-items: center;\n    gap: 12px;\n    flex-wrap: wrap;\n  }\n  .row-main .grow { flex: 1 1 220px; min-width: 0; }\n  .row-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }\n\n  .counter {\n    display: inline-flex;\n    align-items: center;\n    gap: 6px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 999px;\n    padding: 2px;\n  }\n  .counter .num {\n    min-width: 34px;\n    text-align: center;\n    font-size: 15px;\n    font-weight: 500;\n    font-variant-numeric: tabular-nums;\n  }\n  .counter .icon-btn { width: 30px; height: 30px; border: none; }\n\n  /* empty weights inside the manufacturer dialog */\n  .tare-list {\n    display: flex;\n    flex-direction: column;\n    gap: 10px;\n    border-top: 1px solid var(--divider-color, #e0e0e0);\n    padding-top: 12px;\n  }\n  .tare-row {\n    display: flex;\n    align-items: flex-end;\n    gap: 12px;\n  }\n  .tare-row .grow { flex: 1; min-width: 0; }\n  .tare-row .name { font-size: 14px; font-weight: 500; }\n  .tare-row .num-field { width: 120px; flex: 0 0 auto; }\n\n  .sub-list {\n    margin-top: 12px;\n    padding-top: 12px;\n    border-top: 1px solid var(--divider-color, #e0e0e0);\n    display: flex;\n    flex-direction: column;\n    gap: 10px;\n  }\n\n  .spool-edit {\n    display: flex;\n    align-items: flex-end;\n    gap: 8px;\n    flex-wrap: wrap;\n  }\n  .spool-edit .num-field { width: 104px; flex: 0 0 auto; }\n  .spool-edit .grow { flex: 1 1 160px; }\n\n  /* ---------------- empty state ---------------- */\n\n  .empty {\n    text-align: center;\n    padding: 48px 16px;\n    color: var(--secondary-text-color, #727272);\n  }\n  .empty .big { font-size: 44px; line-height: 1; margin-bottom: 12px; }\n  .empty h3 { margin: 0 0 6px; color: var(--primary-text-color); font-weight: 500; }\n  .empty p { margin: 0 0 16px; }\n\n  /* ---------------- dialog ---------------- */\n\n  .overlay {\n    position: fixed;\n    inset: 0;\n    z-index: 10;\n    background: rgba(0, 0, 0, 0.45);\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    padding: 16px;\n  }\n  .dialog {\n    background: var(--card-background-color, #fff);\n    color: var(--primary-text-color);\n    border-radius: var(--ha-card-border-radius, 14px);\n    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);\n    width: min(640px, 100%);\n    max-height: min(88vh, 900px);\n    display: flex;\n    flex-direction: column;\n  }\n  .dialog h2 {\n    margin: 0;\n    padding: 20px 24px 8px;\n    font-size: 20px;\n    font-weight: 500;\n  }\n  .dialog .body { padding: 8px 24px 16px; overflow-y: auto; }\n  .dialog .actions {\n    display: flex;\n    justify-content: flex-end;\n    gap: 8px;\n    padding: 8px 16px 16px;\n    flex-wrap: wrap;\n  }\n  .dialog .actions .spacer { flex: 1; }\n\n  .form-grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n    gap: 14px;\n  }\n  .form-grid .span-2 { grid-column: 1 / -1; }\n  .color-field { display: flex; gap: 8px; align-items: flex-end; }\n  .color-field .grow { flex: 1; }\n\n  .error-text {\n    color: var(--error-color, #db4437);\n    font-size: 13px;\n    margin-top: 8px;\n  }\n\n  /* ---------------- toast ---------------- */\n\n  .toast {\n    position: fixed;\n    left: 50%;\n    bottom: 24px;\n    transform: translateX(-50%);\n    z-index: 20;\n    background: #323232;\n    color: #fff;\n    border-radius: 8px;\n    padding: 12px 18px;\n    font-size: 14px;\n    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);\n    max-width: calc(100vw - 32px);\n  }\n  .toast.error { background: var(--error-color, #db4437); }\n\n  .id-badge {\n    font-family: var(--code-font-family, monospace);\n    font-size: 11px;\n    color: var(--secondary-text-color, #727272);\n    background: var(--divider-color, #e0e0e0);\n    border-radius: 4px;\n    padding: 1px 6px;\n    cursor: pointer;\n    border: none;\n  }\n\n  @media (max-width: 600px) {\n    .content { padding: 12px; }\n    .grid { grid-template-columns: 1fr; }\n    .toolbar { font-size: 18px; }\n  }\n</style>\n      <div id="app"><div class="content"><div class="empty">…</div></div></div>\n      <div id="overlay"></div>\n      <div id="toast"></div>\n    ', this._onClick = this._onClick.bind(this), this._onInput = this._onInput.bind(this), this._onChange = this._onChange.bind(this), this._onKeyDown = this._onKeyDown.bind(this);
+        }
+      }, this._dialog = null, this.shadowRoot.innerHTML = '\n      <style>\n  :host {\n    display: block;\n    height: 100%;\n    background: var(--primary-background-color, #fafafa);\n    color: var(--primary-text-color, #212121);\n    font-family: var(--paper-font-body1_-_font-family, Roboto, sans-serif);\n    -moz-osx-font-smoothing: grayscale;\n    -webkit-font-smoothing: antialiased;\n  }\n\n  * { box-sizing: border-box; }\n\n  .app-header {\n    position: sticky;\n    top: 0;\n    z-index: 4;\n    background: var(--app-header-background-color, var(--primary-color, #03a9f4));\n    color: var(--app-header-text-color, #fff);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.16));\n  }\n\n  .toolbar {\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    height: 56px;\n    padding: 0 12px;\n    font-size: 20px;\n    font-weight: 400;\n  }\n\n  .toolbar .title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n\n  .menu-button {\n    display: none;\n    background: none;\n    border: none;\n    color: inherit;\n    cursor: pointer;\n    padding: 8px;\n    border-radius: 50%;\n    line-height: 0;\n  }\n  :host([narrow]) .menu-button { display: block; }\n  .menu-button:hover { background: rgba(255, 255, 255, 0.12); }\n\n  .tabs {\n    display: flex;\n    gap: 4px;\n    padding: 0 8px;\n    overflow-x: auto;\n    scrollbar-width: none;\n  }\n  .tabs::-webkit-scrollbar { display: none; }\n\n  .tab {\n    appearance: none;\n    background: none;\n    border: none;\n    border-bottom: 3px solid transparent;\n    color: inherit;\n    opacity: 0.72;\n    cursor: pointer;\n    font-size: 14px;\n    font-weight: 500;\n    letter-spacing: 0.4px;\n    padding: 12px 16px;\n    text-transform: uppercase;\n    white-space: nowrap;\n  }\n  .tab:hover { opacity: 1; }\n  .tab[aria-selected="true"] { opacity: 1; border-bottom-color: currentColor; }\n\n  .content {\n    max-width: 1240px;\n    margin: 0 auto;\n    padding: 16px;\n  }\n\n  /* ---------------- cards ---------------- */\n\n  .card {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));\n    border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, transparent);\n    padding: 16px;\n  }\n\n  .section-title {\n    font-size: 16px;\n    font-weight: 500;\n    margin: 24px 0 12px;\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    /* Title plus action button does not fit a narrow panel on one line. */\n    flex-wrap: wrap;\n  }\n  .section-title:first-child { margin-top: 0; }\n  .section-title .spacer { flex: 1; }\n\n  /* ---------------- summary strip ---------------- */\n\n  .summary {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n    gap: 12px;\n    margin-bottom: 16px;\n  }\n\n  .stat {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));\n    padding: 14px 16px;\n  }\n  .stat .value {\n    font-size: 26px;\n    font-weight: 500;\n    line-height: 1.15;\n    color: var(--primary-text-color);\n  }\n  .stat .label {\n    font-size: 12px;\n    letter-spacing: 0.4px;\n    text-transform: uppercase;\n    color: var(--secondary-text-color, #727272);\n    margin-top: 4px;\n  }\n\n  /* ---------------- filter bar ---------------- */\n\n  .filters {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 8px;\n    align-items: center;\n    margin-bottom: 16px;\n  }\n  .filters .grow { flex: 1 1 200px; min-width: 160px; }\n\n  /* ---------------- form controls ---------------- */\n\n  input[type="text"],\n  input[type="number"],\n  input[type="date"],\n  input[type="search"],\n  select,\n  textarea {\n    width: 100%;\n    font: inherit;\n    font-size: 14px;\n    color: var(--primary-text-color);\n    background: var(--card-background-color, #fff);\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 8px;\n    padding: 9px 10px;\n  }\n  textarea { resize: vertical; min-height: 64px; }\n  input:disabled, select:disabled, textarea:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n    background: var(--divider-color, #e0e0e0);\n  }\n  input:focus, select:focus, textarea:focus {\n    outline: none;\n    border-color: var(--primary-color, #03a9f4);\n    box-shadow: 0 0 0 1px var(--primary-color, #03a9f4);\n  }\n  input[type="color"] {\n    width: 48px;\n    height: 40px;\n    padding: 2px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 8px;\n    background: var(--card-background-color, #fff);\n    cursor: pointer;\n  }\n  label.field { display: block; }\n  label.field > .label-text {\n    display: block;\n    font-size: 12px;\n    font-weight: 500;\n    color: var(--secondary-text-color, #727272);\n    margin-bottom: 4px;\n  }\n  .hint {\n    font-size: 12px;\n    color: var(--secondary-text-color, #727272);\n    margin-top: 4px;\n  }\n\n  button {\n    font: inherit;\n    cursor: pointer;\n  }\n\n  .btn {\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    gap: 6px;\n    border: none;\n    border-radius: 8px;\n    font-size: 14px;\n    font-weight: 500;\n    padding: 9px 16px;\n    background: var(--primary-color, #03a9f4);\n    color: var(--text-primary-color, #fff);\n  }\n  .btn:hover { filter: brightness(1.08); }\n  .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }\n\n  .btn.secondary {\n    background: transparent;\n    color: var(--primary-color, #03a9f4);\n    border: 1px solid var(--divider-color, #e0e0e0);\n  }\n  .btn.text {\n    background: transparent;\n    color: var(--primary-color, #03a9f4);\n    padding: 8px 10px;\n  }\n  .btn.danger { background: var(--error-color, #db4437); color: #fff; }\n  .btn.danger.text { background: transparent; color: var(--error-color, #db4437); }\n\n  .icon-btn {\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    width: 34px;\n    height: 34px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 50%;\n    background: transparent;\n    color: var(--primary-text-color);\n    font-size: 18px;\n    line-height: 1;\n    flex: 0 0 auto;\n  }\n  .icon-btn:hover { background: var(--divider-color, #e0e0e0); }\n  .icon-btn:disabled { opacity: 0.35; cursor: not-allowed; background: transparent; }\n  .icon-btn.plain { border: none; }\n  .icon-btn.danger { color: var(--error-color, #db4437); }\n\n  /* ---------------- inventory cards ---------------- */\n\n  .grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));\n    gap: 12px;\n  }\n\n  .spool-card { display: flex; flex-direction: column; gap: 10px; }\n\n  /* Pushed to the bottom edge of the card so the button sits in the same\n     place on every card, however much metadata the entry carries. */\n  .card-actions {\n    display: flex;\n    justify-content: flex-end;\n    margin-top: auto;\n    padding-top: 2px;\n  }\n\n  .spool-head { display: flex; align-items: flex-start; gap: 12px; }\n\n  .swatch {\n    width: 40px;\n    height: 40px;\n    border-radius: 50%;\n    flex: 0 0 auto;\n    border: 2px solid var(--divider-color, #e0e0e0);\n    box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.18);\n  }\n  .swatch.small { width: 26px; height: 26px; border-width: 1px; }\n\n  .spool-title { flex: 1; min-width: 0; }\n  .spool-title .name {\n    font-size: 15px;\n    font-weight: 500;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n  .spool-title .sub {\n    font-size: 13px;\n    color: var(--secondary-text-color, #727272);\n    margin-top: 2px;\n  }\n\n  .chips { display: flex; flex-wrap: wrap; gap: 6px; }\n  .chip {\n    display: inline-flex;\n    align-items: center;\n    gap: 4px;\n    font-size: 12px;\n    font-weight: 500;\n    padding: 3px 9px;\n    border-radius: 999px;\n    background: var(--divider-color, #e0e0e0);\n    color: var(--primary-text-color);\n    white-space: nowrap;\n  }\n  .chip.sealed { background: rgba(3, 169, 244, 0.16); color: var(--primary-color, #03a9f4); }\n  .chip.open { background: rgba(255, 152, 0, 0.18); color: #e08600; }\n  .chip.muted { background: transparent; border: 1px solid var(--divider-color, #e0e0e0); color: var(--secondary-text-color, #727272); }\n\n  .bar {\n    position: relative;\n    height: 8px;\n    border-radius: 999px;\n    background: var(--divider-color, #e0e0e0);\n    overflow: hidden;\n  }\n  .bar > span {\n    position: absolute;\n    inset: 0 auto 0 0;\n    border-radius: 999px;\n    background: var(--primary-color, #03a9f4);\n  }\n  .bar.unknown {\n    background: repeating-linear-gradient(\n      45deg,\n      var(--divider-color, #e0e0e0) 0 6px,\n      transparent 6px 12px\n    );\n  }\n  .bar.low > span { background: var(--error-color, #db4437); }\n  .bar.mid > span { background: var(--warning-color, #ffa600); }\n\n  .open-row {\n    display: flex;\n    align-items: center;\n    gap: 10px;\n    font-size: 13px;\n  }\n  .open-row .bar { flex: 1; }\n  .open-row .amount { color: var(--secondary-text-color, #727272); white-space: nowrap; }\n\n  .meta {\n    font-size: 12px;\n    color: var(--secondary-text-color, #727272);\n    display: flex;\n    flex-wrap: wrap;\n    gap: 4px 14px;\n  }\n\n  /* ---------------- lists (manage / admin) ---------------- */\n\n  .list { display: flex; flex-direction: column; gap: 8px; }\n\n  .row {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));\n    padding: 12px 14px;\n  }\n  .row-main {\n    display: flex;\n    align-items: center;\n    gap: 12px;\n    flex-wrap: wrap;\n  }\n  .row-main .grow { flex: 1 1 220px; min-width: 0; }\n  .row-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }\n\n  .counter {\n    display: inline-flex;\n    align-items: center;\n    gap: 6px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 999px;\n    padding: 2px;\n  }\n  .counter .num {\n    min-width: 34px;\n    text-align: center;\n    font-size: 15px;\n    font-weight: 500;\n    font-variant-numeric: tabular-nums;\n  }\n  .counter .icon-btn { width: 30px; height: 30px; border: none; }\n\n  /* empty weights inside the manufacturer dialog */\n  .tare-list {\n    display: flex;\n    flex-direction: column;\n    gap: 10px;\n    border-top: 1px solid var(--divider-color, #e0e0e0);\n    padding-top: 12px;\n  }\n  .tare-row {\n    display: flex;\n    align-items: flex-end;\n    gap: 12px;\n  }\n  .tare-row .grow { flex: 1; min-width: 0; }\n  .tare-row .name { font-size: 14px; font-weight: 500; }\n  .tare-row .num-field { width: 120px; flex: 0 0 auto; }\n\n  .sub-list {\n    margin-top: 12px;\n    padding-top: 12px;\n    border-top: 1px solid var(--divider-color, #e0e0e0);\n    display: flex;\n    flex-direction: column;\n    gap: 10px;\n  }\n\n  .spool-edit {\n    display: flex;\n    align-items: flex-end;\n    gap: 8px;\n    flex-wrap: wrap;\n  }\n  .spool-edit .num-field { width: 104px; flex: 0 0 auto; }\n  .spool-edit .grow { flex: 1 1 160px; }\n\n  /* ---------------- empty state ---------------- */\n\n  .empty {\n    text-align: center;\n    padding: 48px 16px;\n    color: var(--secondary-text-color, #727272);\n  }\n  .empty .big { font-size: 44px; line-height: 1; margin-bottom: 12px; }\n  .empty h3 { margin: 0 0 6px; color: var(--primary-text-color); font-weight: 500; }\n  .empty p { margin: 0 0 16px; }\n\n  /* ---------------- dialog ---------------- */\n\n  .overlay {\n    position: fixed;\n    inset: 0;\n    z-index: 10;\n    background: rgba(0, 0, 0, 0.45);\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    padding: 16px;\n  }\n  .dialog {\n    background: var(--card-background-color, #fff);\n    color: var(--primary-text-color);\n    border-radius: var(--ha-card-border-radius, 14px);\n    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);\n    width: min(640px, 100%);\n    max-height: min(88vh, 900px);\n    display: flex;\n    flex-direction: column;\n  }\n  .dialog h2 {\n    margin: 0;\n    padding: 20px 24px 8px;\n    font-size: 20px;\n    font-weight: 500;\n  }\n  .dialog .body { padding: 8px 24px 16px; overflow-y: auto; }\n  .dialog .actions {\n    display: flex;\n    justify-content: flex-end;\n    gap: 8px;\n    padding: 8px 16px 16px;\n    flex-wrap: wrap;\n  }\n  .dialog .actions .spacer { flex: 1; }\n\n  .form-grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n    gap: 14px;\n  }\n  .form-grid .span-2 { grid-column: 1 / -1; }\n  .color-field { display: flex; gap: 8px; align-items: flex-end; }\n  .color-field .grow { flex: 1; }\n\n  .error-text {\n    color: var(--error-color, #db4437);\n    font-size: 13px;\n    margin-top: 8px;\n  }\n\n  /* ---------------- toast ---------------- */\n\n  .toast {\n    position: fixed;\n    left: 50%;\n    bottom: 24px;\n    transform: translateX(-50%);\n    z-index: 20;\n    background: #323232;\n    color: #fff;\n    border-radius: 8px;\n    padding: 12px 18px;\n    font-size: 14px;\n    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);\n    max-width: calc(100vw - 32px);\n  }\n  .toast.error { background: var(--error-color, #db4437); }\n\n  .id-badge {\n    font-family: var(--code-font-family, monospace);\n    font-size: 11px;\n    color: var(--secondary-text-color, #727272);\n    background: var(--divider-color, #e0e0e0);\n    border-radius: 4px;\n    padding: 1px 6px;\n    cursor: pointer;\n    border: none;\n  }\n\n  @media (max-width: 600px) {\n    .content { padding: 12px; }\n    .grid { grid-template-columns: 1fr; }\n    .toolbar { font-size: 18px; }\n  }\n</style>\n      <div id="app"><div class="content"><div class="empty">…</div></div></div>\n      <div id="overlay"></div>\n      <div id="toast"></div>\n    ', this._onClick = this._onClick.bind(this), this._onInput = this._onInput.bind(this), this._onChange = this._onChange.bind(this), this._onKeyDown = this._onKeyDown.bind(this);
     }
     set hass(e) {
       const t = !this._hass;
@@ -1088,7 +1080,7 @@ ${n || ""}</textarea
       this._route = e;
       const t = (e && e.path ? e.path : "").split("/").filter(Boolean),
         n = t.length ? t[t.length - 1] : "",
-        a = K.includes(n) ? n : "overview";
+        a = W.includes(n) ? n : "overview";
       a !== this._state.view && (this._state.view = a, this._ready && this._renderApp());
     }
     connectedCallback() {
@@ -1110,23 +1102,23 @@ ${n || ""}</textarea
         console.error("Filament Manager: cannot load translations", e);
       }
       !function (e, t) {
-        b = e || "en", v = t || "EUR";
+        f = e || "en", v = t || "EUR";
       }(e, this._hass.config && this._hass.config.currency || "EUR"), this._renderLoading(), await this._subscribe(), this._ready = !0, this._renderApp();
     }
     _renderLoading() {
-      this.shadowRoot.getElementById("app").innerHTML = String(f`<div class="content"><div class="empty">${r("app.loading")}</div></div>`);
+      this.shadowRoot.getElementById("app").innerHTML = String(g`<div class="content"><div class="empty">${r("app.loading")}</div></div>`);
     }
     async _subscribe() {
       try {
         this._unsubscribe = await this._hass.connection.subscribeMessage(e => {
-          e && e.snapshot && (this._data = e.snapshot, this._ready && this._renderApp());
+          e && e.snapshot && (this._data = e.snapshot, this._ready && (this._renderApp(), this._refreshOpenDialog()));
         }, {
-          type: `${W}/subscribe`
+          type: `${q}/subscribe`
         });
       } catch (e) {
         console.error("Filament Manager: subscription failed", e), this._data = await this._hass.callWS({
-          type: `${W}/data`
-        }).catch(() => Z);
+          type: `${q}/data`
+        }).catch(() => K);
       }
     }
     async _call(e) {
@@ -1168,71 +1160,15 @@ ${n || ""}</textarea
     _renderApp() {
       const e = this.shadowRoot.getElementById("app"),
         t = this.shadowRoot.activeElement,
-        n = t && t.dataset ? t.dataset.filter ? "data-filter" : t.dataset.mfilter ? "data-mfilter" : null : null,
-        a = n ? "data-filter" === n ? t.dataset.filter : t.dataset.mfilter : null,
-        i = a && void 0 !== t.selectionStart ? t.selectionStart : null,
-        o = this._context(),
-        l = "manage" === this._state.view ? function (e) {
-          const {
-              data: t,
-              state: n,
-              lookup: a,
-              isAdmin: i
-            } = e,
-            o = t.items || [],
-            l = f`<div class="section-title">
-    <span>${r("manage.title")}</span>
-    <span class="spacer"></span>
-    <button class="btn" data-action="new-item" ${g(i ? "" : "disabled")}>
-      ${L("plus")} ${r("manage.new_item")}
-    </button>
-  </div>`,
-            s = f`<div class="filters">
-    <div class="grow">
-      <input
-        type="search"
-        data-mfilter="q"
-        value="${n.manageFilters.q}"
-        placeholder="${r("filter.search_placeholder")}"
-        aria-label="${r("filter.search")}"
-      />
-    </div>
-    <select data-mfilter="sort" aria-label="${r("filter.sort")}">
-      ${["manufacturer", "material", "color", "remaining", "updated"].map(e => f`<option value="${e}" ${n.manageFilters.sort === e ? " selected" : ""}>
-          ${r("filter.sort")}: ${r(`sort.${e}`)}
-        </option>`)}
-    </select>
-  </div>`,
-            d = i ? "" : f`<div class="card" style="margin-bottom:12px">${r("readonly.notice")}</div>`;
-          if (!o.length) return f`${l} ${d}
-    ${D({
-            emoji: "📦",
-            title: r("manage.empty.title"),
-            text: r("manage.empty.text"),
-            actionLabel: i ? r("manage.new_item") : "",
-            action: "new-item"
-          })}`;
-          const c = p(o, {
-            q: n.manageFilters.q,
-            manufacturer: "",
-            material: "",
-            condition: "",
-            sort: n.manageFilters.sort
-          }, a);
-          return f`${l} ${d} ${s}
-  ${c.length ? f`<div class="list">${c.map(t => B(t, e))}</div>` : D({
-            emoji: "🔍",
-            title: r("overview.no_match.title"),
-            text: r("overview.no_match.text"),
-            actionLabel: r("overview.no_match.action"),
-            action: "reset-manage-filters"
-          })}`;
-        }(o) : "admin" === this._state.view ? function (e) {
+        n = t && t.dataset && t.dataset.filter || null,
+        a = n && void 0 !== t.selectionStart ? t.selectionStart : null,
+        i = this._context(),
+        o = "admin" === this._state.view ? function (e) {
           const {
             data: t,
             isAdmin: n
           } = e;
-          if (!n) return D({
+          if (!n) return E({
             emoji: "🔒",
             title: r("admin.only_admin.title"),
             text: r("admin.only_admin.text")
@@ -1242,97 +1178,105 @@ ${n || ""}</textarea
             materials: {},
             spool_types: {}
           };
-          return f`<div class="section-title">
+          return g`<div class="section-title">
       <span>${r("admin.title")} — ${r("admin.manufacturers")}</span>
       <span class="spacer"></span>
       <button class="btn" data-action="new-manufacturer">
-        ${L("plus")} ${r("admin.new_manufacturer")}
+        ${k("plus")} ${r("admin.new_manufacturer")}
       </button>
     </div>
-    ${t.manufacturers.length ? f`<div class="list">
-          ${t.manufacturers.map(e => P({
+    ${t.manufacturers.length ? g`<div class="list">
+          ${t.manufacturers.map(e => B({
             entry: e,
-            subtitle: q(e, t),
+            subtitle: P(e, t),
             usage: a.manufacturers[e.id] || 0,
             editAction: "edit-manufacturer",
             deleteAction: "delete-manufacturer"
           }))}
-        </div>` : f`<div class="card">${r("admin.no_manufacturers")}</div>`}
+        </div>` : g`<div class="card">${r("admin.no_manufacturers")}</div>`}
 
     <div class="section-title">
       <span>${r("admin.materials")}</span>
       <span class="spacer"></span>
       <button class="btn" data-action="new-material">
-        ${L("plus")} ${r("admin.new_material")}
+        ${k("plus")} ${r("admin.new_material")}
       </button>
     </div>
-    ${t.materials.length ? f`<div class="list">
-          ${t.materials.map(e => P({
+    ${t.materials.length ? g`<div class="list">
+          ${t.materials.map(e => B({
             entry: e,
             subtitle: O(e),
             usage: a.materials[e.id] || 0,
             editAction: "edit-material",
             deleteAction: "delete-material"
           }))}
-        </div>` : f`<div class="card">${r("admin.no_materials")}</div>`}
+        </div>` : g`<div class="card">${r("admin.no_materials")}</div>`}
 `;
-        }(o) : R(o);
-      if (e.innerHTML = String(f`
+        }(i) : H(i),
+        l = W.filter(e => "admin" !== e || this._isAdmin);
+      if (e.innerHTML = String(g`
       <div class="app-header">
         <div class="toolbar">
           <button class="menu-button" data-action="toggle-menu" title="Menu">
-            ${L("menu", 24)}
+            ${k("menu", 24)}
           </button>
           <div class="title">${r("app.title")}</div>
         </div>
-        <div class="tabs" role="tablist">
-          ${K.filter(e => "admin" !== e || this._isAdmin).map(e => f`<button
-              class="tab"
-              role="tab"
-              data-action="goto"
-              data-view="${e}"
-              aria-selected="${this._state.view === e ? "true" : "false"}"
-            >
-              ${r(`tab.${e}`)}
-            </button>`)}
-        </div>
+        ${l.length > 1 ? g`<div class="tabs" role="tablist">
+              ${l.map(e => g`<button
+                  class="tab"
+                  role="tab"
+                  data-action="goto"
+                  data-view="${e}"
+                  aria-selected="${this._state.view === e ? "true" : "false"}"
+                >
+                  ${r(`tab.${e}`)}
+                </button>`)}
+            </div>` : ""}
       </div>
-      <div class="content">${l}</div>
-    `), a) {
-        const t = e.querySelector(`[${n}="${a}"]`);
-        if (t && (t.focus(), null !== i && t.setSelectionRange)) try {
-          t.setSelectionRange(i, i);
+      <div class="content">${o}</div>
+    `), n) {
+        const t = e.querySelector(`[data-filter="${n}"]`);
+        if (t && (t.focus(), null !== a && t.setSelectionRange)) try {
+          t.setSelectionRange(a, a);
         } catch {}
       }
     }
-    _renderOverlay(e = !1) {
-      const t = this.shadowRoot.getElementById("overlay"),
-        n = this._dialog ? `${this._dialog.kind}:${this._dialog.id || "new"}:${this._dialog.error || ""}` : "";
-      if (!e && n === this._overlayKey) return;
-      if (this._overlayKey = n, !this._dialog) return void (t.innerHTML = "");
-      const a = this._dialog.values || {};
-      let i, o;
-      "item" === this._dialog.kind ? (i = I(a, this._data), o = M({
-        confirmLabel: r("action.save")
-      })) : "manufacturer" === this._dialog.kind ? (i = function (e, t, n) {
+    _renderOverlay(e = !1, t = !1) {
+      const n = this.shadowRoot.getElementById("overlay"),
+        a = this._dialog ? `${this._dialog.kind}:${this._dialog.id || "new"}:${this._dialog.error || ""}` : "";
+      if (!e && a === this._overlayKey) return;
+      if (this._overlayKey = a, !this._dialog) return void (n.innerHTML = "");
+      const i = this._dialog.values || {};
+      let o, l;
+      if ("item" === this._dialog.kind) {
+        const e = "edit" === this._dialog.mode ? this._findItem(this._dialog.id) : null;
+        if ("edit" === this._dialog.mode && !e) return void this._closeDialog();
+        this._dialog.signature = this._itemSignature(e), o = I(i, this._data, this._lookup, e, this._isAdmin), l = C({
+          confirmLabel: r("action.save"),
+          extra: e ? g`<button class="btn danger text" data-action="delete-item" data-item="${e.id}">
+              ${r("action.delete")}
+            </button>` : ""
+        });
+      } else "manufacturer" === this._dialog.kind ? (o = function (e, t, n) {
         const a = (t.spool_types || []).filter(t => t.manufacturer_id === e.id);
-        return f`<div class="form-grid">
+        return g`<div class="form-grid">
     <div class="span-2">
-      ${S({
+      ${L({
           name: "name",
           label: r("field.name"),
           value: e.name
         })}
     </div>
     <div class="span-2">
-      ${S({
+      ${L({
           name: "website",
           label: `${r("field.website")} (${r("field.optional")})`,
           value: e.website,
           placeholder: "https://"
         })}
     </div>
-    ${S({
+    ${L({
           name: "sort_order",
           label: r("field.sort_order"),
           type: "number",
@@ -1344,14 +1288,14 @@ ${n || ""}</textarea
     <div class="span-2">
       <div class="section-title" style="margin:8px 0 4px">${r("admin.spool_types")}</div>
       <div class="hint" style="margin-bottom:10px">${r("admin.spool_types_hint")}</div>
-      ${a.length ? f`<div class="tare-list">
+      ${a.length ? g`<div class="tare-list">
             ${a.map(a => {
           const i = (t.usage?.spool_types || {})[a.id] || 0;
-          return f`<div class="tare-row">
+          return g`<div class="tare-row">
                 <div class="grow">
                   <div class="name">
                     ${n.materialName(a.material_id)} ·
-                    ${y(a.net_weight_g)} g
+                    ${b(a.net_weight_g)} g
                   </div>
                   <div class="hint">
                     ${i ? r(1 === i ? "admin.used_in_one" : "admin.used_in", {
@@ -1360,7 +1304,7 @@ ${n || ""}</textarea
                   </div>
                 </div>
                 <div class="num-field">
-                  ${S({
+                  ${L({
             name: `spool_type__${a.id}`,
             label: r("field.empty_weight_short"),
             type: "number",
@@ -1371,21 +1315,21 @@ ${n || ""}</textarea
                 </div>
               </div>`;
         })}
-          </div>` : f`<div class="hint">${r("admin.no_spool_types_for_manufacturer")}</div>`}
+          </div>` : g`<div class="hint">${r("admin.no_spool_types_for_manufacturer")}</div>`}
     </div>
   </div>`;
-      }(a, this._data, this._lookup), o = M({
+      }(i, this._data, this._lookup), l = C({
         confirmLabel: r("action.save")
-      })) : "material" === this._dialog.kind ? (i = function (e) {
-        return f`<div class="form-grid">
+      })) : "material" === this._dialog.kind ? (o = function (e) {
+        return g`<div class="form-grid">
     <div class="span-2">
-      ${S({
+      ${L({
           name: "name",
           label: r("field.name"),
           value: e.name
         })}
     </div>
-    ${S({
+    ${L({
           name: "nozzle_temp",
           label: r("field.nozzle_temp"),
           type: "number",
@@ -1394,7 +1338,7 @@ ${n || ""}</textarea
           step: 5,
           value: e.nozzle_temp
         })}
-    ${S({
+    ${L({
           name: "bed_temp",
           label: r("field.bed_temp"),
           type: "number",
@@ -1403,7 +1347,7 @@ ${n || ""}</textarea
           step: 5,
           value: e.bed_temp
         })}
-    ${S({
+    ${L({
           name: "density",
           label: r("field.density"),
           type: "number",
@@ -1412,7 +1356,7 @@ ${n || ""}</textarea
           step: .01,
           value: e.density
         })}
-    ${S({
+    ${L({
           name: "sort_order",
           label: r("field.sort_order"),
           type: "number",
@@ -1421,7 +1365,7 @@ ${n || ""}</textarea
           value: e.sort_order
         })}
     <div class="span-2">
-      ${C({
+      ${A({
           name: "ace_material_type",
           label: r("field.ace_material_type"),
           value: e.ace_material_type || "",
@@ -1434,43 +1378,56 @@ ${n || ""}</textarea
         })}
     </div>
   </div>`;
-      }(a), o = M({
+      }(i), l = C({
         confirmLabel: r("action.save")
-      })) : (i = f`<p>${this._dialog.text}</p>`, o = M({
+      })) : (o = g`<p>${this._dialog.text}</p>`, l = C({
         confirmLabel: this._dialog.confirmLabel || r("action.delete"),
         danger: !0
-      })), t.innerHTML = String(function ({
+      }));
+      if (n.innerHTML = String(function ({
         title: e,
         body: t,
         actions: n,
         error: a
       }) {
-        return f`<div class="overlay" data-action="dialog-backdrop">
+        return g`<div class="overlay" data-action="dialog-backdrop">
     <div class="dialog" role="dialog" aria-modal="true" data-stop>
       <h2>${e}</h2>
       <div class="body">
-        ${t} ${a ? f`<div class="error-text">${a}</div>` : ""}
+        ${t} ${a ? g`<div class="error-text">${a}</div>` : ""}
       </div>
       <div class="actions">${n}</div>
     </div>
   </div>`;
       }({
         title: this._dialog.title,
-        body: i,
-        actions: o,
+        body: o,
+        actions: l,
         error: this._dialog.error
-      }));
-      const l = t.querySelector("[data-field]");
-      l && l.focus();
+      })), !t) return;
+      const s = n.querySelector("[data-field]");
+      s && s.focus();
+    }
+    _itemSignature(e) {
+      return e ? `${e.sealed_count}|${(e.open_spools || []).map(e => e.id).join(",")}` : "";
+    }
+    _refreshOpenDialog() {
+      const e = this._dialog;
+      if (!e || "item" !== e.kind || "edit" !== e.mode) return;
+      const t = this._findItem(e.id);
+      if (!t) return void this._closeDialog();
+      const n = this.shadowRoot.activeElement,
+        a = Boolean(n && n.closest && n.closest(".overlay"));
+      this._itemSignature(t) === e.signature && a || this._renderOverlay(!0);
     }
     _toast(e, t = !1) {
       const n = this.shadowRoot.getElementById("toast");
-      n.innerHTML = String(f`<div class="toast ${t ? "error" : ""}">${e}</div>`), this._toastTimer && clearTimeout(this._toastTimer), this._toastTimer = setTimeout(() => {
+      n.innerHTML = String(g`<div class="toast ${t ? "error" : ""}">${e}</div>`), this._toastTimer && clearTimeout(this._toastTimer), this._toastTimer = setTimeout(() => {
         n.innerHTML = "";
       }, t ? 6e3 : 2500);
     }
     _navigate(e) {
-      K.includes(e) && (this._state.view = e, this.dispatchEvent(new CustomEvent("ac-filament-navigate", {
+      W.includes(e) && (this._state.view = e, this.dispatchEvent(new CustomEvent("ac-filament-navigate", {
         detail: {
           view: e
         },
@@ -1482,26 +1439,28 @@ ${n || ""}</textarea
       this._dialog = {
         error: "",
         ...e
-      }, this._renderOverlay(!0);
+      }, this._renderOverlay(!0, !0);
     }
     _closeDialog() {
-      this._dialog = null, this._renderOverlay(!0);
+      this._dialog = this._dialog && this._dialog.previous || null, this._renderOverlay(!0);
     }
     _setDialogError(e) {
       this._dialog && (this._dialog.error = e, this._renderOverlay(!0));
     }
     _confirm({
-      title: e,
-      text: t,
-      confirmLabel: n,
-      onConfirm: a
+      previous: e,
+      title: t,
+      text: n,
+      confirmLabel: a,
+      onConfirm: i
     }) {
       this._openDialog({
         kind: "confirm",
-        title: e,
-        text: t,
-        confirmLabel: n,
-        onConfirm: a
+        previous: e,
+        title: t,
+        text: n,
+        confirmLabel: a,
+        onConfirm: i
       });
     }
     _blockedMessage(e, t) {
@@ -1514,14 +1473,13 @@ ${n || ""}</textarea
       return (this._data.items || []).find(t => t.id === e) || null;
     }
     _onKeyDown(e) {
-      if ("Escape" === e.key && this._dialog) return e.preventDefault(), void this._closeDialog();
-      "Enter" === e.key && this._dialog && "confirm" !== this._dialog.kind && "INPUT" === e.target.tagName && (e.preventDefault(), this._commitDialog());
+      return "Escape" === e.key && this._dialog ? (e.preventDefault(), void this._closeDialog()) : "Enter" === e.key && e.target.closest && e.target.closest(".spool-edit") ? (e.preventDefault(), void e.target.blur()) : void ("Enter" === e.key && this._dialog && "confirm" !== this._dialog.kind && "INPUT" === e.target.tagName && (e.preventDefault(), this._commitDialog()));
     }
     _applyFilter(e) {
-      return e.dataset.filter ? (this._state.filters[e.dataset.filter] = e.value, this._renderApp(), !0) : !!e.dataset.mfilter && (this._state.manageFilters[e.dataset.mfilter] = e.value, this._renderApp(), !0);
+      return !!e.dataset.filter && (this._state.filters[e.dataset.filter] = e.value, this._renderApp(), !0);
     }
     _captureDialogField(e) {
-      return !!(this._dialog && e.dataset.field && e.closest(".overlay")) && (this._dialog.values[e.dataset.field] = e.value, !0);
+      return !!(this._dialog && e.dataset.field && e.closest(".overlay")) && !e.closest(".spool-edit") && (this._dialog.values[e.dataset.field] = e.value, !0);
     }
     _onInput(e) {
       const t = e.target;
@@ -1534,7 +1492,7 @@ ${n || ""}</textarea
       if (this._captureDialogField(t)) return;
       const n = t.closest(".spool-edit");
       n && t.dataset.field && this._call({
-        type: `${W}/spool/update`,
+        type: `${q}/spool/update`,
         item_id: n.dataset.item,
         spool_id: n.dataset.spool,
         [t.dataset.field]: "" === t.value ? null : t.value
@@ -1558,13 +1516,6 @@ ${n || ""}</textarea
           composed: !0
         })),
         goto: e => this._navigate(e.view),
-        "goto-manage": () => this._navigate("manage"),
-        "reset-manage-filters": () => {
-          this._state.manageFilters = {
-            q: "",
-            sort: "manufacturer"
-          }, this._renderApp();
-        },
         "reset-filters": () => {
           this._state.filters = {
             q: "",
@@ -1597,9 +1548,11 @@ ${n || ""}</textarea
           });
           var e;
         },
-        "edit-item": e => {
+        "setup-item": e => {
           const t = this._findItem(e.item);
-          t && this._openDialog({
+          if (!t) return;
+          const n = this._lookup.spoolTypeFor(t);
+          this._openDialog({
             kind: "item",
             mode: "edit",
             id: t.id,
@@ -1611,26 +1564,28 @@ ${n || ""}</textarea
               color_hex: t.color_hex,
               diameter: t.diameter,
               spool_net_weight_g: t.spool_net_weight_g,
-              sealed_count: t.sealed_count,
               location: t.location,
               price: t.price ?? "",
               purchase_date: t.purchase_date ?? "",
               nozzle_temp: t.nozzle_temp ?? "",
               bed_temp: t.bed_temp ?? "",
-              notes: t.notes
+              notes: t.notes,
+              ...(n ? {
+                [`spool_type__${n.id}`]: n.empty_weight_g ?? ""
+              } : {})
             }
           });
         },
         "delete-item": e => {
           const t = this._findItem(e.item);
           t && this._confirm({
-            title: r("manage.delete_title"),
-            text: r("manage.delete_text", {
+            title: r("setup.delete_title"),
+            text: r("setup.delete_text", {
               name: d(t, this._lookup)
             }),
             onConfirm: async () => {
               await this._call({
-                type: `${W}/item/delete`,
+                type: `${q}/item/delete`,
                 item_id: t.id
               }), this._toast(r("toast.deleted"));
             }
@@ -1639,7 +1594,7 @@ ${n || ""}</textarea
         "sealed-plus": t => {
           const n = this._findItem(t.item);
           n && e({
-            type: `${W}/item/set_sealed`,
+            type: `${q}/item/set_sealed`,
             item_id: n.id,
             sealed_count: Number(n.sealed_count || 0) + 1
           });
@@ -1647,31 +1602,29 @@ ${n || ""}</textarea
         "sealed-minus": t => {
           const n = this._findItem(t.item);
           !n || Number(n.sealed_count || 0) < 1 || e({
-            type: `${W}/item/set_sealed`,
+            type: `${q}/item/set_sealed`,
             item_id: n.id,
             sealed_count: Number(n.sealed_count) - 1
           });
         },
         "open-spool": t => {
-          this._state.expanded.add(t.item), e({
-            type: `${W}/spool/open`,
+          e({
+            type: `${q}/spool/open`,
             item_id: t.item
           });
-        },
-        "toggle-spools": e => {
-          this._state.expanded.has(e.item) ? this._state.expanded.delete(e.item) : this._state.expanded.add(e.item), this._renderApp();
         },
         "consume-spool": e => {
           const t = this._findItem(e.item);
           t && this._confirm({
-            title: r("manage.consume_title"),
-            text: r("manage.consume_text", {
+            previous: this._dialog,
+            title: r("setup.consume_title"),
+            text: r("setup.consume_text", {
               name: d(t, this._lookup)
             }),
-            confirmLabel: r("manage.consume"),
+            confirmLabel: r("setup.consume"),
             onConfirm: async () => {
               await this._call({
-                type: `${W}/spool/consume`,
+                type: `${q}/spool/consume`,
                 item_id: e.item,
                 spool_id: e.spool
               }), this._toast(r("toast.deleted"));
@@ -1725,7 +1678,7 @@ ${n || ""}</textarea
             }),
             onConfirm: async () => {
               await this._call({
-                type: `${W}/manufacturer/delete`,
+                type: `${q}/manufacturer/delete`,
                 manufacturer_id: t.id
               }), this._toast(r("toast.deleted"));
             }
@@ -1775,7 +1728,7 @@ ${n || ""}</textarea
             }),
             onConfirm: async () => {
               await this._call({
-                type: `${W}/material/delete`,
+                type: `${q}/material/delete`,
                 material_id: t.id
               }), this._toast(r("toast.deleted"));
             }
@@ -1809,7 +1762,7 @@ ${n || ""}</textarea
           material: "material"
         }[e],
         o = {
-          type: `${W}/${i}/${"edit" === t ? "update" : "create"}`,
+          type: `${q}/${i}/${"edit" === t ? "update" : "create"}`,
           ...this._cleanValues(a)
         };
       "edit" === t && (o[`${i}_id`] = n);
@@ -1827,7 +1780,7 @@ ${n || ""}</textarea
         const e = n.slice(12),
           i = "" === a || null === a ? null : Number(a);
         t.has(e) && t.get(e) !== i && (await this._call({
-          type: `${W}/spool_type/update`,
+          type: `${q}/spool_type/update`,
           spool_type_id: e,
           empty_weight_g: i
         }));
@@ -1839,15 +1792,15 @@ ${n || ""}</textarea
       return t;
     }
   }
-  customElements.get("anycubic-filament-panel") || customElements.define("anycubic-filament-panel", G);
-  const U = "anycubic-filament-manager-panel",
-    X = ["overview", "manage", "admin"];
-  class Y extends HTMLElement {
+  customElements.get("anycubic-filament-panel") || customElements.define("anycubic-filament-panel", Z);
+  const G = "anycubic-filament-manager-panel",
+    U = ["overview", "admin"];
+  class X extends HTMLElement {
     constructor() {
       super(), this._route = null, this._handleNavigate = e => {
         e.stopPropagation();
         const t = e.detail.view;
-        t && X.includes(t) && this._route && (window.history.pushState(null, "", `${this._route.prefix}/${t}`), window.dispatchEvent(new CustomEvent("location-changed", {
+        t && U.includes(t) && this._route && (window.history.pushState(null, "", `${this._route.prefix}/${t}`), window.dispatchEvent(new CustomEvent("location-changed", {
           detail: {
             replace: !1
           }
@@ -1879,5 +1832,5 @@ ${n || ""}</textarea
       this.removeEventListener("ac-filament-navigate", this._handleNavigate);
     }
   }
-  customElements.get(U) || customElements.define(U, Y);
+  customElements.get(G) || customElements.define(G, X);
 }();

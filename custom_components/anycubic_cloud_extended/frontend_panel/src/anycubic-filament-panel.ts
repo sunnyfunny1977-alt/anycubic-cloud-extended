@@ -22,7 +22,7 @@ const INVENTORY_ELEMENT = "anycubic-filament-panel";
 // Kept in sync with `VIEWS` in filament_panel/app.js. Duplicated rather than
 // exported from that module so the URL can be validated before the views have
 // been touched.
-const VIEWS = ["overview", "manage", "admin"];
+const VIEWS = ["overview", "admin"];
 
 interface InventoryElement extends HTMLElement {
   hass: HomeAssistant;
