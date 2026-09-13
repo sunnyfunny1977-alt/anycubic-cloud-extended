@@ -97,14 +97,6 @@ SENSORS: tuple[FilamentSensorDescription, ...] = (
         value_fn=lambda store, _: store.summary()["inventory_value"],
     ),
     FilamentSensorDescription(
-        key="weighing_pending",
-        translation_key="weighing_pending",
-        icon="mdi:scale-balance",
-        state_class=SensorStateClass.MEASUREMENT,
-        value_fn=lambda store, _: len(store.pending_weighings()),
-        attributes_fn=lambda store, _: {"slots": store.pending_weighings()},
-    ),
-    FilamentSensorDescription(
         key="low_stock",
         translation_key="low_stock",
         icon="mdi:alert-outline",

@@ -16,22 +16,23 @@ ACE can point at a specific roll in the cupboard.
   the scale and derives the remaining filament from the spool type's tare. A
   missing tare is asked for once and then applies to every roll of that
   manufacturer, material and size, recomputing rolls already weighed.
-- **Re-weigh reminder.** What the slot held is recorded with the binding. When
-  it changes, the binding is flagged and the reminder fires: a badge on the
-  slot, `binary_sensor.<printer>_ace_slot_N_needs_weighing`, and a
-  `filament_spools_to_weigh` counter for automations. A binding is never
-  dropped automatically — the ACE reports an empty slot for a few seconds
-  during every feed — and returning to the known filament clears the flag by
-  itself.
-- New entities per slot: `sensor.<printer>_ace_slot_N_remaining` (grams, with
-  history) and `binary_sensor.<printer>_ace_slot_N_needs_weighing`, for both
-  the primary and the secondary box.
-- The filament inventory sensors from the Filament Manager, plus
-  `filament_spools_to_weigh`.
+- **Swap detection.** What the slot held is recorded with the binding. When it
+  changes, the binding is marked as no longer describing the slot and the slot
+  gets a warning marker, because it would otherwise keep showing a spool that
+  has been taken out. Nothing asks for a weighing: whether the new roll goes on
+  the scale is the user's call, and an unweighed roll is not an error. A binding
+  is never dropped automatically — the ACE reports an empty slot for a few
+  seconds during every feed — and returning to the known filament clears the
+  mark by itself.
+- New entity per slot: `sensor.<printer>_ace_slot_N_remaining` (grams, with
+  history), for both the primary and the secondary box. Its attributes carry
+  the whole binding, including `stale` and `weighed_at`.
+- The filament inventory sensors from the Filament Manager.
 - Services `assign_slot_spool`, `clear_slot_spool` and `weigh_slot_spool`
   alongside the inventory services carried over from the Filament Manager.
 - The Lovelace card is registered as a resource automatically. Card options
-  `showFilamentInventory`, `showWeighingReminder` and `allowSpoolAssignment`.
+  `showFilamentInventory`, `showSpoolChangedWarning` and
+  `allowSpoolAssignment`.
 - Integration options for the low-stock threshold, the inventory currency, and
   whether non-admin users may assign and weigh spools.
 - A third frontend bundle, `anycubic-filament-panel.js` (~80 KB), for the

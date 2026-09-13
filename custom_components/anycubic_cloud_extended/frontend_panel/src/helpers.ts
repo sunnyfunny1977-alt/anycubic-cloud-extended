@@ -885,7 +885,7 @@ export function getDefaultCardConfig(): AnycubicCardConfig {
     showSettingsButton: false,
     alwaysShow: false,
     showFilamentInventory: true,
-    showWeighingReminder: true,
+    showSpoolChangedWarning: true,
     allowSpoolAssignment: true,
   };
 }

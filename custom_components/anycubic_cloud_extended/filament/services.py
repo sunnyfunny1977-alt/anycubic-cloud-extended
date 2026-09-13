@@ -167,7 +167,6 @@ def make_slot_handler(hass: HomeAssistant) -> Callable:
                         "local_slot": local_slot,
                         "item_id": data["item_id"],
                         "spool_id": data.get("spool_id"),
-                        "needs_weighing": True,
                     }
                 )
             elif call.service == SERVICE_CLEAR_SLOT_SPOOL:

@@ -181,7 +181,6 @@ store.weigh_assignment(*SLOT, 950.0, empty_weight_g=250.0)
 detail = store.assignment_detail(store.find_assignment(*SLOT))
 check("remaining = gross - tare", detail["remaining_grams"] == 700.0, detail["remaining_grams"])
 check("percent derived", detail["remaining_percent"] == 70.0, detail["remaining_percent"])
-check("needs_weighing cleared", detail["needs_weighing"] is False)
 check("weighed_at set", bool(detail["weighed_at"]))
 check("tare now known", detail["tare_g"] == 250.0)
 
@@ -192,7 +191,7 @@ detail = store.assignment_detail(store.find_assignment(*SLOT))
 check("remaining recomputed to 750 g", detail["remaining_grams"] == 750.0, detail["remaining_grams"])
 
 # --------------------------------------------------------------------------
-print("\n5. Filament swap must raise the re-weigh reminder")
+print("\n5. Filament swap marks the binding, and asks for nothing")
 
 binder = SlotBindingManager(hass)
 
@@ -210,7 +209,8 @@ def build_data(spool):
 data = build_data(dict(spool_loaded))
 binder.reconcile_and_enrich(data)
 st1 = data["printers"][42]["states"]
-check("unchanged slot: needs_weighing off", st1["ace_slot_1_needs_weighing"] is False)
+check("no weighing sensor is produced",
+      "ace_slot_1_needs_weighing" not in st1, sorted(st1))
 check("remaining exposed as state", st1["ace_slot_1_remaining"] == 750.0)
 check("assignment attached to slot attributes",
       data["printers"][42]["attributes"]["ace_slot_1"]["assignment"]["item_label"] == "eSun PLA Rot")
@@ -221,19 +221,21 @@ swapped = dict(spool_loaded, color=[0, 0, 255], material_type="PLA")
 data = build_data(swapped)
 binder.reconcile_and_enrich(data)
 st2 = data["printers"][42]["states"]
-check("swap detected: needs_weighing on", st2["ace_slot_1_needs_weighing"] is True)
-check("assignment marked stale",
+check("swap detected: binding marked stale",
       store.find_assignment(*SLOT)["stale"] is True)
-check("pending_weighings lists the slot",
-      any(p["local_slot"] == 1 for p in store.pending_weighings()),
-      store.pending_weighings())
+check("stale reaches the slot attributes",
+      data["printers"][42]["attributes"]["ace_slot_1_remaining"]["stale"] is True)
+check("still no weighing sensor after a swap",
+      "ace_slot_1_needs_weighing" not in st2, sorted(st2))
+check("nothing in the binding demands a weighing",
+      "needs_weighing" not in store.find_assignment(*SLOT),
+      sorted(store.find_assignment(*SLOT)))
 
-print("\n5b. A feed flicker back to the known filament clears stale, keeps the reminder")
+print("\n5b. A feed flicker back to the known filament clears stale by itself")
 data = build_data(dict(spool_loaded))
 binder.reconcile_and_enrich(data)
 a = store.find_assignment(*SLOT)
 check("stale cleared", a["stale"] is False)
-check("needs_weighing still set", a["needs_weighing"] is True)
 
 print("\n5c. Empty slot is a fingerprint of its own")
 empty = dict(spool_loaded, spool_loaded=False, status=4, color=[0, 0, 0])

@@ -65,8 +65,7 @@
     "spools": {
       "ace_feed": "ACE-Zuleitung",
       "no_spool_assigned": "Keine Rolle zugeordnet",
-      "needs_weighing": "Bitte Rolle wiegen",
-      "spool_changed": "Filament gewechselt – bitte prüfen und wiegen",
+      "spool_changed": "Filament gewechselt – bitte prüfen",
       "remaining": "Rest"
     },
     "configure": {

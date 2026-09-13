@@ -504,7 +504,7 @@ def extract_panel_card_config(
     update_dict_and_validate(card_conf, input_conf, 'showSettingsButton', bool)
     update_dict_and_validate(card_conf, input_conf, 'alwaysShow', bool)
     update_dict_and_validate(card_conf, input_conf, 'showFilamentInventory', bool)
-    update_dict_and_validate(card_conf, input_conf, 'showWeighingReminder', bool)
+    update_dict_and_validate(card_conf, input_conf, 'showSpoolChangedWarning', bool)
     update_dict_and_validate(card_conf, input_conf, 'allowSpoolAssignment', bool)
 
     return card_conf

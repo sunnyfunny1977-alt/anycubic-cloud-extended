@@ -143,30 +143,6 @@
       },
       "secondary_dry_status_is_drying": {
         "name": "Secondary Drying Active"
-      },
-      "ace_slot_1_needs_weighing": {
-        "name": "ACE Slot 1 wiegen"
-      },
-      "secondary_ace_slot_1_needs_weighing": {
-        "name": "Sekundär ACE Slot 1 wiegen"
-      },
-      "ace_slot_2_needs_weighing": {
-        "name": "ACE Slot 2 wiegen"
-      },
-      "secondary_ace_slot_2_needs_weighing": {
-        "name": "Sekundär ACE Slot 2 wiegen"
-      },
-      "ace_slot_3_needs_weighing": {
-        "name": "ACE Slot 3 wiegen"
-      },
-      "secondary_ace_slot_3_needs_weighing": {
-        "name": "Sekundär ACE Slot 3 wiegen"
-      },
-      "ace_slot_4_needs_weighing": {
-        "name": "ACE Slot 4 wiegen"
-      },
-      "secondary_ace_slot_4_needs_weighing": {
-        "name": "Sekundär ACE Slot 4 wiegen"
       }
     },
     "button": {
@@ -433,9 +409,6 @@
       },
       "low_stock": {
         "name": "Filament Mindestbestand"
-      },
-      "weighing_pending": {
-        "name": "Filament zu wiegende Rollen"
       }
     },
     "switch": {

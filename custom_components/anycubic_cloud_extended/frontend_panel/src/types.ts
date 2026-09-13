@@ -298,7 +298,6 @@ export interface AnycubicSlotAssignment {
   remaining_percent: number | null;
   net_weight_g: number;
   tare_g: number | null;
-  needs_weighing: boolean;
   stale: boolean;
   weighed_at: string | null;
   fingerprint_mismatch?: boolean;
@@ -357,10 +356,11 @@ export interface AnycubicCardConfig {
   showSettingsButton?: boolean;
   alwaysShow?: boolean;
   // Filament inventory: show the bound roll and its remaining weight under
-  // each slot, show the "please re-weigh" badge, and allow assigning/weighing
-  // from the card (turn the last one off for a guest dashboard).
+  // each slot, mark a slot whose filament no longer matches its binding, and
+  // allow assigning/weighing from the card (turn the last one off for a guest
+  // dashboard).
   showFilamentInventory?: boolean;
-  showWeighingReminder?: boolean;
+  showSpoolChangedWarning?: boolean;
   allowSpoolAssignment?: boolean;
 }
 

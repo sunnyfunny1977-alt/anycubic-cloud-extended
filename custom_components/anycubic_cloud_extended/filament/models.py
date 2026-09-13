@@ -130,7 +130,6 @@ class SlotAssignment(TypedDict):
     fp_color_hex: str
     fp_sku: str
     fp_status: int | None
-    needs_weighing: bool
     stale: bool
     stale_since: str | None
     assigned_at: str
@@ -391,7 +390,6 @@ def normalize_assignment(
         "fp_color_hex": _str(base.get("fp_color_hex")),
         "fp_sku": _str(base.get("fp_sku")),
         "fp_status": _opt_int(base.get("fp_status"), 0, 255),
-        "needs_weighing": bool(base.get("needs_weighing", False)),
         "stale": bool(base.get("stale", False)),
         "stale_since": _str(base.get("stale_since")) or None,
         "assigned_at": _str(base.get("assigned_at")) or utcnow_iso(),

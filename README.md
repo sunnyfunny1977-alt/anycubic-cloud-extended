@@ -22,10 +22,9 @@ Die Integration wird ueber HACS als benutzerdefiniertes Repository installiert.
 >   Anycubic-Panel und als eigener Sidebar-Eintrag **Filament Manager**.
 > - Zu jedem ACE-Slot laesst sich die konkrete Rolle aus dem Bestand waehlen. Die
 >   Auswahl ist auf das Material gefiltert, das der Slot meldet.
-> - Das Rollengewicht wird direkt im Dashboard eingetragen (brutto, Tara wird
->   abgezogen). Nach jedem Filamentwechsel erinnert die Integration ans Wiegen.
-> - Neue Entitaeten pro Slot: `..._remaining` (Restmenge in Gramm) und
->   `..._needs_weighing`.
+> - Das Rollengewicht laesst sich direkt im Dashboard eintragen (brutto, Tara
+>   wird abgezogen) — wann der Anwender es moechte, ungefragt.
+> - Neue Entitaet pro Slot: `..._remaining` (Restmenge in Gramm).
 > - Die Lovelace-Card wird beim Setup automatisch als Ressource registriert.
 > - Vorhandene Daten beider Vorgaenger-Integrationen werden beim ersten Start
 >   uebernommen. Details unter [🧵 Filament-Bestand](#-filament-bestand).
@@ -135,30 +134,26 @@ getrennt von **Speichern**: Speichern schickt Materialtyp und Farbe an den
 Drucker, Zuordnen & wiegen schreibt in den Bestand. Beides kann unabhängig
 fehlschlagen.
 
-### Erinnerung nach dem Wechsel
+### Wechsel wird erkannt, aber nicht angemahnt
 
 Beim Zuordnen wird festgehalten, was im Slot steckte (Materialtyp, Farbe, SKU).
-Erkennt die Integration, dass sich das geändert hat, wird die Zuordnung als
-*zu prüfen* markiert und die Erinnerung ausgelöst — genau dafür ist der
-Mechanismus da: Nach jedem Wechsel soll neu gewogen werden, damit der Bestand
-stimmt.
+Ändert sich das, wird die Zuordnung als *zu prüfen* markiert — sie beschreibt
+dann nicht mehr, was tatsächlich im Slot liegt, und der Slot bekommt im Panel
+und in der Card ein Warndreieck.
 
-Sichtbar wird das an drei Stellen:
+**Gewogen wird, wenn der Anwender es möchte.** Die Integration fordert nicht dazu
+auf: es gibt keine `needs_weighing`-Entitäten, keinen Zähler offener
+Wiegevorgänge und kein Waage-Symbol. Eine nicht gewogene Rolle ist kein Fehler,
+der Bestand rechnet dann einfach mit dem letzten bekannten Wert weiter.
 
-| Ort | Was |
-|---|---|
-| Slot im Panel/Card | Waage-Symbol, bei erkanntem Wechsel ein Warndreieck |
-| `binary_sensor.<drucker>_ace_slot_N_needs_weighing` | `on`, solange gewogen werden muss |
-| `sensor.<...>_filament_spools_to_weigh` | Anzahl offener Wiegevorgänge, mit Slot-Liste als Attribut |
-
-Zusätzlich gibt es `sensor.<drucker>_ace_slot_N_remaining` mit der Restmenge in
-Gramm — als Messwert, also mit Verlauf und Statistik.
+`sensor.<drucker>_ace_slot_N_remaining` liefert die Restmenge in Gramm als
+Messwert, also mit Verlauf und Statistik. Die vollständige Zuordnung inklusive
+`stale` und `weighed_at` steht in dessen Attributen.
 
 Kurzzeitige Aussetzer sind eingeplant: Der ACE meldet während eines
 Filamentwechsels für ein paar Sekunden einen leeren Slot. Die Zuordnung wird
 deshalb nie automatisch gelöscht, sondern nur markiert, und eine Rückkehr zum
-bekannten Filament hebt die Markierung von selbst wieder auf. Die
-Wiege-Erinnerung bleibt bis zum tatsächlichen Wiegen bestehen.
+bekannten Filament hebt die Markierung von selbst wieder auf.
 
 ### Services
 
@@ -229,7 +224,7 @@ Optionen steuern den Filament-Teil:
 | Option | Standard | Wirkung |
 |---|---|---|
 | `showFilamentInventory` | `true` | Rollenname und Restmenge unter den Slots |
-| `showWeighingReminder` | `true` | Warnsymbol „bitte wiegen" |
+| `showSpoolChangedWarning` | `true` | Warndreieck, wenn der Slot nicht mehr zur Zuordnung passt |
 | `allowSpoolAssignment` | `true` | Zuordnen und Wiegen im Dialog erlaubt |
 
 Für ein Gäste-Dashboard lässt sich `allowSpoolAssignment` abschalten. Wer soll

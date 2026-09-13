@@ -143,30 +143,6 @@
       },
       "secondary_dry_status_is_drying": {
         "name": "Secondary Drying Active"
-      },
-      "ace_slot_1_needs_weighing": {
-        "name": "ACE Slot 1 Needs Weighing"
-      },
-      "secondary_ace_slot_1_needs_weighing": {
-        "name": "Secondary ACE Slot 1 Needs Weighing"
-      },
-      "ace_slot_2_needs_weighing": {
-        "name": "ACE Slot 2 Needs Weighing"
-      },
-      "secondary_ace_slot_2_needs_weighing": {
-        "name": "Secondary ACE Slot 2 Needs Weighing"
-      },
-      "ace_slot_3_needs_weighing": {
-        "name": "ACE Slot 3 Needs Weighing"
-      },
-      "secondary_ace_slot_3_needs_weighing": {
-        "name": "Secondary ACE Slot 3 Needs Weighing"
-      },
-      "ace_slot_4_needs_weighing": {
-        "name": "ACE Slot 4 Needs Weighing"
-      },
-      "secondary_ace_slot_4_needs_weighing": {
-        "name": "Secondary ACE Slot 4 Needs Weighing"
       }
     },
     "button": {
@@ -433,9 +409,6 @@
       },
       "low_stock": {
         "name": "Filament Low Stock"
-      },
-      "weighing_pending": {
-        "name": "Filament Spools To Weigh"
       }
     },
     "switch": {

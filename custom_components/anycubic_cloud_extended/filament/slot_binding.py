@@ -8,8 +8,12 @@ whether it still holds.
 Every coordinator cycle the fingerprint of each slot is compared against the
 one stored with its binding. A mismatch does not delete the binding — the ACE
 briefly reports an empty slot during a feed, and dropping the assignment on
-every print start would make the feature useless. The binding is flagged
-instead, which is what drives the "please re-weigh" reminder.
+every print start would make the feature useless. The binding is marked as no
+longer describing the slot instead, so the panel can say so rather than keep
+showing a spool that has been taken out.
+
+Nothing here asks for anything. Whether the new roll gets weighed is the user's
+call, and the inventory is none the worse for a roll they chose not to weigh.
 """
 
 from __future__ import annotations
@@ -20,7 +24,6 @@ from ..const import (
     DATA_FILAMENT_STORE,
     DOMAIN,
     ENTITY_ID_ACE_SLOT_,
-    ENTITY_ID_ACE_SLOT_SUFFIX_NEEDS_WEIGHING,
     ENTITY_ID_ACE_SLOT_SUFFIX_REMAINING,
     LOGGER,
     MAX_ACE_SLOTS,
@@ -123,17 +126,12 @@ class SlotBindingManager:
                 states[entity_key + ENTITY_ID_ACE_SLOT_SUFFIX_REMAINING] = (
                     None if detail is None else detail.get("remaining_grams")
                 )
-                states[entity_key + ENTITY_ID_ACE_SLOT_SUFFIX_NEEDS_WEIGHING] = bool(
-                    detail is not None and detail.get("needs_weighing")
-                )
+                # `detail` already carries `stale`, `item_label` and
+                # `weighed_at`, so the remaining-grams sensor is the one place
+                # the whole binding is exposed.
                 attributes[entity_key + ENTITY_ID_ACE_SLOT_SUFFIX_REMAINING] = (
                     detail or {}
                 )
-                attributes[entity_key + ENTITY_ID_ACE_SLOT_SUFFIX_NEEDS_WEIGHING] = {
-                    "stale": bool(detail is not None and detail.get("stale")),
-                    "item_label": None if detail is None else detail.get("item_label"),
-                    "weighed_at": None if detail is None else detail.get("weighed_at"),
-                }
 
     def _reconcile_slot(
         self,
@@ -161,8 +159,8 @@ class SlotBindingManager:
         if current == stored:
             if assignment.get("stale"):
                 # The ACE flickers to "empty" while feeding and back again.
-                # Coming back to the known fingerprint clears the alarm, but
-                # not the reminder: it is still unknown how much was used.
+                # Coming back to the known fingerprint means the same roll is
+                # in there after all, so the mark clears itself.
                 changes.append(
                     {
                         "printer_id": printer_id,
@@ -183,12 +181,11 @@ class SlotBindingManager:
                     "local_slot": local_slot,
                     "stale": True,
                     "stale_since": utcnow_iso(),
-                    "needs_weighing": True,
                 }
             )
             LOGGER.debug(
                 "Filament in printer %s box %s slot %s changed (%s -> %s); "
-                "asking the user to re-weigh",
+                "the binding no longer describes the slot",
                 printer_id,
                 box_id,
                 local_slot,
@@ -197,6 +194,5 @@ class SlotBindingManager:
             )
 
         detail["stale"] = True
-        detail["needs_weighing"] = True
         detail["fingerprint_mismatch"] = bool(spool.get("spool_loaded"))
         return detail

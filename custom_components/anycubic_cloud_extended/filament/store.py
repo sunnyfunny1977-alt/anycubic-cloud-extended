@@ -642,7 +642,6 @@ class FilamentStore:
         payload = {
             **raw,
             "spool_id": spool_id,
-            "needs_weighing": bool(raw.get("needs_weighing", False)),
             "stale": False,
             "stale_since": None,
         }
@@ -702,7 +701,6 @@ class FilamentStore:
             {"gross_weight_g": gross_weight_g},
         )
 
-        existing["needs_weighing"] = False
         existing["stale"] = False
         existing["stale_since"] = None
         existing["weighed_at"] = utcnow_iso()
@@ -770,7 +768,6 @@ class FilamentStore:
             "remaining_percent": spool_remaining_percent(spool, net),
             "net_weight_g": net,
             "tare_g": self.item_tare(item),
-            "needs_weighing": bool(assignment.get("needs_weighing")),
             "stale": bool(assignment.get("stale")),
             "weighed_at": assignment.get("weighed_at"),
         }
@@ -795,26 +792,6 @@ class FilamentStore:
             item.get("color_name") or "",
         ]
         return " ".join(part for part in parts if part).strip() or item["id"]
-
-    def pending_weighings(self) -> list[dict[str, Any]]:
-        """Return every slot that is waiting to be weighed."""
-        pending = []
-        for entry in self._data["assignments"]:
-            if not entry.get("needs_weighing"):
-                continue
-            detail = self.assignment_detail(entry)
-            pending.append(
-                {
-                    "printer_id": entry["printer_id"],
-                    "box_id": entry["box_id"],
-                    "local_slot": entry["local_slot"],
-                    "item_label": detail["item_label"] if detail else entry["item_id"],
-                    "stale": bool(entry.get("stale")),
-                }
-            )
-        return sorted(
-            pending, key=lambda e: (e["printer_id"], e["box_id"], e["local_slot"])
-        )
 
     def _prune_assignments(self) -> None:
         """Drop bindings whose item or spool no longer exists.

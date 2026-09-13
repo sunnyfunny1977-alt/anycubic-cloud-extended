@@ -39,7 +39,6 @@ ATTR_ANYCUBIC_EVENT = "anycubic_cloud_extended"
 ENTITY_ID_DRYING_START_PRESET_ = "drying_start_preset_"
 ENTITY_ID_ACE_SLOT_ = "ace_slot_"
 ENTITY_ID_ACE_SLOT_SUFFIX_REMAINING = "_remaining"
-ENTITY_ID_ACE_SLOT_SUFFIX_NEEDS_WEIGHING = "_needs_weighing"
 
 CONF_USER_AUTH_MODE = "user_auth_mode"
 CONF_USER_DEVICE_ID = "user_device_id"

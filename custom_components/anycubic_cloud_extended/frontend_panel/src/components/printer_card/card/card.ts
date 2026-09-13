@@ -109,8 +109,8 @@ export class AnycubicPrintercardCard extends LitElement {
   @property({ attribute: "showfilamentinventory", type: Boolean })
   public showFilamentInventory: boolean = true;
 
-  @property({ attribute: "showweighingreminder", type: Boolean })
-  public showWeighingReminder: boolean = true;
+  @property({ attribute: "showspoolchangedwarning", type: Boolean })
+  public showSpoolChangedWarning: boolean = true;
 
   @property({ attribute: "allowspoolassignment", type: Boolean })
   public allowSpoolAssignment: boolean = true;
@@ -499,7 +499,7 @@ export class AnycubicPrintercardCard extends LitElement {
                 .showControls=${false}
                 .allowSpoolEdit=${true}
                 .showFilamentInventory=${this.showFilamentInventory}
-                .showWeighingReminder=${this.showWeighingReminder}
+                .showSpoolChangedWarning=${this.showSpoolChangedWarning}
               ></anycubic-printercard-multicolorbox_view>
             </div>
           </div>
@@ -532,7 +532,7 @@ export class AnycubicPrintercardCard extends LitElement {
                 .printerEntityIdPart=${this.printerEntityIdPart}
                 .box_id=${0}
                 .showFilamentInventory=${this.showFilamentInventory}
-                .showWeighingReminder=${this.showWeighingReminder}
+                .showSpoolChangedWarning=${this.showSpoolChangedWarning}
               ></anycubic-printercard-multicolorbox_view>
             </div>
           </div>
@@ -565,7 +565,7 @@ export class AnycubicPrintercardCard extends LitElement {
                 .printerEntityIdPart=${this.printerEntityIdPart}
                 .box_id=${1}
                 .showFilamentInventory=${this.showFilamentInventory}
-                .showWeighingReminder=${this.showWeighingReminder}
+                .showSpoolChangedWarning=${this.showSpoolChangedWarning}
               ></anycubic-printercard-multicolorbox_view>
             </div>
           </div>

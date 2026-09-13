@@ -65,8 +65,7 @@
     "spools": {
       "ace_feed": "ACE Feed",
       "no_spool_assigned": "No spool assigned",
-      "needs_weighing": "Please weigh this spool",
-      "spool_changed": "Filament changed - please check and weigh",
+      "spool_changed": "Filament changed - please check",
       "remaining": "Remaining"
     },
     "configure": {

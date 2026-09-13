@@ -334,8 +334,8 @@ export class AnycubicViewMain extends LitElement {
           .slotColors=${this.panel.config.slotColors}
           .showFilamentInventory=${this.panel.config.showFilamentInventory ??
           true}
-          .showWeighingReminder=${this.panel.config.showWeighingReminder ??
-          true}
+          .showSpoolChangedWarning=${this.panel.config
+            .showSpoolChangedWarning ?? true}
           .allowSpoolAssignment=${this.panel.config.allowSpoolAssignment ??
           true}
           .showSettingsButton=${this.panel.config.showSettingsButton ?? true}

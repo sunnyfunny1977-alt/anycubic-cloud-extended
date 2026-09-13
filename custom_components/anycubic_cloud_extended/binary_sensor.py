@@ -5,7 +5,6 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
 from homeassistant.components.binary_sensor import (
-    BinarySensorDeviceClass,
     BinarySensorEntity,
     BinarySensorEntityDescription,
 )
@@ -17,9 +16,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from .const import (
     COORDINATOR,
     DOMAIN,
-    ENTITY_ID_ACE_SLOT_,
-    ENTITY_ID_ACE_SLOT_SUFFIX_NEEDS_WEIGHING,
-    MAX_ACE_SLOTS,
     PrinterEntityType,
 )
 from .entity import AnycubicCloudEntity, AnycubicCloudEntityDescription
@@ -100,30 +96,6 @@ GLOBAL_SENSOR_TYPES: list[AnycubicBinarySensorEntityDescription] = list([
 ])
 
 
-# Turns on when the roll in a slot no longer matches the one that was weighed,
-# which is the prompt to put the new roll on the scale.
-PRIMARY_ACE_SLOT_WEIGHING_SENSOR_TYPES: list[AnycubicBinarySensorEntityDescription] = list([
-    AnycubicBinarySensorEntityDescription(
-        key=f"{ENTITY_ID_ACE_SLOT_}{x + 1}{ENTITY_ID_ACE_SLOT_SUFFIX_NEEDS_WEIGHING}",
-        translation_key=f"{ENTITY_ID_ACE_SLOT_}{x + 1}{ENTITY_ID_ACE_SLOT_SUFFIX_NEEDS_WEIGHING}",
-        device_class=BinarySensorDeviceClass.PROBLEM,
-        printer_entity_type=PrinterEntityType.ACE_PRIMARY,
-        create_when_available=True,
-    ) for x in range(MAX_ACE_SLOTS)
-])
-
-
-SECONDARY_ACE_SLOT_WEIGHING_SENSOR_TYPES: list[AnycubicBinarySensorEntityDescription] = list([
-    AnycubicBinarySensorEntityDescription(
-        key=f"secondary_{ENTITY_ID_ACE_SLOT_}{x + 1}{ENTITY_ID_ACE_SLOT_SUFFIX_NEEDS_WEIGHING}",
-        translation_key=f"secondary_{ENTITY_ID_ACE_SLOT_}{x + 1}{ENTITY_ID_ACE_SLOT_SUFFIX_NEEDS_WEIGHING}",
-        device_class=BinarySensorDeviceClass.PROBLEM,
-        printer_entity_type=PrinterEntityType.ACE_SECONDARY,
-        create_when_available=True,
-    ) for x in range(MAX_ACE_SLOTS)
-])
-
-
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
@@ -140,8 +112,6 @@ async def async_setup_entry(
             SENSOR_TYPES
             + PRIMARY_MULTI_COLOR_BOX_SENSOR_TYPES
             + SECONDARY_MULTI_COLOR_BOX_SENSOR_TYPES
-            + PRIMARY_ACE_SLOT_WEIGHING_SENSOR_TYPES
-            + SECONDARY_ACE_SLOT_WEIGHING_SENSOR_TYPES
             + GLOBAL_SENSOR_TYPES
         ),
     )

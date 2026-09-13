@@ -1,4 +1,4 @@
-import { mdiAlertOutline, mdiRadiator, mdiScaleBalance } from "@mdi/js";
+import { mdiAlertOutline, mdiRadiator } from "@mdi/js";
 import { CSSResult, LitElement, PropertyValues, css, html, nothing } from "lit";
 import { property, state } from "lit/decorators.js";
 import { map } from "lit/directives/map.js";
@@ -64,8 +64,8 @@ export class AnycubicPrintercardMulticolorboxview extends LitElement {
   @property({ attribute: "show-filament-inventory", type: Boolean })
   public showFilamentInventory: boolean = true;
 
-  @property({ attribute: "show-weighing-reminder", type: Boolean })
-  public showWeighingReminder: boolean = true;
+  @property({ attribute: "show-spool-changed-warning", type: Boolean })
+  public showSpoolChangedWarning: boolean = true;
 
   @state()
   private _runoutRefillId: string = PRIMARY_ENTITY_ID_RUNOUT_REFILL;
@@ -101,9 +101,6 @@ export class AnycubicPrintercardMulticolorboxview extends LitElement {
   private _labelNoSpool: string;
 
   @state()
-  private _labelNeedsWeighing: string;
-
-  @state()
   private _labelSpoolChanged: string;
 
   @state()
@@ -121,10 +118,6 @@ export class AnycubicPrintercardMulticolorboxview extends LitElement {
       this._labelAceFeed = localize("card.spools.ace_feed", this.language);
       this._labelNoSpool = localize(
         "card.spools.no_spool_assigned",
-        this.language,
-      );
-      this._labelNeedsWeighing = localize(
-        "card.spools.needs_weighing",
         this.language,
       );
       this._labelSpoolChanged = localize(
@@ -289,9 +282,7 @@ export class AnycubicPrintercardMulticolorboxview extends LitElement {
     const percent = assignment.remaining_percent;
     const grams = assignment.remaining_grams;
     const low = percent !== null && percent < 10;
-    const warn =
-      this.showWeighingReminder &&
-      (assignment.needs_weighing || assignment.stale);
+    const warn = this.showSpoolChangedWarning && assignment.stale;
 
     return html`
       <div class="ac-spool-roll-label" title=${assignment.item_label}>
@@ -304,15 +295,8 @@ export class AnycubicPrintercardMulticolorboxview extends LitElement {
       </div>
       ${warn
         ? html`
-            <div
-              class="ac-spool-weigh-badge"
-              title=${assignment.stale
-                ? this._labelSpoolChanged
-                : this._labelNeedsWeighing}
-            >
-              <ha-svg-icon
-                .path=${assignment.stale ? mdiAlertOutline : mdiScaleBalance}
-              ></ha-svg-icon>
+            <div class="ac-spool-weigh-badge" title=${this._labelSpoolChanged}>
+              <ha-svg-icon .path=${mdiAlertOutline}></ha-svg-icon>
             </div>
           `
         : nothing}

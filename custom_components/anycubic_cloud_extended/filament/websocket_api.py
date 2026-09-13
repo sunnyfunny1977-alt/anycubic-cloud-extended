@@ -670,7 +670,6 @@ def handle_slot_list(
         vol.Optional("fp_material_type"): vol.Any(str, None),
         vol.Optional("fp_color_hex"): vol.Any(str, None),
         vol.Optional("fp_sku"): vol.Any(str, None),
-        vol.Optional("needs_weighing"): bool,
     }
 )
 @callback
@@ -695,7 +694,6 @@ def handle_slot_assign(
         "fp_material_type",
         "fp_color_hex",
         "fp_sku",
-        "needs_weighing",
     )
     payload = {name: msg[name] for name in fields if name in msg}
     payload["printer_id"] = str(payload["printer_id"])

@@ -96,9 +96,9 @@ export class AnycubicPrintercardEditor extends LitElement {
         this.config.showFilamentInventory,
         defaultConfig.showFilamentInventory,
       ) as boolean;
-      this.config.showWeighingReminder = undefinedDefault(
-        this.config.showWeighingReminder,
-        defaultConfig.showWeighingReminder,
+      this.config.showSpoolChangedWarning = undefinedDefault(
+        this.config.showSpoolChangedWarning,
+        defaultConfig.showSpoolChangedWarning,
       ) as boolean;
       this.config.allowSpoolAssignment = undefinedDefault(
         this.config.allowSpoolAssignment,
@@ -184,7 +184,7 @@ export class AnycubicCard extends LitElement {
   private showFilamentInventory?: boolean;
 
   @state()
-  private showWeighingReminder?: boolean;
+  private showSpoolChangedWarning?: boolean;
 
   @state()
   private allowSpoolAssignment?: boolean;
@@ -236,7 +236,7 @@ export class AnycubicCard extends LitElement {
       this.scaleFactor = this.config.scaleFactor;
       this.slotColors = this.config.slotColors;
       this.showFilamentInventory = this.config.showFilamentInventory;
-      this.showWeighingReminder = this.config.showWeighingReminder;
+      this.showSpoolChangedWarning = this.config.showSpoolChangedWarning;
       this.allowSpoolAssignment = this.config.allowSpoolAssignment;
       this.monitoredStats = this.config.monitoredStats;
       if (this.config.printer_id && this.printers) {
@@ -273,7 +273,7 @@ export class AnycubicCard extends LitElement {
         .scaleFactor=${this.scaleFactor}
         .slotColors=${this.slotColors}
         .showFilamentInventory=${this.showFilamentInventory}
-        .showWeighingReminder=${this.showWeighingReminder}
+        .showSpoolChangedWarning=${this.showSpoolChangedWarning}
         .allowSpoolAssignment=${this.allowSpoolAssignment}
       ></anycubic-printercard-card>
     `;
