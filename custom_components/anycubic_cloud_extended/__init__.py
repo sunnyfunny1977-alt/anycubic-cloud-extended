@@ -30,6 +30,7 @@ from .filament.store import FilamentStore
 from .helpers import entry_ids_in_data
 from .panel import (
     async_register_card_resource,
+    async_register_filament_panel,
     async_register_panel,
     async_unregister_panel,
 )
@@ -83,11 +84,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if not hass.services.has_service(DOMAIN, service_name):
             hass.services.async_register(DOMAIN, service_name, handler(hass), schema)
 
-    # register panel and the Lovelace card resource
+    # register both panels and the Lovelace card resource
     await async_register_panel(
         hass,
         entry.options.get(CONF_CARD_CONFIG)
     )
+    await async_register_filament_panel(hass)
     await async_register_card_resource(hass)
 
     return True

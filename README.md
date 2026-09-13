@@ -17,8 +17,9 @@ Die Integration wird ueber HACS als benutzerdefiniertes Repository installiert.
 > 🗓️ **Aktuelles Release: 2.0.0**
 >
 > - Die Integrationen `anycubic_ha_integration` und `filament_manager` sind zu einer
->   Integration `anycubic_cloud_extended` zusammengefuehrt. Ein Sidebar-Eintrag,
->   ein Panel; der Filament-Bestand liegt im Reiter **Filament**.
+>   Integration `anycubic_cloud_extended` zusammengefuehrt.
+> - Der Filament-Bestand ist zweifach erreichbar: als Reiter **Filament** im
+>   Anycubic-Panel und als eigener Sidebar-Eintrag **Filament Manager**.
 > - Zu jedem ACE-Slot laesst sich die konkrete Rolle aus dem Bestand waehlen. Die
 >   Auswahl ist auf das Material gefiltert, das der Slot meldet.
 > - Das Rollengewicht wird direkt im Dashboard eingetragen (brutto, Tara wird
@@ -94,8 +95,16 @@ Wenn du ein noch nicht bestaetigtes Modell testest, bitte Rueckmeldung geben: Wi
 ## 🧵 Filament-Bestand
 
 Der frühere eigenständige **Filament Manager** ist Teil dieser Integration. Er
-läuft im Hintergrund und wird über den Reiter **Filament** im Anycubic-Panel
-bedient — ein einziger Sidebar-Eintrag statt zwei.
+läuft im Hintergrund und ist an zwei Stellen bedienbar:
+
+| Zugang | Wofür |
+| --- | --- |
+| Sidebar **Filament Manager** (`/anycubic-filament`) | Bestandsführung: Rollen anlegen, wiegen, Stammdaten pflegen. Funktioniert unabhängig davon, ob ein Drucker online ist. |
+| Reiter **Filament** im Anycubic-Panel | Derselbe Bestand im Druckerkontext, direkt neben den ACE-Slots. |
+
+Beide zeigen dieselben Daten — es gibt genau einen Bestand. Der eigenständige
+Eintrag hat sein eigenes, kleines Frontend-Bundle: wer nur eine Rolle wiegen
+will, lädt nicht das komplette Drucker-Panel samt Kamera-SDK.
 
 ### Rolle einem ACE-Slot zuordnen
 
@@ -533,6 +542,7 @@ python scripts/check_release_version.py
 cd custom_components/anycubic_cloud_extended/frontend_panel
 npm run build
 npm run build_card
+npm run build_filament
 ```
 
 Danach immer die echten Diffs pruefen, weil der Frontend-Build `eslint --fix` ausfuehrt und dadurch auch reine Formatierungs- oder Zeilenenden-Aenderungen entstehen koennen.

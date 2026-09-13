@@ -60,6 +60,6 @@ jobs:
         working-directory: custom_components/anycubic_cloud_extended/frontend_panel
       - name: Build and check diff
         run: |
-          npm run build && npm run build_card
+          npm run build && npm run build_card && npm run build_filament
           git diff --exit-code
         working-directory: custom_components/anycubic_cloud_extended/frontend_panel

@@ -34,14 +34,20 @@ ACE can point at a specific roll in the cupboard.
   `showFilamentInventory`, `showWeighingReminder` and `allowSpoolAssignment`.
 - Integration options for the low-stock threshold, the inventory currency, and
   whether non-admin users may assign and weigh spools.
+- A third frontend bundle, `anycubic-filament-panel.js` (~80 KB), for the
+  standalone inventory panel. The inventory views are dependency-free, so
+  serving them from the printer panel's two-megabyte bundle would mean
+  downloading Lit, date-fns and the Agora video SDK to weigh a spool.
 
 ### Changed
 
 - Domain is `anycubic_cloud_extended`. Entity IDs change accordingly;
   automations and dashboards referring to the predecessors need adjusting once.
-- One sidebar entry. The inventory lives in a **Filament** tab in the Anycubic
-  panel and is also reachable without picking a printer first, so an offline
-  printer does not hide the cupboard.
+- The inventory is reachable two ways: as a **Filament** tab in the Anycubic
+  panel, next to the ACE slots it binds spools to, and as its own sidebar entry
+  **Filament Manager** at `/anycubic-filament`. Stock keeping has nothing to do
+  with any one printer and stays useful while every printer is offline, so it is
+  not buried behind picking one. Both show the same single inventory.
 - Data from both predecessors is imported on first start: the full inventory
   from `filament_manager` (including older storage versions) and the latched
   active ACE slot from `anycubic_ha_integration`. Nothing in the old stores is

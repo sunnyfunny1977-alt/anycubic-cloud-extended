@@ -21,6 +21,18 @@ PANEL_NAME = "anycubic-cloud-extended-panel"
 PANEL_TITLE = "Anycubic Cloud"
 PANEL_ICON = "mdi:printer-3d"
 
+# The filament inventory is reachable two ways on purpose: as a tab inside the
+# printer panel, where a spool is assigned to a slot, and as a sidebar entry of
+# its own for stock keeping, which has nothing to do with any one printer and
+# stays useful while every printer is offline. Both show the same views; only
+# the bundle differs, because the standalone one carries none of the printer
+# panel's dependencies.
+FILAMENT_PANEL_FILENAME = "dist/anycubic-filament-panel.js"
+FILAMENT_PANEL_NAME = "anycubic-filament-manager-panel"
+FILAMENT_PANEL_URL_PATH = "anycubic-filament"
+FILAMENT_PANEL_TITLE = "Filament Manager"
+FILAMENT_PANEL_ICON = "mdi:printer-3d-nozzle"
+
 ATTR_CONFIG_ENTRY = "config_entry"
 ATTR_ANYCUBIC_EVENT = "anycubic_cloud_extended"
 
