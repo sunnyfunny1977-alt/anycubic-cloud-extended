@@ -77,9 +77,11 @@ from .helpers import (
     get_drying_preset_from_entry_options,
     printer_attributes_for_key,
     printer_entity_unique_id,
+    printer_material_used_kg,
     printer_state_connected_ace_units,
     printer_state_for_key,
     printer_state_supports_ace,
+    printer_total_print_hours,
     spool_attributes,
     spool_info_for_active_slot,
     spool_info_for_local_slot,
@@ -329,6 +331,12 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "manual_mqtt_connection_enabled": self._mqtt_manually_connected,
             "mqtt_connection_active": self.anycubic_api.mqtt_is_started,
             "camera_light": printer.camera_light_on,
+            # What the printer has done in its life. The cloud keeps these
+            # counters itself and sends them with every info poll, so there is
+            # nothing to accumulate here.
+            "total_print_time": printer_total_print_hours(printer),
+            "total_material_used": printer_material_used_kg(printer),
+            "total_print_count": printer.print_count,
         }
 
         attributes = {
@@ -373,6 +381,16 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             "job_speed_mode": {
                 "available_modes": printer.latest_project_available_print_speed_modes_data_object,
                 "print_speed_mode_code": printer.latest_project_print_speed_mode,
+            },
+            # The exact figures behind the two rounded lifetime sensors, so a
+            # dashboard can show "10d 21h 57m" without reaching into another
+            # entity's attributes for it.
+            "total_print_time": {
+                "dhm": printer.total_print_time_dhm_str,
+                "raw": printer.total_print_time,
+            },
+            "total_material_used": {
+                "raw": printer.material_used,
             },
             "current_status": {
                 "model": printer.model,

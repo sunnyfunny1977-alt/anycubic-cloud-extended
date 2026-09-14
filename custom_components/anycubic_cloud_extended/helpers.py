@@ -15,11 +15,13 @@ from .const import (
     CONF_DRYING_PRESET_TEMPERATURE_,
     DATA_PREFIX,
     DOMAIN,
+    LOGGER,
     MANUFACTURER,
     PrinterEntityType,
 )
 
 if TYPE_CHECKING:
+    from .anycubic_cloud_api.data_models.printer import AnycubicPrinter
     from .coordinator import AnycubicCloudDataUpdateCoordinator
     from .entity import AnycubicCloudEntityDescription
 
@@ -40,6 +42,16 @@ ENTITY_ID_COMPAT_SUFFIXES: dict[str, str] = {
     "secondary_ace_spools": "secondary_multi_color_box_spools",
     "target_hotbed_temp": "target_hotbed_temperature",
     "target_nozzle_temp": "target_nozzle_temperature",
+}
+
+
+# The lifetime filament total is the one value the cloud sends pre-formatted,
+# as a number with its unit stuck to it ("6.46kg").
+REX_MATERIAL_USED = re.compile(r"^([0-9]+(?:[.,][0-9]+)?)\s*([a-zA-Z]*)$")
+
+MATERIAL_USED_TO_KG: dict[str, float] = {
+    "kg": 1.0,
+    "g": 0.001,
 }
 
 
@@ -80,6 +92,50 @@ def get_drying_preset_from_entry_options(
         preset_duration,
         preset_temperature,
     )
+
+
+def printer_total_print_hours(printer: AnycubicPrinter) -> float | None:
+    """Return how long this printer has been printing in its life, in hours.
+
+    Derived from the parsed duration rather than the API's own
+    `total_print_time_hrs`, which is truncated to whole hours: a counter that
+    can only ever move in one-hour steps makes for a poor graph.
+    """
+    if not printer.total_print_time:
+        return None
+
+    return round(printer.total_print_time_delta.total_seconds() / 3600, 1)
+
+
+def printer_material_used_kg(printer: AnycubicPrinter) -> float | None:
+    """Return the filament this printer has used in its life, in kilograms.
+
+    The cloud sends this one as text with the unit attached -- "6.46kg" on a
+    printer that has been going a while, presumably grams on a fresh one. The
+    unit is therefore read rather than assumed: reading it wrong is a factor
+    of a thousand.
+
+    An unrecognised unit yields None instead of a guess. A missing lifetime
+    total is a gap; one that is out by three orders of magnitude is a lie, and
+    since these feed long-term statistics it would be a lasting one.
+    """
+    raw = printer.material_used
+
+    if not raw:
+        return None
+
+    match = REX_MATERIAL_USED.match(str(raw).strip())
+    factor = MATERIAL_USED_TO_KG.get(match.group(2).lower()) if match else None
+
+    if factor is None:
+        LOGGER.warning(
+            "Cannot read the total filament used from %r: expected a number "
+            "followed by kg or g. The total filament sensor stays unavailable.",
+            raw,
+        )
+        return None
+
+    return round(float(match.group(1).replace(",", ".")) * factor, 3)
 
 
 def printer_state_for_key(

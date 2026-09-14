@@ -409,6 +409,15 @@
       },
       "low_stock": {
         "name": "Filament Mindestbestand"
+      },
+      "total_print_time": {
+        "name": "Gesamte Druckzeit"
+      },
+      "total_material_used": {
+        "name": "Gesamt verbrauchtes Filament"
+      },
+      "total_print_count": {
+        "name": "Gedruckte Projekte"
       }
     },
     "switch": {

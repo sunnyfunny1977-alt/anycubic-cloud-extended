@@ -35,6 +35,19 @@ ACE can point at a specific roll in the cupboard.
   `allowSpoolAssignment`.
 - Integration options for the low-stock threshold, the inventory currency, and
   whether non-admin users may assign and weigh spools.
+- **The printer's lifetime counters as sensors.** `total_print_time` (hours),
+  `total_material_used` (kg) and `total_print_count`, with
+  `state_class: total_increasing` so they reach long-term statistics. The cloud
+  keeps these counters itself and sends them with the info poll the integration
+  already makes, so there is no extra request and nothing to accumulate. Two of
+  them were previously buried as attributes of the `current_status` sensor
+  (those attributes stay); the print count was parsed but never surfaced at all.
+  - The filament total arrives as text with its unit attached ("6.46kg"), so the
+    unit is read rather than assumed. An unrecognised unit leaves the sensor
+    unavailable and logs the raw value — being out by a factor of a thousand in
+    a statistics-backed total would be worse than a gap.
+  - A descriptor may now set its own `state_class`; it used to be overwritten
+    with `measurement` unconditionally.
 - A third frontend bundle, `anycubic-filament-panel.js` (~80 KB), for the
   standalone inventory panel. The inventory views are dependency-free, so
   serving them from the printer panel's two-megabyte bundle would mean

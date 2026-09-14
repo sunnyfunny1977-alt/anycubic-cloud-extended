@@ -580,6 +580,15 @@
       },
       "low_stock": {
         "name": "Filament Low Stock"
+      },
+      "total_print_time": {
+        "name": "Total Print Time"
+      },
+      "total_material_used": {
+        "name": "Total Filament Used"
+      },
+      "total_print_count": {
+        "name": "Total Prints"
       }
     },
     "switch": {

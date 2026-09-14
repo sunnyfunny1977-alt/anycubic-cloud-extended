@@ -370,6 +370,37 @@ SENSOR_TYPES: list[AnycubicSensorEntityDescription] = list([
         translation_key="job_z_thick",
         printer_entity_type=PrinterEntityType.PRINTER,
     ),
+    # Lifetime counters kept by the cloud itself. `create_when_available`
+    # because not every printer reports all three: one that does not simply
+    # gets no entity, rather than one that is permanently unknown.
+    AnycubicSensorEntityDescription(
+        key="total_print_time",
+        translation_key="total_print_time",
+        native_unit_of_measurement=UnitOfTime.HOURS,
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        suggested_display_precision=0,
+        printer_entity_type=PrinterEntityType.PRINTER,
+        create_when_available=True,
+    ),
+    AnycubicSensorEntityDescription(
+        key="total_material_used",
+        translation_key="total_material_used",
+        native_unit_of_measurement=UnitOfMass.KILOGRAMS,
+        device_class=SensorDeviceClass.WEIGHT,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        suggested_display_precision=2,
+        printer_entity_type=PrinterEntityType.PRINTER,
+        create_when_available=True,
+    ),
+    AnycubicSensorEntityDescription(
+        key="total_print_count",
+        translation_key="total_print_count",
+        icon="mdi:counter",
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        printer_entity_type=PrinterEntityType.PRINTER,
+        create_when_available=True,
+    ),
 ])
 
 GLOBAL_SENSOR_TYPES: list[AnycubicSensorEntityDescription] = list([
@@ -428,6 +459,11 @@ class AnycubicSensor(AnycubicCloudEntity, SensorEntity):
 
         if self.entity_description.not_measured:
             self._attr_state_class = None
+        elif self.entity_description.state_class is not None:
+            # A lifetime counter is not a measurement. Without this branch the
+            # descriptor's own choice is silently replaced and the value never
+            # reaches long-term statistics as a total.
+            self._attr_state_class = self.entity_description.state_class
         else:
             self._attr_state_class = SensorStateClass.MEASUREMENT
 
