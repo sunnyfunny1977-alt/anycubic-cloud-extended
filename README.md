@@ -495,25 +495,28 @@ Fehler, Verbesserungsvorschlaege und Erfahrungen mit weiteren Druckermodellen ko
 ## 🔐 Token auslesen (Slicer Next)
 
 1. **Slicer Next starten und eingeloggt lassen**
-2. PowerShell-Skript fuer Slicer Next 1.4.1.2+ (durchsucht alle Logdateien, waehlt den zeitlich neuesten Access-Token und kopiert ihn in die Zwischenablage):
-   ```powershell
-   $logDir = Join-Path $env:AppData 'AnycubicSlicerNext\log'
-   $hit = Get-ChildItem $logDir -Filter 'debug_*.log' | Select-String -Pattern 'accessToken\s*=\s*([^,\s]+)' | ForEach-Object { $ts = [datetime]::MinValue; if ($_.Line -match '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})') { $ts = [datetime]::ParseExact($Matches[1],'yyyy-MM-dd HH:mm:ss',$null) }; [pscustomobject]@{ Time=$ts; Token=$_.Matches[0].Groups[1].Value; File=$_.Filename } } | Sort-Object Time | Select-Object -Last 1
-   if (-not $hit) { throw 'Kein accessToken gefunden - im Slicer einmal ab- und wieder anmelden.' }
-   $hit.Token | Set-Clipboard
-   "OK - $($hit.File) ($($hit.Time)), $($hit.Token.Length) Zeichen kopiert."
+2. PowerShell-Skript aus dem Repository ausfuehren: [`scripts/anycubic-token.ps1`](scripts/anycubic-token.ps1)
+   Es durchsucht alle Logdateien, nimmt den zeitlich neuesten Token und legt ihn in die
+   Zwischenablage. Ausgegeben werden nur Fundstelle, Laenge und Ablaufdatum — **nie der Token selbst**:
    ```
-3. Das Skript liegt auch als Datei im Repository: [`scripts/anycubic-token.ps1`](scripts/anycubic-token.ps1) — herunterladen und in PowerShell ausfuehren, statt es zu kopieren.
-4. Alternative fuer aeltere Slicer-Versionen mit Klartext-Token in der `.conf`:
-   ```powershell
-   $path = "$env:AppData\AnycubicSlicerNext\AnycubicSlicerNext.conf"; 
-   (Select-String -Path $path -Pattern '"access_token"\s*:\s*"([^"]+)"').Matches.Groups[1].Value | Set-Clipboard
+   OK - kopiert: 1242 Zeichen, 3 JWT-Teile
+        Quelle : debug_6_0919_1629.25_27152.0.log, Zeile 175 (19.09.2026 16:29:30)
+        Gueltig bis 18.12.2026 15:26:29
    ```
-5. In Integration einfügen → fertig
+3. In Integration einfuegen → fertig
 
-> Hinweis: Der aktuelle Slicer-Next-Token ist ein JWT und besteht aus drei durch Punkte getrennten Teilen. Die Integration entfernt Anführungszeichen, Whitespace und kann auch Log-Zeilen wie `accessToken = ...` verarbeiten.
+> **Slicer Next 2.x schreibt den Token unter einem anderen Namen.** Bis 1.4.x gab es eine eigene
+> Zeile `accessToken = ...`; 2.0.0.3 schreibt sie nicht mehr und haengt den Wert stattdessen als
+> `id_token=` an die Portal-URLs in den `debug_*.log`. Das Skript kennt beide Schreibweisen, der
+> Wert ist derselbe: ein JWT aus drei durch Punkte getrennten Teilen. Die Integration entfernt
+> Anfuehrungszeichen und Whitespace selbst.
 
----
+> **„Kein Token gefunden"?** Dann steht in den Logs nur die maskierte Form `id_token=***`. Im
+> Slicer einmal abmelden und wieder anmelden — beim Login-Durchlauf wird der Wert im Klartext
+> protokolliert — und das Skript erneut ausfuehren.
+
+> **Hinweis zur `.conf`:** Aeltere Anleitungen lesen den Token aus
+> `AnycubicSlicerNext.conf`. Seit 2.x steht er dort nicht mehr; die Datei ist keine Quelle mehr.
 
 ## 🌐 Web-Login (ohne MQTT, nur Polling)
 

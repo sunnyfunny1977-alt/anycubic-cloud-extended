@@ -93,6 +93,21 @@ ACE can point at a specific roll in the cupboard.
 
 ### Fixed
 
+- **`scripts/anycubic-token.ps1` finds the token again on Slicer Next 2.x.** Up
+  to 1.4.x the slicer wrote a dedicated `accessToken = <jwt>` line; 2.0.0.3 does
+  not write it at all and carries the same value as `id_token=` on the portal
+  URLs in `debug_*.log` instead, so the script matched nothing and threw. Both
+  spellings are searched now, the newest hit wins, and masked occurrences
+  (`id_token=***`, which the slicer also writes) are skipped rather than copied
+  as a bogus value. The value is unchanged: the same 3-part JWT the config flow
+  already expected.
+  - The script now also reports the token's expiry. An expired token makes the
+    integration answer "Authentication failed. Check credentials.", which reads
+    as a wrong token rather than an old one.
+  - It still never prints the token — only where it was found, how long it is,
+    and until when it is valid.
+  - The `.conf` fallback in the README is gone: 2.x no longer keeps the token
+    there either.
 - The printer list no longer offers devices belonging to a predecessor Anycubic
   integration. Both create a device for the same printer with manufacturer
   "Anycubic", so picking the wrong one sent service calls to this domain
