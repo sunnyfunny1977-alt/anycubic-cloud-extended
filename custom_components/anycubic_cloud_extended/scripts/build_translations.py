@@ -17,6 +17,9 @@ REX_TRANSLATION_KEY = r"\[\%key:([a-z0-9_]+(?:::(?:[a-z0-9-_])+)+(?:{[\w\d\-_ ]+
 REX_DICT_TRANSLATION_KEY = r"\[\%dictkey:([a-z0-9_]+(?:::(?:[a-z0-9-_#])+)+)\%\]"
 REX_VAR_SUB = r"{([\w\d\-_ ]+)}"
 
+# Written explicitly so the output does not depend on the platform.
+LF = chr(10)
+
 
 def substitute_translation_references(
     integration_strings: dict[str, Any],
@@ -117,7 +120,10 @@ def substitute_reference(
 
 
 def read_input_strings(file_path: Path) -> dict[str, Any]:
-    input_string_data = file_path.read_text()
+    # Without an explicit encoding this reads the locale codepage on
+    # Windows and UTF-8 on Linux, so the same input produced different
+    # output depending on who ran it -- an em dash came out mangled.
+    input_string_data = file_path.read_text(encoding="utf-8")
     input_string_dict: dict[str, Any] = json.loads(input_string_data)
 
     return input_string_dict
@@ -144,12 +150,12 @@ def run_single(
     )
 
     (TRANSLATIONS_DIR / file_path.name).write_text(
-        translated_dump
+        translated_dump, encoding="utf-8", newline=LF
     )
 
     if file_path.name == "en.json":
         OUT_STRINGS_PATH.write_text(
-            translated_dump
+            translated_dump, encoding="utf-8", newline=LF
         )
 
 

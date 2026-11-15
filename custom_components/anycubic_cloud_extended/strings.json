@@ -1408,7 +1408,7 @@
     },
     "legacy_anycubic_integration_present": {
       "title": "The previous Anycubic integration is still installed",
-      "description": "`{legacy_domain}` and Anycubic Cloud Extended sign in to the same Anycubic cloud account, and the cloud allows only one session per account. Each integration refreshes the access token on its own, so whichever refreshes last invalidates the other, which then fails with \"Authentication failed. Check credentials.\". A new token does not help \u00e2\u20ac\u201d the next refresh breaks it again. Remove one of the two integrations. Entity IDs of the one you remove become free, so you can rename the survivor's entities to match and keep your automations and dashboards working."
+      "description": "`{legacy_domain}` and Anycubic Cloud Extended sign in to the same Anycubic cloud account, and the cloud allows only one session per account. Each integration refreshes the access token on its own, so whichever refreshes last invalidates the other, which then fails with \"Authentication failed. Check credentials.\". A new token does not help \u2014 the next refresh breaks it again. Remove one of the two integrations. Entity IDs of the one you remove become free, so you can rename the survivor's entities to match and keep your automations and dashboards working."
     }
   }
 }
