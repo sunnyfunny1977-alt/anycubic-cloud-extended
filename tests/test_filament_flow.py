@@ -366,6 +366,52 @@ check("weighing clears the flag", store4.find_assignment(*SLOT4)["depleted"] is 
 check("and restores a real figure", remaining4() == 800.0, remaining4())
 
 # --------------------------------------------------------------------------
+print("\n7h. A binding made without a fingerprint must not count as a swap")
+
+# The panel binds a slot with just the item and the spool: it knows the slot,
+# not how the signature is built. Reading the empty fingerprint as a change
+# marked the binding stale a second after it was made, and a stale binding is
+# deliberately never charged -- so nothing was ever deducted.
+store4.set_assignment({
+    "printer_id": "42", "box_id": 0, "local_slot": 1,
+    "item_id": item4["id"], "spool_id": spool4["id"],
+})
+fresh = store4.find_assignment(*SLOT4)
+check("bound without a fingerprint", fresh["fingerprint"] == "", fresh["fingerprint"])
+
+binder4 = SlotBindingManager(hass4)
+live = {
+    "material_type": "PLA", "color": [255, 0, 0], "sku": "X-1",
+    "status": 5, "spool_loaded": True, "local_slot": 1,
+}
+
+
+def build4(spool):
+    return {"printers": {42: {"states": {}, "attributes": {
+        "ace_spools": {"spool_info": [dict(spool)]},
+        "ace_slot_1": {"material_type": "PLA"},
+    }}}}
+
+
+binder4.reconcile_and_enrich(build4(live))
+after = store4.find_assignment(*SLOT4)
+check("not marked stale", after["stale"] is False, after["stale"])
+check("the slot's signature was adopted",
+      after["fingerprint"] == spool_fingerprint(live), after["fingerprint"])
+check("and recorded for diagnosis", after["fp_material_type"] == "PLA")
+
+before7h = remaining4()
+ConsumptionTracker(hass4).apply("42", "job-7h", 12.0, ACTIVE)
+check("so the job is actually charged", remaining4() == before7h - 12.0, remaining4())
+
+print("\n7i. A real swap is still caught")
+binder4.reconcile_and_enrich(build4(dict(live, color=[0, 0, 255])))
+check("different filament marks it stale",
+      store4.find_assignment(*SLOT4)["stale"] is True)
+before7i = remaining4()
+ConsumptionTracker(hass4).apply("42", "job-7i", 50.0, ACTIVE)
+check("and a stale binding stays uncharged", remaining4() == before7i, remaining4())
+
 print("\n" + "=" * 60)
 if failures:
     print(f"FAILURES ({len(failures)}):")

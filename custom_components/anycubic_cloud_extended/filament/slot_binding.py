@@ -28,7 +28,11 @@ from ..const import (
     LOGGER,
     MAX_ACE_SLOTS,
 )
-from ..helpers import spool_fingerprint, spool_info_for_local_slot
+from ..helpers import (
+    spool_color_hex,
+    spool_fingerprint,
+    spool_info_for_local_slot,
+)
 from .models import utcnow_iso
 
 # Which attribute of the printer dict holds which box, and what entity key
@@ -155,6 +159,32 @@ class SlotBindingManager:
 
         current = spool_fingerprint(spool)
         stored = assignment.get("fingerprint") or ""
+
+        if not stored:
+            # Bound without a fingerprint, which a client is not obliged to
+            # supply: the panel knows the slot but not how the signature is
+            # built, and duplicating that in the frontend would be a second
+            # implementation to keep in step. An empty one means nobody ever
+            # recorded what was in the slot -- not that the filament changed --
+            # so adopt what is there now. Calling it a swap would mark the
+            # binding stale a second after it was made, and a stale binding is
+            # deliberately never charged for what it prints.
+            changes.append(
+                {
+                    "printer_id": printer_id,
+                    "box_id": box_id,
+                    "local_slot": local_slot,
+                    "fingerprint": current,
+                    "fp_material_type": str(spool.get("material_type") or ""),
+                    "fp_color_hex": spool_color_hex(spool.get("color")) or "",
+                    "fp_sku": str(spool.get("sku") or ""),
+                    "fp_status": spool.get("status"),
+                    "stale": False,
+                    "stale_since": None,
+                }
+            )
+            detail["stale"] = False
+            return detail
 
         if current == stored:
             if assignment.get("stale"):
