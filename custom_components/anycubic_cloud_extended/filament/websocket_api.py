@@ -133,6 +133,7 @@ def async_register_commands(hass: HomeAssistant) -> None:
         handle_slot_list,
         handle_slot_assign,
         handle_slot_clear,
+        handle_slot_confirm,
         handle_slot_weigh,
     ):
         websocket_api.async_register_command(hass, handler)
@@ -725,6 +726,35 @@ def handle_slot_clear(
         connection,
         msg,
         lambda store: store.clear_assignment(
+            str(msg["printer_id"]), msg["box_id"], msg["local_slot"]
+        ),
+    )
+
+
+@websocket_api.websocket_command(
+    {vol.Required("type"): f"{WS_PREFIX}/slot/confirm", **SLOT_FIELDS}
+)
+@callback
+def handle_slot_confirm(
+    hass: HomeAssistant,
+    connection: websocket_api.ActiveConnection,
+    msg: dict[str, Any],
+) -> None:
+    """Accept a slot as it stands and clear the swap mark.
+
+    The mark is a question put to the user, and this is the answer. Deduction
+    resumes from here, so it needs the same permission as binding a slot.
+    """
+    if not _weighing_allowed(hass, connection):
+        connection.send_error(
+            msg["id"], "unauthorized", "Not allowed to confirm slots"
+        )
+        return
+    _answer(
+        hass,
+        connection,
+        msg,
+        lambda store: store.confirm_assignment(
             str(msg["printer_id"]), msg["box_id"], msg["local_slot"]
         ),
     )

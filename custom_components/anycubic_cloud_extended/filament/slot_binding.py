@@ -169,6 +169,15 @@ class SlotBindingManager:
             # so adopt what is there now. Calling it a swap would mark the
             # binding stale a second after it was made, and a stale binding is
             # deliberately never charged for what it prints.
+            #
+            # An empty slot is not worth recording, though: the ACE reports one
+            # during every feed, and adopting that signature would mark the
+            # binding stale again as soon as the roll came back. Waiting costs
+            # nothing, because an empty slot is not printing either.
+            if not spool.get("spool_loaded"):
+                detail["stale"] = False
+                return detail
+
             changes.append(
                 {
                     "printer_id": printer_id,

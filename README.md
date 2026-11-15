@@ -191,7 +191,15 @@ fehlschlagen.
 Beim Zuordnen wird festgehalten, was im Slot steckte (Materialtyp, Farbe, SKU).
 Ändert sich das, wird die Zuordnung als *zu prüfen* markiert — sie beschreibt
 dann nicht mehr, was tatsächlich im Slot liegt, und der Slot bekommt im Panel
-und in der Card ein Warndreieck.
+und in der Card ein Warndreieck. Solange die Markierung steht, wird der
+Verbrauch **nicht** abgezogen: welche Rolle gerade druckt, ist dann offen, und
+die falsche zu belasten wäre schlechter als gar nichts zu tun.
+
+Die Frage beantwortet ein **Erledigt**-Button direkt an der Meldung. Er nimmt
+den Slot so an, wie er jetzt ist: die hinterlegte Signatur wird verworfen, der
+nächste Abgleich übernimmt, was tatsächlich eingelegt ist, und der Abzug läuft
+weiter. Nur das Flag zu löschen würde nicht reichen — der nächste Durchlauf
+vergliche die alte Signatur erneut und würde sofort wieder warnen.
 
 **Gewogen wird, wenn der Anwender es möchte.** Die Integration fordert nicht dazu
 auf: es gibt keine `needs_weighing`-Entitäten, keinen Zähler offener
@@ -205,7 +213,9 @@ Messwert, also mit Verlauf und Statistik. Die vollständige Zuordnung inklusive
 Kurzzeitige Aussetzer sind eingeplant: Der ACE meldet während eines
 Filamentwechsels für ein paar Sekunden einen leeren Slot. Die Zuordnung wird
 deshalb nie automatisch gelöscht, sondern nur markiert, und eine Rückkehr zum
-bekannten Filament hebt die Markierung von selbst wieder auf.
+bekannten Filament hebt die Markierung von selbst wieder auf. Aus demselben
+Grund wird ein leerer Slot nie als Signatur übernommen — sonst stünde die
+Warnung wieder da, sobald die Rolle zurück ist.
 
 Von Hand lässt sie sich jederzeit lösen: neben **Ändern** sitzt bei jedem
 belegten Slot ein **Löschen**-Button. Er entfernt nur die Zuordnung — die Rolle

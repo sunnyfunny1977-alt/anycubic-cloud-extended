@@ -670,6 +670,34 @@ class FilamentStore:
         ]
         self._save_and_notify()
 
+    def confirm_assignment(
+        self, printer_id: Any, box_id: Any, local_slot: Any
+    ) -> SlotAssignment:
+        """Accept a slot as it now stands, clearing the swap mark.
+
+        Only the user can decide whether the roll in the slot is still the one
+        the binding names. When they say it is, the recorded signature is
+        dropped rather than overwritten: computing the new one here would mean
+        reaching into the coordinator from the store, and the reconciler
+        already adopts what a slot reports when nothing has been recorded for
+        it. Clearing the flag on its own would not hold -- the next cycle would
+        compare the old signature again and mark it straight back.
+        """
+        existing = self.find_assignment(printer_id, box_id, local_slot)
+        if existing is None:
+            raise FilamentError(ERR_NOT_FOUND, collection="assignments")
+
+        record = cast(dict[str, Any], existing)
+        record["fingerprint"] = ""
+        record["fp_material_type"] = ""
+        record["fp_color_hex"] = ""
+        record["fp_sku"] = ""
+        record["fp_status"] = None
+        record["stale"] = False
+        record["stale_since"] = None
+        self._save_and_notify()
+        return existing
+
     def weigh_assignment(
         self,
         printer_id: Any,

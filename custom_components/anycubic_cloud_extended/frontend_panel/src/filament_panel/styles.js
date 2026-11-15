@@ -320,6 +320,29 @@ export const panelStyles = `
     color: var(--warning-color, #ffa600);
   }
 
+  /* Wraps on a narrow card, so the button drops under the text rather than
+     squeezing it into a column of single words. */
+  .ace-warn-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
+  }
+  .ace-warn-row .grow { flex: 1 1 auto; min-width: 0; }
+
+  .ace-warn-btn {
+    flex: 0 0 auto;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 500;
+    color: inherit;
+    background: transparent;
+    border: 1px solid currentColor;
+    border-radius: 6px;
+  }
+  .ace-warn-btn:hover { background: rgba(255, 166, 0, 0.12); }
+  .ace-warn-btn:disabled { opacity: 0.5; cursor: not-allowed; background: transparent; }
+
   /* Pushed down so the buttons line up however tall the slot above is. */
   .ace-slot-actions {
     display: flex;

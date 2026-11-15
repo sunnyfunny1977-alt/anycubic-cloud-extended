@@ -37,6 +37,12 @@ function slotCard(slot, isAdmin) {
   const loaded = Boolean(slot.spool_loaded);
   const active = Boolean(slot.is_active);
 
+  // `stale_confirmed` is this session's answer to the warning. The slot
+  // sensors only carry the cleared mark on the printer's next cycle, and a
+  // warning that stays put for a quarter minute after being dismissed reads
+  // as a button that did not work.
+  const stale = Boolean(assignment && assignment.stale && !slot.stale_confirmed);
+
   const grams = assignment ? assignment.remaining_grams : null;
   const percent = assignment ? assignment.remaining_percent : null;
   const low = percent !== null && percent !== undefined && percent < 10;
@@ -76,8 +82,20 @@ function slotCard(slot, isAdmin) {
     ${assignment && assignment.depleted
       ? html`<div class="ace-warn">${t("ace.depleted")}</div>`
       : ""}
-    ${assignment && assignment.stale
-      ? html`<div class="ace-warn">${t("ace.changed")}</div>`
+    ${stale
+      ? html`<div class="ace-warn ace-warn-row">
+          <span class="grow">${t("ace.changed")}</span>
+          <button
+            class="ace-warn-btn"
+            data-action="confirm-slot"
+            data-printer="${slot.printer_id}"
+            data-box="${slot.box_id}"
+            data-slot="${slot.local_slot}"
+            ${raw(isAdmin ? "" : "disabled")}
+          >
+            ${t("ace.confirm")}
+          </button>
+        </div>`
       : ""}
 
     <div class="ace-slot-actions">

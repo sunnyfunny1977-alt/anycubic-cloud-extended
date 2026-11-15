@@ -412,6 +412,48 @@ before7i = remaining4()
 ConsumptionTracker(hass4).apply("42", "job-7i", 50.0, ACTIVE)
 check("and a stale binding stays uncharged", remaining4() == before7i, remaining4())
 
+print("\n7j. Acknowledging the warning sticks, and deduction resumes")
+
+# "Erledigt" drops the recorded signature rather than overwriting it: the
+# store cannot compute the new one without reaching into the coordinator, and
+# the reconciler already adopts a slot nobody has recorded. Clearing the flag
+# alone would not hold -- the next cycle would compare the old signature
+# again and mark it straight back.
+swapped = dict(live, color=[0, 0, 255])
+store4.confirm_assignment(*SLOT4)
+confirmed = store4.find_assignment(*SLOT4)
+check("the mark is gone", confirmed["stale"] is False, confirmed["stale"])
+check("and the old signature with it", confirmed["fingerprint"] == "",
+      confirmed["fingerprint"])
+
+binder4.reconcile_and_enrich(build4(swapped))
+after7j = store4.find_assignment(*SLOT4)
+check("the next cycle does not mark it again", after7j["stale"] is False,
+      after7j["stale"])
+check("it adopts what is in the slot now",
+      after7j["fingerprint"] == spool_fingerprint(swapped), after7j["fingerprint"])
+
+before7j = remaining4()
+ConsumptionTracker(hass4).apply("42", "job-7j", 30.0, ACTIVE)
+check("and the roll is charged again", remaining4() == before7j - 30.0, remaining4())
+
+print("\n7k. An empty slot is not adopted as a signature")
+
+# The ACE reports an empty slot for a few seconds during every feed. Writing
+# that down would mark the binding stale again as soon as the roll came back.
+store4.confirm_assignment(*SLOT4)
+binder4.reconcile_and_enrich(build4(dict(swapped, spool_loaded=False, color=None)))
+during = store4.find_assignment(*SLOT4)
+check("nothing is recorded while the slot reads empty", during["fingerprint"] == "",
+      during["fingerprint"])
+check("and it is not called a swap", during["stale"] is False, during["stale"])
+
+binder4.reconcile_and_enrich(build4(swapped))
+after7k = store4.find_assignment(*SLOT4)
+check("the roll coming back is adopted",
+      after7k["fingerprint"] == spool_fingerprint(swapped), after7k["fingerprint"])
+check("with no warning raised", after7k["stale"] is False, after7k["stale"])
+
 print("\n" + "=" * 60)
 if failures:
     print(f"FAILURES ({len(failures)}):")

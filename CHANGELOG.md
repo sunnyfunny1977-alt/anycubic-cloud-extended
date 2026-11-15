@@ -15,6 +15,18 @@
 
 ### Added
 
+- **Erledigt on the swap warning.** The mark is a question put to the user --
+  does the binding still describe the slot? -- and until now there was no way
+  to answer it except by rebinding the slot. The button accepts the slot as it
+  stands: the recorded signature is dropped, the next reconcile adopts what is
+  actually in there, and deduction resumes. Clearing the flag alone would not
+  hold, because the next cycle would compare the old signature again.
+  - An empty slot is never adopted as a signature. The ACE reports one during
+    every feed, and writing it down would raise the warning again as soon as
+    the roll came back.
+  - The panel hides the warning the moment it is acknowledged rather than
+    waiting for the printer's next cycle, and shows it again if the slot is
+    marked afresh.
 - **Löschen beside Ändern on every bound ACE slot.** Releasing a binding was
   only reachable as an entry in the roll picker inside the slot dialog, which
   put a one-step action behind two steps and a dropdown. It removes the binding

@@ -72,6 +72,7 @@ class FilamentManagerPanel extends HTMLElement {
     this._unsubscribe = null;
     this._toastTimer = null;
     this._overlayKey = "";
+    this._confirmedSlots = new Set();
 
     this._state = {
       view: "overview",
@@ -246,14 +247,24 @@ class FilamentManagerPanel extends HTMLElement {
 
       const slots = info
         .filter((slot) => slot && slot.printer_id && slot.local_slot)
-        .map((slot) => ({
-          ...slot,
-          is_active: Boolean(
-            active &&
-              active.local_slot === slot.local_slot &&
-              active.box_id === slot.box_id
-          ),
-        }));
+        .map((slot) => {
+          const key = `${slot.printer_id}:${slot.box_id}:${slot.local_slot}`;
+          const marked = Boolean(slot.assignment && slot.assignment.stale);
+
+          // Data that no longer carries the mark retires the local answer,
+          // so a later swap of the same slot is shown again.
+          if (!marked) this._confirmedSlots.delete(key);
+
+          return {
+            ...slot,
+            is_active: Boolean(
+              active &&
+                active.local_slot === slot.local_slot &&
+                active.box_id === slot.box_id
+            ),
+            stale_confirmed: this._confirmedSlots.has(key),
+          };
+        });
 
       if (slots.length) {
         boxes.push({ name: attributes.friendly_name || entityId, slots });
@@ -703,6 +714,26 @@ class FilamentManagerPanel extends HTMLElement {
 
       // Only the binding goes: the roll keeps the remaining weight the
       // automatic deduction has arrived at and stays in the cupboard.
+      // The warning asks whether the binding still describes the slot.
+      // This is the user answering yes, and deduction resumes from here.
+      "confirm-slot": async (dataset) => {
+        try {
+          await this._call({
+            type: `${WS}/slot/confirm`,
+            printer_id: String(dataset.printer),
+            box_id: Number(dataset.box),
+            local_slot: Number(dataset.slot),
+          });
+        } catch {
+          return;
+        }
+        this._confirmedSlots.add(
+          `${dataset.printer}:${dataset.box}:${dataset.slot}`
+        );
+        this._renderApp();
+        this._toast(t("ace.confirm_toast"));
+      },
+
       "clear-slot": (dataset) => {
         this._confirm({
           title: t("ace.clear_title"),
