@@ -147,7 +147,7 @@ class SlotBindingManager:
         if assignment is None:
             return None
 
-        detail = store.assignment_detail(assignment)
+        detail: dict[str, Any] | None = store.assignment_detail(assignment)
         if detail is None:
             # Pruning happens on load and on delete; a dangling record here
             # means the data changed underneath us, so just hide it.

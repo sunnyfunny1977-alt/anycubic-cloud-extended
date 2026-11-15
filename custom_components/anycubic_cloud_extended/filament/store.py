@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from collections.abc import Mapping
+from typing import Any, cast
 
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_send
@@ -21,16 +22,16 @@ from .const import (
 from .legacy_import import async_import_legacy_filament
 from .models import (
     Item,
-    SlotAssignment,
     Manufacturer,
     Material,
     OpenSpool,
+    SlotAssignment,
     SpoolType,
+    assignment_key,
     default_data,
     item_total_grams,
     item_total_spools,
     net_from_gross,
-    assignment_key,
     normalize_assignment,
     normalize_item,
     normalize_manufacturer,
@@ -61,8 +62,8 @@ def migrate_v1_to_v2(old_data: dict[str, Any]) -> dict[str, Any]:
     (manufacturer + material + size), so one entry covers every colour.
     """
     items = [dict(entry) for entry in old_data.get("items", []) if isinstance(entry, dict)]
-    spool_types: list[dict[str, Any]] = []
-    by_key: dict[tuple, dict[str, Any]] = {}
+    spool_types: list[SpoolType] = []
+    by_key: dict[tuple, SpoolType] = {}
 
     for item in items:
         key = spool_type_key(
@@ -70,7 +71,7 @@ def migrate_v1_to_v2(old_data: dict[str, Any]) -> dict[str, Any]:
             item.get("material_id"),
             item.get("spool_net_weight_g"),
         )
-        record = by_key.get(key)
+        record: SpoolType | None = by_key.get(key)
         if record is None:
             record = normalize_spool_type(
                 {
@@ -288,7 +289,7 @@ class FilamentStore:
         """Return one record or raise if it does not exist."""
         for entry in self._data[collection]:
             if entry.get("id") == record_id:
-                return entry
+                return cast(dict[str, Any], entry)
         raise FilamentError(ERR_NOT_FOUND, collection=collection, id=record_id)
 
     def _usage_count(self, field: str, record_id: str) -> int:
@@ -316,7 +317,7 @@ class FilamentStore:
             raise FilamentError(ERR_INVALID, field="name")
         existing.update(record)
         self._save_and_notify()
-        return existing
+        return cast(Manufacturer, existing)
 
     def delete_manufacturer(self, record_id: str) -> None:
         """Delete a manufacturer that is not referenced by any item."""
@@ -349,7 +350,7 @@ class FilamentStore:
             raise FilamentError(ERR_INVALID, field="name")
         existing.update(record)
         self._save_and_notify()
-        return existing
+        return cast(Material, existing)
 
     def delete_material(self, record_id: str) -> None:
         """Delete a material that is not referenced by any item."""
@@ -380,7 +381,7 @@ class FilamentStore:
         )
 
     @staticmethod
-    def _key_of(record: dict[str, Any], net_field: str) -> tuple:
+    def _key_of(record: Mapping[str, Any], net_field: str) -> tuple:
         """Return the spool-type key of an item or a spool type."""
         return spool_type_key(
             record.get("manufacturer_id"),
@@ -392,19 +393,19 @@ class FilamentStore:
         """Return the spool type for a business key, if it exists."""
         for entry in self._data["spool_types"]:
             if self._key_of(entry, "net_weight_g") == key:
-                return entry
+                return cast(SpoolType, entry)
         return None
 
-    def spool_type_for(self, item: Item) -> SpoolType | None:
+    def spool_type_for(self, item: Mapping[str, Any]) -> SpoolType | None:
         """Return the spool type an item belongs to."""
         return self._find_spool_type(self._key_of(item, "spool_net_weight_g"))
 
-    def item_tare(self, item: Item) -> float | None:
+    def item_tare(self, item: Mapping[str, Any]) -> float | None:
         """Return the empty-spool weight that applies to an item."""
         spool_type = self.spool_type_for(item)
         return None if spool_type is None else spool_type.get("empty_weight_g")
 
-    def _ensure_spool_type(self, item: Item) -> SpoolType:
+    def _ensure_spool_type(self, item: Mapping[str, Any]) -> SpoolType:
         """Create the spool type of an item if this combination is new."""
         key = self._key_of(item, "spool_net_weight_g")
         existing = self._find_spool_type(key)
@@ -451,9 +452,9 @@ class FilamentStore:
         existing.update(record)
         self._recompute_weighed_spools(existing)
         self._save_and_notify()
-        return existing
+        return cast(SpoolType, existing)
 
-    def _recompute_weighed_spools(self, spool_type: SpoolType) -> None:
+    def _recompute_weighed_spools(self, spool_type: Mapping[str, Any]) -> None:
         """Recompute the remaining grams of every weighed spool of a type."""
         tare = spool_type.get("empty_weight_g")
         if tare is None:
@@ -498,7 +499,7 @@ class FilamentStore:
         self._ensure_spool_type(record)
         existing.update(record)
         self._save_and_notify()
-        return existing
+        return cast(Item, existing)
 
     def delete_item(self, record_id: str) -> None:
         """Delete an inventory item."""
@@ -509,7 +510,7 @@ class FilamentStore:
         self._prune_assignments()
         self._save_and_notify()
 
-    def _validate_references(self, item: Item) -> None:
+    def _validate_references(self, item: Mapping[str, Any]) -> None:
         """Make sure the referenced manufacturer and material exist."""
         self._find("manufacturers", item["manufacturer_id"])
         self._find("materials", item["material_id"])
@@ -520,7 +521,7 @@ class FilamentStore:
         existing["sealed_count"] = max(0, int(count))
         existing["updated_at"] = utcnow_iso()
         self._save_and_notify()
-        return existing
+        return cast(Item, existing)
 
     # ------------------------------------------------------------------
     # Opened spools
@@ -557,10 +558,10 @@ class FilamentStore:
                 spool.update(normalize_open_spool({**payload, "id": spool_id}, spool))
                 existing["updated_at"] = utcnow_iso()
                 self._save_and_notify()
-                return spool
+                return cast(OpenSpool, spool)
         raise FilamentError(ERR_NOT_FOUND, collection="open_spools", id=spool_id)
 
-    def _apply_gross_weight(self, item: Item, raw: dict[str, Any]) -> dict[str, Any]:
+    def _apply_gross_weight(self, item: Mapping[str, Any], raw: dict[str, Any]) -> dict[str, Any]:
         """Resolve a weighed reading against the tare of the item's spool type.
 
         The reading is kept so a later correction of the empty-spool weight can
@@ -570,7 +571,7 @@ class FilamentStore:
         payload = dict(raw)
         gross = payload.get("gross_weight_g")
 
-        if gross in (None, ""):
+        if gross is None or gross == "":
             if "remaining_grams" in payload:
                 payload["gross_weight_g"] = None
             else:
@@ -617,7 +618,7 @@ class FilamentStore:
                 entry["printer_id"], entry["box_id"], entry["local_slot"]
             )
             if entry_key == key:
-                return entry
+                return cast(SlotAssignment, entry)
         return None
 
     def set_assignment(self, raw: dict[str, Any]) -> SlotAssignment:
@@ -650,7 +651,7 @@ class FilamentStore:
             self._data["assignments"].append(record)
         else:
             record = normalize_assignment(payload, existing)
-            existing.clear()
+            cast(dict[str, Any], existing).clear()
             existing.update(record)
             record = existing
 
@@ -806,14 +807,14 @@ class FilamentStore:
                 if key in ("printer_id", "box_id", "local_slot"):
                     continue
                 if existing.get(key) != value:
-                    existing[key] = value
+                    cast(dict[str, Any], existing)[key] = value
                     touched = True
 
         if touched:
             self._save_and_notify()
         return touched
 
-    def assignment_detail(self, assignment: SlotAssignment) -> dict[str, Any] | None:
+    def assignment_detail(self, assignment: Mapping[str, Any]) -> dict[str, Any] | None:
         """Return the display data for a binding, or None if it dangles."""
         item = next(
             (e for e in self._data["items"] if e["id"] == assignment["item_id"]),
@@ -848,7 +849,7 @@ class FilamentStore:
             "weighed_at": assignment.get("weighed_at"),
         }
 
-    def item_label(self, item: Item) -> str:
+    def item_label(self, item: Mapping[str, Any]) -> str:
         """Return a human readable one-liner for an item."""
         manufacturer = next(
             (
@@ -930,7 +931,7 @@ class FilamentStore:
             "summary": self.summary(),
         }
 
-    def _item_for_panel(self, item: Item) -> dict[str, Any]:
+    def _item_for_panel(self, item: Mapping[str, Any]) -> dict[str, Any]:
         """Enrich an item with the values the panel would otherwise recompute.
 
         The tare and the fill percentage are both derived, and deriving them

@@ -12,6 +12,7 @@ spool and not of the colour wound onto it.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from datetime import datetime
 from typing import Any, TypedDict
 from uuid import uuid4
@@ -19,7 +20,6 @@ from uuid import uuid4
 from homeassistant.util import dt as dt_util
 
 from ..const import LOGGER
-
 from .const import (
     DEFAULT_DIAMETER,
     DEFAULT_MANUFACTURERS,
@@ -208,7 +208,7 @@ def _hex_color(value: Any, default: str = "#9e9e9e") -> str:
 
 
 def normalize_manufacturer(
-    raw: dict[str, Any], existing: Manufacturer | None = None
+    raw: dict[str, Any], existing: Mapping[str, Any] | None = None
 ) -> Manufacturer:
     """Build a valid manufacturer record from user input."""
     base: dict[str, Any] = dict(existing or {})
@@ -222,7 +222,7 @@ def normalize_manufacturer(
 
 
 def normalize_material(
-    raw: dict[str, Any], existing: Material | None = None
+    raw: dict[str, Any], existing: Mapping[str, Any] | None = None
 ) -> Material:
     """Build a valid material record from user input."""
     base: dict[str, Any] = dict(existing or {})
@@ -248,7 +248,7 @@ def spool_type_key(manufacturer_id: Any, material_id: Any, net_weight_g: Any) ->
 
 
 def normalize_spool_type(
-    raw: dict[str, Any], existing: SpoolType | None = None
+    raw: dict[str, Any], existing: Mapping[str, Any] | None = None
 ) -> SpoolType:
     """Build a valid spool-type record from user input."""
     base: dict[str, Any] = dict(existing or {})
@@ -265,7 +265,7 @@ def normalize_spool_type(
 
 
 def normalize_open_spool(
-    raw: dict[str, Any], existing: OpenSpool | None = None
+    raw: dict[str, Any], existing: Mapping[str, Any] | None = None
 ) -> OpenSpool:
     """Build a valid opened-spool record."""
     base: dict[str, Any] = dict(existing or {})
@@ -279,7 +279,7 @@ def normalize_open_spool(
     }
 
 
-def normalize_item(raw: dict[str, Any], existing: Item | None = None) -> Item:
+def normalize_item(raw: dict[str, Any], existing: Mapping[str, Any] | None = None) -> Item:
     """Build a valid item record from user input."""
     base: dict[str, Any] = dict(existing or {})
     base.update(raw)
@@ -368,7 +368,7 @@ def assignment_key(printer_id: Any, box_id: Any, local_slot: Any) -> tuple:
 
 
 def normalize_assignment(
-    raw: dict[str, Any], existing: SlotAssignment | None = None
+    raw: dict[str, Any], existing: Mapping[str, Any] | None = None
 ) -> SlotAssignment:
     """Build a valid slot assignment from user input."""
     base: dict[str, Any] = dict(existing or {})
@@ -382,10 +382,12 @@ def normalize_assignment(
             base.get("box_id"),
             base.get("local_slot"),
         )
+    box_id = _opt_int(base.get("box_id"), -1, 15)
+
     return {
         "id": base.get("id") or new_id(),
         "printer_id": _str(base.get("printer_id")),
-        "box_id": _opt_int(base.get("box_id"), -1, 15) if base.get("box_id") is not None else -1,
+        "box_id": -1 if box_id is None else box_id,
         "local_slot": local_slot,
         "source": _str(base.get("source")) or "ace",
         "item_id": _str(base.get("item_id")),

@@ -248,7 +248,7 @@ def printer_material_used_kg(printer: AnycubicPrinter) -> float | None:
     match = REX_MATERIAL_USED.match(str(raw).strip())
     factor = MATERIAL_USED_TO_KG.get(match.group(2).lower()) if match else None
 
-    if factor is None:
+    if match is None or factor is None:
         LOGGER.warning(
             "Cannot read the total filament used from %r: expected a number "
             "followed by kg or g. The total filament sensor stays unavailable.",

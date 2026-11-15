@@ -20,6 +20,7 @@ sorted with the most confident matches first.
 from __future__ import annotations
 
 import re
+from collections.abc import Mapping
 from typing import Any
 
 # Canonical token per known spelling. Keys are already normalised
@@ -121,7 +122,7 @@ def normalize_material_token(raw: Any) -> str:
     return CANONICAL.get(text, text)
 
 
-def material_matches(ace_type: Any, material: dict[str, Any]) -> int:
+def material_matches(ace_type: Any, material: Mapping[str, Any]) -> int:
     """Return how well an inventory material fits what the ACE reported.
 
     MATCH_EXPLICIT  the material names this ACE type outright

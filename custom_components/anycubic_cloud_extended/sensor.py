@@ -14,8 +14,8 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     PERCENTAGE,
     Platform,
-    UnitOfMass,
     UnitOfLength,
+    UnitOfMass,
     UnitOfTemperature,
     UnitOfTime,
 )

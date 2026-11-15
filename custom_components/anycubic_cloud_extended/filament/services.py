@@ -11,12 +11,15 @@ from __future__ import annotations
 from typing import Any, Callable
 
 import voluptuous as vol
-
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import config_validation as cv
 
-from ..const import DATA_FILAMENT_STORE, DOMAIN, LOGGER
+from ..const import (
+    DATA_FILAMENT_STORE,
+    DOMAIN,
+    LOGGER,
+)
 from .const import (
     SERVICE_ADD_SPOOLS,
     SERVICE_CONSUME_SPOOL,

@@ -24,8 +24,7 @@ from ..const import (
     STORAGE_KEY_FILAMENT_BACKUP,
     STORAGE_VERSION,
 )
-from .const import LEGACY_STORAGE_KEY as LEGACY_FILAMENT_KEY
-from .const import LEGACY_STORAGE_VERSION as LEGACY_FILAMENT_VERSION
+from .const import LEGACY_STORAGE_KEY as LEGACY_FILAMENT_KEY, LEGACY_STORAGE_VERSION as LEGACY_FILAMENT_VERSION
 
 
 async def async_import_legacy_filament(hass: HomeAssistant) -> dict[str, Any] | None:

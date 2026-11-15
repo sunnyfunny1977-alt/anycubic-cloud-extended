@@ -11,11 +11,10 @@ number, and the client overwrites any ``id`` a caller puts in the payload. The p
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from typing import Any
 
 import voluptuous as vol
-
 from homeassistant.components import websocket_api
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.dispatcher import async_dispatcher_connect
@@ -32,7 +31,7 @@ from .store import FilamentError, FilamentStore
 
 # Fields accepted for an inventory item. Unknown keys are ignored so the panel
 # can post the whole form object.
-ITEM_FIELDS = {
+ITEM_FIELDS: dict[Any, Any] = {
     vol.Optional("manufacturer_id"): str,
     vol.Optional("material_id"): str,
     vol.Optional("color_name"): vol.Any(str, None),
@@ -48,13 +47,13 @@ ITEM_FIELDS = {
     vol.Optional("bed_temp"): vol.Any(int, str, None),
 }
 
-MANUFACTURER_FIELDS = {
+MANUFACTURER_FIELDS: dict[Any, Any] = {
     vol.Optional("name"): str,
     vol.Optional("website"): vol.Any(str, None),
     vol.Optional("sort_order"): vol.Any(int, str, None),
 }
 
-MATERIAL_FIELDS = {
+MATERIAL_FIELDS: dict[Any, Any] = {
     vol.Optional("name"): str,
     vol.Optional("ace_material_type"): vol.Any(str, None),
     vol.Optional("nozzle_temp"): vol.Any(int, str, None),
@@ -63,12 +62,12 @@ MATERIAL_FIELDS = {
     vol.Optional("sort_order"): vol.Any(int, str, None),
 }
 
-SPOOL_TYPE_FIELDS = {
+SPOOL_TYPE_FIELDS: dict[Any, Any] = {
     vol.Optional("empty_weight_g"): vol.Any(float, int, str, None),
 }
 
 # The fill percentage is derived from the grams and cannot be written.
-SPOOL_FIELDS = {
+SPOOL_FIELDS: dict[Any, Any] = {
     vol.Optional("remaining_grams"): vol.Any(float, int, str, None),
     # Weighed total including the empty spool; converted by the store.
     vol.Optional("gross_weight_g"): vol.Any(float, int, str, None),
@@ -79,10 +78,14 @@ SPOOL_FIELDS = {
 
 def _get_store(hass: HomeAssistant) -> FilamentStore | None:
     """Return the store, or None when the integration is not loaded."""
-    return hass.data.get(DOMAIN, {}).get(DATA_FILAMENT_STORE)
+    store: FilamentStore | None = hass.data.get(DOMAIN, {}).get(DATA_FILAMENT_STORE)
+    return store
 
 
-def _weighing_allowed(hass: HomeAssistant, connection) -> bool:
+def _weighing_allowed(
+    hass: HomeAssistant,
+    connection: websocket_api.ActiveConnection,
+) -> bool:
     """Whether this user may bind and weigh spools.
 
     Assigning a roll to a slot and typing in what it weighs is the everyday
@@ -514,14 +517,18 @@ def _answer(
 # ACE slot bindings
 # ----------------------------------------------------------------------
 
-SLOT_FIELDS = {
+SLOT_FIELDS: dict[Any, Any] = {
     vol.Required("printer_id"): vol.Any(str, int),
     vol.Required("box_id"): vol.Coerce(int),
     vol.Required("local_slot"): vol.All(vol.Coerce(int), vol.Range(min=1, max=8)),
 }
 
 
-def _candidate(store: FilamentStore, item: dict[str, Any], rank: int) -> list[dict[str, Any]]:
+def _candidate(
+    store: FilamentStore,
+    item: Mapping[str, Any],
+    rank: int,
+) -> list[dict[str, Any]]:
     """Turn one inventory item into its selectable opened spools."""
     net = float(item.get("spool_net_weight_g") or 0)
     tare = store.item_tare(item)
