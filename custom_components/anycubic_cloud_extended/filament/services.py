@@ -137,7 +137,9 @@ def make_inventory_handler(hass: HomeAssistant) -> Callable:
                 store.open_spool(item_id)
             elif call.service == SERVICE_SET_REMAINING:
                 spool_id = _resolve_spool_id(store, item_id, data.get("spool_id"))
-                payload = {
+                # Annotated: a comprehension over literal keys infers a
+                # dict keyed by those literals, which is not a dict[str, Any].
+                payload: dict[str, Any] = {
                     key: data[key]
                     for key in ("remaining_grams", "gross_weight_g", "note")
                     if key in data
