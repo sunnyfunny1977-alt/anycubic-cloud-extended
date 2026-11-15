@@ -10,6 +10,12 @@
         "ace.no_assignment": "keine Rolle zugeordnet",
         "ace.assign": "Zuordnen",
         "ace.change": "Ändern",
+        "ace.clear": "Löschen",
+        "ace.clear_title": "Zuordnung löschen?",
+        "ace.clear_text": "{name} wird aus Slot {slot} gelöst. Die Rolle bleibt mit ihrem aktuellen Restgewicht im Bestand.",
+        "ace.clear_confirm": "Löschen",
+        "ace.clear_fallback": "Die zugeordnete Rolle",
+        "ace.clear_toast": "Zuordnung gelöscht",
         "ace.depleted": "Schätzung aufgebraucht — bitte nachwiegen",
         "ace.changed": "Filament gewechselt – bitte prüfen",
         "ace.dialog_title": "ACE Slot {slot}",
@@ -166,6 +172,12 @@
         "ace.no_assignment": "no spool assigned",
         "ace.assign": "Assign",
         "ace.change": "Change",
+        "ace.clear": "Remove",
+        "ace.clear_title": "Remove the assignment?",
+        "ace.clear_text": "{name} will be released from slot {slot}. The roll stays in stock with its current remaining weight.",
+        "ace.clear_confirm": "Remove",
+        "ace.clear_fallback": "The assigned roll",
+        "ace.clear_toast": "Assignment removed",
         "ace.depleted": "Estimate used up — please weigh",
         "ace.changed": "Filament changed - please check",
         "ace.dialog_title": "ACE slot {slot}",
@@ -314,38 +326,38 @@
         "setup.no_spool_type": "No spool type for this entry yet."
       }
     },
-    n = Object.keys(t);
-  let a = {},
+    a = Object.keys(t);
+  let n = {},
     i = {};
   async function o(o) {
     const r = function (t) {
       if (!t) return e;
-      const a = String(t).toLowerCase();
-      if (n.includes(a)) return a;
-      const i = a.split("-")[0];
-      return n.includes(i) ? i : e;
+      const n = String(t).toLowerCase();
+      if (a.includes(n)) return n;
+      const i = n.split("-")[0];
+      return a.includes(i) ? i : e;
     }(o);
-    return i = t[e], a = t[r] || i, r;
+    return i = t[e], n = t[r] || i, r;
   }
   function r(e, t = {}) {
-    return (a[e] ?? i[e] ?? e).replace(/\{(\w+)\}/g, (e, n) => Object.hasOwn(t, n) ? String(t[n]) : e);
+    return (n[e] ?? i[e] ?? e).replace(/\{(\w+)\}/g, (e, a) => Object.hasOwn(t, a) ? String(t[a]) : e);
   }
   function l(e, t) {
     return [e.manufacturer_id, e.material_id, Math.round(Number(e[t]) || 0)].join("|");
   }
   function s(e, t) {
     if (void 0 !== e.tare_g) return e.tare_g;
-    const n = t && t.spoolTypeFor ? t.spoolTypeFor(e) : null;
-    return n ? n.empty_weight_g : null;
+    const a = t && t.spoolTypeFor ? t.spoolTypeFor(e) : null;
+    return a ? a.empty_weight_g : null;
   }
   function d(e, t) {
     return [t.manufacturerName(e.manufacturer_id), t.materialName(e.material_id), e.color_name].filter(Boolean).join(" ");
   }
   function c(e, t) {
     if (null !== e.remaining_percent && void 0 !== e.remaining_percent) return Number(e.remaining_percent);
-    const n = e.remaining_grams,
-      a = Number(t || 0);
-    return null == n || a <= 0 ? null : Math.round(10 * Math.min(100, Math.max(0, Number(n) / a * 100))) / 10;
+    const a = e.remaining_grams,
+      n = Number(t || 0);
+    return null == a || n <= 0 ? null : Math.round(10 * Math.min(100, Math.max(0, Number(a) / n * 100))) / 10;
   }
   function p(e) {
     const t = Number(e.spool_net_weight_g || 0);
@@ -370,9 +382,9 @@
   }
   const h = e => new m(String(e));
   function g(e, ...t) {
-    let n = e[0];
-    for (let a = 0; a < t.length; a += 1) n += _(t[a]) + e[a + 1];
-    return new m(n);
+    let a = e[0];
+    for (let n = 0; n < t.length; n += 1) a += _(t[n]) + e[n + 1];
+    return new m(a);
   }
   let f = "en",
     v = "EUR";
@@ -418,40 +430,40 @@
     scissors: "M19,3L13,9L15,11L22,4V3M12,12.5A0.5,0.5 0 0,1 11.5,12A0.5,0.5 0 0,1 12,11.5A0.5,0.5 0 0,1 12.5,12A0.5,0.5 0 0,1 12,12.5M6,20A2,2 0 0,1 4,18C4,16.89 4.9,16 6,16A2,2 0 0,1 8,18C8,19.11 7.1,20 6,20M6,8A2,2 0 0,1 4,6C4,4.89 4.9,4 6,4A2,2 0 0,1 8,6C8,7.11 7.1,8 6,8M9.64,7.64C9.87,7.14 10,6.59 10,6A4,4 0 0,0 6,2A4,4 0 0,0 2,6A4,4 0 0,0 6,10C6.59,10 7.14,9.87 7.64,9.64L10,12L7.64,14.36C7.14,14.13 6.59,14 6,14A4,4 0 0,0 2,18A4,4 0 0,0 6,22A4,4 0 0,0 10,18C10,17.41 9.87,16.86 9.64,16.36L12,14L19,21H22V20L9.64,7.64Z"
   };
   function k(e, t = 20) {
-    const n = $[e];
-    return n ? g`<svg
+    const a = $[e];
+    return a ? g`<svg
     viewBox="0 0 24 24"
     width="${t}"
     height="${t}"
     fill="currentColor"
     aria-hidden="true"
   >
-    <path d="${n}"></path>
+    <path d="${a}"></path>
   </svg>` : h("");
   }
   function z(e, t = !1) {
-    const n = function (e) {
+    const a = function (e) {
       const t = String(e || "").replace("#", "");
       if (6 !== t.length) return .5;
-      const [n, a, i] = [0, 2, 4].map(e => parseInt(t.slice(e, e + 2), 16) / 255);
-      return .2126 * n + .7152 * a + .0722 * i;
+      const [a, n, i] = [0, 2, 4].map(e => parseInt(t.slice(e, e + 2), 16) / 255);
+      return .2126 * a + .7152 * n + .0722 * i;
     }(e) > .75 ? "rgba(0,0,0,.35)" : "rgba(0,0,0,.12)";
     return g`<span
     class="swatch ${t ? "small" : ""}"
-    style="background:${e}; border-color:${n}"
+    style="background:${e}; border-color:${a}"
   ></span>`;
   }
-  function N(e, t, n) {
+  function N(e, t, a) {
     return g`<label class="field">
     <span class="label-text">${e}</span>
-    ${t} ${n ? g`<span class="hint">${n}</span>` : ""}
+    ${t} ${a ? g`<span class="hint">${a}</span>` : ""}
   </label>`;
   }
   function L({
     name: e,
     label: t,
-    value: n = "",
-    type: a = "text",
+    value: a = "",
+    type: n = "text",
     placeholder: i = "",
     hint: o = "",
     min: r,
@@ -464,10 +476,10 @@
     const m = [void 0 !== r ? `min="${u(r)}"` : "", void 0 !== l ? `max="${u(l)}"` : "", void 0 !== s ? `step="${u(s)}"` : "", d ? `title="${u(d)}"` : "", c ? "disabled" : ""].join(" ");
     return N(t, g`<input
     class="${p}"
-    type="${a}"
+    type="${n}"
     name="${e}"
     data-field="${e}"
-    value="${n ?? ""}"
+    value="${a ?? ""}"
     placeholder="${i}"
     ${h(m)}
   />`, o);
@@ -475,16 +487,16 @@
   function S({
     name: e,
     label: t,
-    value: n = "",
-    options: a = [],
+    value: a = "",
+    options: n = [],
     hint: i = "",
     placeholder: o = ""
   }) {
     return N(t, g`<select name="${e}" data-field="${e}">
-    ${o ? g`<option value="" ${h(n ? "" : "selected")}>${o}</option>` : ""}
-    ${a.map(e => g`<option
+    ${o ? g`<option value="" ${h(a ? "" : "selected")}>${o}</option>` : ""}
+    ${n.map(e => g`<option
           value="${e.value}"
-          ${h(String(e.value) === String(n) ? "selected" : "")}
+          ${h(String(e.value) === String(a) ? "selected" : "")}
         >
           ${e.label}
         </option>`)}
@@ -498,23 +510,23 @@
   function E({
     emoji: e,
     title: t,
-    text: n,
-    actionLabel: a,
+    text: a,
+    actionLabel: n,
     action: i
   }) {
     return g`<div class="empty">
     <div class="big">${e}</div>
     <h3>${t}</h3>
-    <p>${n}</p>
-    ${a ? g`<button class="btn" data-action="${i}">${a}</button>` : ""}
+    <p>${a}</p>
+    ${n ? g`<button class="btn" data-action="${i}">${n}</button>` : ""}
   </div>`;
   }
   function D({
     confirmLabel: e,
     danger: t = !1,
-    extra: n
+    extra: a
   }) {
-    return g`${n || ""}
+    return g`${a || ""}
     <span class="spacer"></span>
     <button class="btn text" data-action="dialog-cancel">${r("action.cancel")}</button>
     <button class="btn ${t ? "danger" : ""}" data-action="dialog-confirm">
@@ -522,12 +534,12 @@
     </button>`;
   }
   const C = "__none__";
-  function M(e, t) {
-    const n = e.assignment || null,
-      a = Boolean(e.spool_loaded),
+  function R(e, t) {
+    const a = e.assignment || null,
+      n = Boolean(e.spool_loaded),
       i = Boolean(e.is_active),
-      o = n ? n.remaining_grams : null,
-      l = n ? n.remaining_percent : null,
+      o = a ? a.remaining_grams : null,
+      l = a ? a.remaining_percent : null,
       s = null != l && l < 10;
     return g`<div class="ace-slot ${i ? "ace-slot-active" : ""}">
     <div class="ace-slot-head">
@@ -539,44 +551,60 @@
 
     <div class="ace-slot-body">
       <span
-        class="ace-dot ${a ? "" : "ace-dot-empty"}"
-        style="background:${a ? function (e) {
+        class="ace-dot ${n ? "" : "ace-dot-empty"}"
+        style="background:${n ? function (e) {
       const t = e.color;
       return Array.isArray(t) && t.length >= 3 ? `rgb(${Number(t[0])},${Number(t[1])},${Number(t[2])})` : e.color_hex || "#555";
     }(e) : "transparent"}"
       ></span>
       <div class="grow">
-        <div class="name">${a ? e.material_type || "–" : r("ace.empty")}</div>
+        <div class="name">${n ? e.material_type || "–" : r("ace.empty")}</div>
         <div class="sub hint">
-          ${n ? n.item_label : g`<span class="ace-unbound">${r("ace.no_assignment")}</span>`}
+          ${a ? a.item_label : g`<span class="ace-unbound">${r("ace.no_assignment")}</span>`}
         </div>
       </div>
     </div>
 
-    ${n ? g`<div class="ace-slot-amount">
+    ${a ? g`<div class="ace-slot-amount">
           ${A(void 0 === l ? null : l)}
           <span class="amount ${s ? "ace-low" : ""}">
             ${null == o ? "? g" : `${b(o)} g`}
           </span>
         </div>` : ""}
 
-    ${n && n.depleted ? g`<div class="ace-warn">${r("ace.depleted")}</div>` : ""}
-    ${n && n.stale ? g`<div class="ace-warn">${r("ace.changed")}</div>` : ""}
+    ${a && a.depleted ? g`<div class="ace-warn">${r("ace.depleted")}</div>` : ""}
+    ${a && a.stale ? g`<div class="ace-warn">${r("ace.changed")}</div>` : ""}
 
-    <button
-      class="btn ${n ? "secondary" : ""} ace-slot-btn"
-      data-action="assign-slot"
-      data-printer="${e.printer_id}"
-      data-box="${e.box_id}"
-      data-slot="${e.local_slot}"
-      ${h(t ? "" : "disabled")}
-    >
-      ${k(n ? "pencil" : "plus")}
-      ${r(n ? "ace.change" : "ace.assign")}
-    </button>
+    <div class="ace-slot-actions">
+      <button
+        class="btn ${a ? "secondary" : ""} grow"
+        data-action="assign-slot"
+        data-printer="${e.printer_id}"
+        data-box="${e.box_id}"
+        data-slot="${e.local_slot}"
+        ${h(t ? "" : "disabled")}
+      >
+        ${k(a ? "pencil" : "plus")}
+        ${r(a ? "ace.change" : "ace.assign")}
+      </button>
+
+      ${a ? g`<button
+            class="icon-btn danger"
+            data-action="clear-slot"
+            data-printer="${e.printer_id}"
+            data-box="${e.box_id}"
+            data-slot="${e.local_slot}"
+            data-label="${a.item_label || ""}"
+            title="${r("ace.clear")}"
+            aria-label="${r("ace.clear")}"
+            ${h(t ? "" : "disabled")}
+          >
+            ${k("delete")}
+          </button>` : ""}
+    </div>
   </div>`;
   }
-  function R(e) {
+  function M(e) {
     return {
       candidate: e ? `${e.item_id}:${e.spool_id}` : "",
       gross_weight_g: "",
@@ -609,15 +637,15 @@
       </div>`)}
   </div>`;
   }
-  function F(e, t, n) {
-    const a = Number(e.spool_net_weight_g || 0),
+  function F(e, t, a) {
+    const n = Number(e.spool_net_weight_g || 0),
       i = Number(e.sealed_count || 0),
       o = e.open_spools || [],
       l = function (e, t) {
-        const n = t.material(e.material_id);
+        const a = t.material(e.material_id);
         return {
-          nozzle: e.nozzle_temp ?? n?.nozzle_temp ?? null,
-          bed: e.bed_temp ?? n?.bed_temp ?? null,
+          nozzle: e.nozzle_temp ?? a?.nozzle_temp ?? null,
+          bed: e.bed_temp ?? a?.bed_temp ?? null,
           nozzleIsDefault: null === e.nozzle_temp || void 0 === e.nozzle_temp,
           bedIsDefault: null === e.bed_temp || void 0 === e.bed_temp
         };
@@ -634,7 +662,7 @@
         </div>
         <div class="sub">
           ${e.color_name || "–"} · ${(u = e.diameter, `${b(u, Number(u) % 1 == 0 ? 0 : 2)} mm`)} ·
-          ${b(a)} g
+          ${b(n)} g
         </div>
       </div>
       <div class="chip muted">${y(p(e))}</div>
@@ -653,15 +681,15 @@
     </div>
 
     ${o.map((e, t) => {
-      const n = c(e, a),
+      const a = c(e, n),
         i = null !== e.remaining_grams && void 0 !== e.remaining_grams;
       return g`<div class="open-row">
         <span class="chip muted">${r("label.spool_index", {
         index: t + 1
       })}</span>
-        ${A(n)}
+        ${A(a)}
         <span class="amount">
-          ${i ? `${b(n, 0)} % · ${b(e.remaining_grams)} g` : r("label.not_measured")}
+          ${i ? `${b(a, 0)} % · ${b(e.remaining_grams)} g` : r("label.not_measured")}
         </span>
       </div>`;
     })}
@@ -673,7 +701,7 @@
         class="btn secondary"
         data-action="setup-item"
         data-item="${e.id}"
-        ${h(n ? "" : "disabled")}
+        ${h(a ? "" : "disabled")}
       >
         ${k("pencil")} ${r("overview.setup")}
       </button>
@@ -684,8 +712,8 @@
   function T(e) {
     const {
         data: t,
-        state: n,
-        lookup: a,
+        state: a,
+        lookup: n,
         isAdmin: i
       } = e,
       o = t.items || [],
@@ -700,14 +728,14 @@
       d = function (e) {
         const {
           slots: t,
-          isAdmin: n
+          isAdmin: a
         } = e;
         return t && t.length ? g`${t.map(e => g`<div class="ace-box">
       <div class="section-title" style="margin:0 0 10px">
         <span>${e.name}</span>
       </div>
       <div class="ace-grid">
-        ${e.slots.map(e => M(e, n))}
+        ${e.slots.map(e => R(e, a))}
       </div>
     </div>`)}` : "";
       }(e);
@@ -719,18 +747,18 @@
       actionLabel: i ? r("overview.empty.action") : "",
       action: "new-item"
     })}`;
-    const c = function (e, t, n) {
-      const a = (t.q || "").trim().toLowerCase(),
-        i = e.filter(e => (!t.manufacturer || e.manufacturer_id === t.manufacturer) && (!t.material || e.material_id === t.material) && !("sealed" === t.condition && Number(e.sealed_count || 0) < 1) && !("open" === t.condition && (e.open_spools || []).length < 1) && (!a || [n.manufacturerName(e.manufacturer_id), n.materialName(e.material_id), e.color_name, e.location, e.notes].join(" ").toLowerCase().includes(a))),
+    const c = function (e, t, a) {
+      const n = (t.q || "").trim().toLowerCase(),
+        i = e.filter(e => (!t.manufacturer || e.manufacturer_id === t.manufacturer) && (!t.material || e.material_id === t.material) && !("sealed" === t.condition && Number(e.sealed_count || 0) < 1) && !("open" === t.condition && (e.open_spools || []).length < 1) && (!n || [a.manufacturerName(e.manufacturer_id), a.materialName(e.material_id), e.color_name, e.location, e.notes].join(" ").toLowerCase().includes(n))),
         o = {
-          manufacturer: (e, t) => n.manufacturerName(e.manufacturer_id).localeCompare(n.manufacturerName(t.manufacturer_id)) || n.materialName(e.material_id).localeCompare(n.materialName(t.material_id)),
-          material: (e, t) => n.materialName(e.material_id).localeCompare(n.materialName(t.material_id)) || n.manufacturerName(e.manufacturer_id).localeCompare(n.manufacturerName(t.manufacturer_id)),
+          manufacturer: (e, t) => a.manufacturerName(e.manufacturer_id).localeCompare(a.manufacturerName(t.manufacturer_id)) || a.materialName(e.material_id).localeCompare(a.materialName(t.material_id)),
+          material: (e, t) => a.materialName(e.material_id).localeCompare(a.materialName(t.material_id)) || a.manufacturerName(e.manufacturer_id).localeCompare(a.manufacturerName(t.manufacturer_id)),
           color: (e, t) => (e.color_name || "").localeCompare(t.color_name || ""),
           remaining: (e, t) => p(e) - p(t),
           updated: (e, t) => String(t.updated_at || "").localeCompare(String(e.updated_at || ""))
         }[t.sort || "manufacturer"];
       return i.slice().sort((e, t) => o(e, t) || (e.color_name || "").localeCompare(t.color_name || ""));
-    }(o, n.filters, a);
+    }(o, a.filters, n);
     return g`${d} ${l} ${s} ${H(t.summary)}
   ${function (e, t) {
       return g`<div class="filters">
@@ -776,8 +804,8 @@
         </option>`)}
     </select>
   </div>`;
-    }(t, n.filters)}
-  ${c.length ? g`<div class="grid">${c.map(e => F(e, a, i))}</div>` : E({
+    }(t, a.filters)}
+  ${c.length ? g`<div class="grid">${c.map(e => F(e, n, i))}</div>` : E({
       emoji: "🔍",
       title: r("overview.no_match.title"),
       text: r("overview.no_match.text"),
@@ -789,23 +817,23 @@
     V = [1.75, 2.85, 3],
     I = "margin:8px 0 4px";
   function O(e, t) {
-    const n = e.open_spools || [],
-      a = null != t;
+    const a = e.open_spools || [],
+      n = null != t;
     return g`<div class="span-2">
     <div class="section-title" style="${I}">${r("setup.open_spools_title")}</div>
     <div class="hint">
       ${r("field.remaining_hint")}
-      ${a ? ` ${r("field.gross_weight_hint")}` : ` ${r("field.gross_weight_disabled")}`}
+      ${n ? ` ${r("field.gross_weight_hint")}` : ` ${r("field.gross_weight_disabled")}`}
     </div>
-    ${n.length ? g`<div class="sub-list">
-          ${n.map((n, a) => function (e, t, n, a) {
-      const i = null != a,
+    ${a.length ? g`<div class="sub-list">
+          ${a.map((a, n) => function (e, t, a, n) {
+      const i = null != n,
         o = c(t, Number(e.spool_net_weight_g || 0));
       return g`<div class="spool-edit" data-item="${e.id}" data-spool="${t.id}">
     <div class="grow">
       <div class="open-row">
         <span class="chip muted">${r("label.spool_index", {
-        index: n + 1
+        index: a + 1
       })}</span>
         ${A(o)}
         <span class="amount">${null === o ? "–" : `${b(o, 0)} %`}</span>
@@ -853,12 +881,12 @@
       ${r("setup.consume")}
     </button>
   </div>`;
-    }(e, n, a, t))}
+    }(e, a, n, t))}
         </div>` : g`<div class="hint">${r("setup.no_open_spools")}</div>`}
   </div>`;
   }
-  function P(e, t, n, a, i) {
-    const o = a ? s(a, n) : null;
+  function P(e, t, a, n, i) {
+    const o = n ? s(n, a) : null;
     return g`<div class="form-grid">
     ${S({
       name: "manufacturer_id",
@@ -885,8 +913,8 @@
       ${function ({
       nameText: e,
       nameHex: t,
-      label: n,
-      textValue: a,
+      label: a,
+      textValue: n,
       hexValue: i,
       placeholder: o
     }) {
@@ -894,8 +922,8 @@
     <div class="grow">
       ${L({
         name: e,
-        label: n,
-        value: a,
+        label: a,
+        value: n,
         placeholder: o || ""
       })}
     </div>
@@ -936,7 +964,7 @@
       value: e.location,
       placeholder: r("field.location_placeholder")
     })}
-    ${a ? "" : L({
+    ${n ? "" : L({
       name: "sealed_count",
       label: r("field.sealed_count"),
       type: "number",
@@ -985,12 +1013,12 @@
       ${function ({
       name: e,
       label: t,
-      value: n = "",
-      hint: a = ""
+      value: a = "",
+      hint: n = ""
     }) {
       return N(t, g`<textarea name="${e}" data-field="${e}">
-${n || ""}</textarea
-  >`, a);
+${a || ""}</textarea
+  >`, n);
     }({
       name: "notes",
       label: r("field.notes"),
@@ -998,15 +1026,15 @@ ${n || ""}</textarea
     })}
     </div>
 
-    ${a ? function (e, t) {
-      const n = Number(e.sealed_count || 0);
+    ${n ? function (e, t) {
+      const a = Number(e.sealed_count || 0);
       return g`<div class="span-2">
     <div class="section-title" style="${I}">${r("setup.section_stock")}</div>
     <div class="row-main">
       <div class="grow">
         <div class="name">${r("setup.sealed_count")}</div>
         <div class="sub hint">${r("label.sealed", {
-        count: n
+        count: a
       })}</div>
       </div>
       <span class="counter">
@@ -1015,11 +1043,11 @@ ${n || ""}</textarea
           data-action="sealed-minus"
           data-item="${e.id}"
           title="-1"
-          ${h(!t || n < 1 ? "disabled" : "")}
+          ${h(!t || a < 1 ? "disabled" : "")}
         >
           ${k("minus")}
         </button>
-        <span class="num">${n}</span>
+        <span class="num">${a}</span>
         <button
           class="icon-btn plain"
           data-action="sealed-plus"
@@ -1034,32 +1062,32 @@ ${n || ""}</textarea
         class="btn secondary"
         data-action="open-spool"
         data-item="${e.id}"
-        ${h(!t || n < 1 ? "disabled" : "")}
+        ${h(!t || a < 1 ? "disabled" : "")}
       >
         ${r("setup.open_spool")}
       </button>
     </div>
   </div>`;
-    }(a, i) : ""}
-    ${a ? function (e, t, n) {
-      const a = n.spoolTypeFor(e),
-        i = a ? g`<div class="tare-list">
+    }(n, i) : ""}
+    ${n ? function (e, t, a) {
+      const n = a.spoolTypeFor(e),
+        i = n ? g`<div class="tare-list">
         <div class="tare-row">
           <div class="grow">
             <div class="name">
-              ${n.manufacturerName(a.manufacturer_id)}
-              ${n.materialName(a.material_id)} ·
-              ${b(a.net_weight_g)} g
+              ${a.manufacturerName(n.manufacturer_id)}
+              ${a.materialName(n.material_id)} ·
+              ${b(n.net_weight_g)} g
             </div>
           </div>
           <div class="num-field">
             ${L({
-          name: `spool_type__${a.id}`,
+          name: `spool_type__${n.id}`,
           label: r("field.empty_weight_short"),
           type: "number",
           min: 0,
           step: .1,
-          value: t[`spool_type__${a.id}`]
+          value: t[`spool_type__${n.id}`]
         })}
           </div>
         </div>
@@ -1069,13 +1097,13 @@ ${n || ""}</textarea
     <div class="hint">${r("setup.tare_hint")}</div>
     ${i}
   </div>`;
-    }(a, e, n) : ""}
-    ${a ? O(a, o) : ""}
-    ${a ? g`<div class="span-2">
+    }(n, e, a) : ""}
+    ${n ? O(n, o) : ""}
+    ${n ? g`<div class="span-2">
           <div class="hint">
             ID:
-            <button class="id-badge" data-action="copy-id" data-id="${a.id}" title="${r("setup.copy_id")}">
-              ${a.id}
+            <button class="id-badge" data-action="copy-id" data-id="${n.id}" title="${r("setup.copy_id")}">
+              ${n.id}
             </button>
           </div>
         </div>` : ""}
@@ -1084,8 +1112,8 @@ ${n || ""}</textarea
   function j({
     entry: e,
     subtitle: t,
-    usage: n,
-    editAction: a,
+    usage: a,
+    editAction: n,
     deleteAction: i
   }) {
     return g`<div class="row">
@@ -1095,12 +1123,12 @@ ${n || ""}</textarea
         <div class="sub hint">${t}</div>
       </div>
       <div class="row-actions">
-        ${(o = n, 0 === o ? g`<span class="chip muted">${r("admin.unused")}</span>` : g`<span class="chip">${r(1 === o ? "admin.used_in_one" : "admin.used_in", {
+        ${(o = a, 0 === o ? g`<span class="chip muted">${r("admin.unused")}</span>` : g`<span class="chip">${r(1 === o ? "admin.used_in_one" : "admin.used_in", {
       count: o
     })}</span>`)}
         <button
           class="icon-btn"
-          data-action="${a}"
+          data-action="${n}"
           data-id="${e.id}"
           title="${r("action.edit")}"
         >
@@ -1111,7 +1139,7 @@ ${n || ""}</textarea
           data-action="${i}"
           data-id="${e.id}"
           title="${r("action.delete")}"
-          ${h(n > 0 ? "disabled" : "")}
+          ${h(a > 0 ? "disabled" : "")}
         >
           ${k("delete")}
         </button>
@@ -1120,16 +1148,16 @@ ${n || ""}</textarea
   </div>`;
     var o;
   }
-  function W(e, t) {
-    const n = (t.spool_types || []).filter(t => t.manufacturer_id === e.id),
-      a = n.filter(e => null === e.empty_weight_g || void 0 === e.empty_weight_g).length,
+  function q(e, t) {
+    const a = (t.spool_types || []).filter(t => t.manufacturer_id === e.id),
+      n = a.filter(e => null === e.empty_weight_g || void 0 === e.empty_weight_g).length,
       i = e.website || "—";
-    return a ? `${i} · ${r("admin.tare_open", {
-      count: a,
-      total: n.length
+    return n ? `${i} · ${r("admin.tare_open", {
+      count: n,
+      total: a.length
     })}` : i;
   }
-  function q(e) {
+  function W(e) {
     return `${null !== e.nozzle_temp || null !== e.bed_temp ? r("admin.temps", {
       nozzle: e.nozzle_temp ?? "–",
       bed: e.bed_temp ?? "–"
@@ -1173,7 +1201,7 @@ ${n || ""}</textarea
           condition: "",
           sort: "manufacturer"
         }
-      }, this._dialog = null, this.shadowRoot.innerHTML = '\n      <style>\n  :host {\n    display: block;\n    height: 100%;\n    background: var(--primary-background-color, #fafafa);\n    color: var(--primary-text-color, #212121);\n    font-family: var(--paper-font-body1_-_font-family, Roboto, sans-serif);\n    -moz-osx-font-smoothing: grayscale;\n    -webkit-font-smoothing: antialiased;\n  }\n\n  * { box-sizing: border-box; }\n\n  .app-header {\n    position: sticky;\n    top: 0;\n    z-index: 4;\n    background: var(--app-header-background-color, var(--primary-color, #03a9f4));\n    color: var(--app-header-text-color, #fff);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.16));\n  }\n\n  .toolbar {\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    height: 56px;\n    padding: 0 12px;\n    font-size: 20px;\n    font-weight: 400;\n  }\n\n  .toolbar .title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n\n  .menu-button {\n    display: none;\n    background: none;\n    border: none;\n    color: inherit;\n    cursor: pointer;\n    padding: 8px;\n    border-radius: 50%;\n    line-height: 0;\n  }\n  :host([narrow]) .menu-button { display: block; }\n  .menu-button:hover { background: rgba(255, 255, 255, 0.12); }\n\n  .tabs {\n    display: flex;\n    gap: 4px;\n    padding: 0 8px;\n    overflow-x: auto;\n    scrollbar-width: none;\n  }\n  .tabs::-webkit-scrollbar { display: none; }\n\n  .tab {\n    appearance: none;\n    background: none;\n    border: none;\n    border-bottom: 3px solid transparent;\n    color: inherit;\n    opacity: 0.72;\n    cursor: pointer;\n    font-size: 14px;\n    font-weight: 500;\n    letter-spacing: 0.4px;\n    padding: 12px 16px;\n    text-transform: uppercase;\n    white-space: nowrap;\n  }\n  .tab:hover { opacity: 1; }\n  .tab[aria-selected="true"] { opacity: 1; border-bottom-color: currentColor; }\n\n  .content {\n    max-width: 1240px;\n    margin: 0 auto;\n    padding: 16px;\n  }\n\n  /* ---------------- cards ---------------- */\n\n  .card {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));\n    border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, transparent);\n    padding: 16px;\n  }\n\n  .section-title {\n    font-size: 16px;\n    font-weight: 500;\n    margin: 24px 0 12px;\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    /* Title plus action button does not fit a narrow panel on one line. */\n    flex-wrap: wrap;\n  }\n  .section-title:first-child { margin-top: 0; }\n  .section-title .spacer { flex: 1; }\n\n  /* ---------------- summary strip ---------------- */\n\n  .summary {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n    gap: 12px;\n    margin-bottom: 16px;\n  }\n\n  .stat {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));\n    padding: 14px 16px;\n  }\n  .stat .value {\n    font-size: 26px;\n    font-weight: 500;\n    line-height: 1.15;\n    color: var(--primary-text-color);\n  }\n  .stat .label {\n    font-size: 12px;\n    letter-spacing: 0.4px;\n    text-transform: uppercase;\n    color: var(--secondary-text-color, #727272);\n    margin-top: 4px;\n  }\n\n  /* ---------------- filter bar ---------------- */\n\n  .filters {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 8px;\n    align-items: center;\n    margin-bottom: 16px;\n  }\n  .filters .grow { flex: 1 1 200px; min-width: 160px; }\n\n  /* ---------------- form controls ---------------- */\n\n  input[type="text"],\n  input[type="number"],\n  input[type="date"],\n  input[type="search"],\n  select,\n  textarea {\n    width: 100%;\n    font: inherit;\n    font-size: 14px;\n    color: var(--primary-text-color);\n    background: var(--card-background-color, #fff);\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 8px;\n    padding: 9px 10px;\n  }\n  textarea { resize: vertical; min-height: 64px; }\n  input:disabled, select:disabled, textarea:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n    background: var(--divider-color, #e0e0e0);\n  }\n  input:focus, select:focus, textarea:focus {\n    outline: none;\n    border-color: var(--primary-color, #03a9f4);\n    box-shadow: 0 0 0 1px var(--primary-color, #03a9f4);\n  }\n  input[type="color"] {\n    width: 48px;\n    height: 40px;\n    padding: 2px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 8px;\n    background: var(--card-background-color, #fff);\n    cursor: pointer;\n  }\n  label.field { display: block; }\n  label.field > .label-text {\n    display: block;\n    font-size: 12px;\n    font-weight: 500;\n    color: var(--secondary-text-color, #727272);\n    margin-bottom: 4px;\n  }\n  .hint {\n    font-size: 12px;\n    color: var(--secondary-text-color, #727272);\n    margin-top: 4px;\n  }\n\n  button {\n    font: inherit;\n    cursor: pointer;\n  }\n\n  .btn {\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    gap: 6px;\n    border: none;\n    border-radius: 8px;\n    font-size: 14px;\n    font-weight: 500;\n    padding: 9px 16px;\n    background: var(--primary-color, #03a9f4);\n    color: var(--text-primary-color, #fff);\n  }\n  .btn:hover { filter: brightness(1.08); }\n  .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }\n\n  .btn.secondary {\n    background: transparent;\n    color: var(--primary-color, #03a9f4);\n    border: 1px solid var(--divider-color, #e0e0e0);\n  }\n  .btn.text {\n    background: transparent;\n    color: var(--primary-color, #03a9f4);\n    padding: 8px 10px;\n  }\n  .btn.danger { background: var(--error-color, #db4437); color: #fff; }\n  .btn.danger.text { background: transparent; color: var(--error-color, #db4437); }\n\n  .icon-btn {\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    width: 34px;\n    height: 34px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 50%;\n    background: transparent;\n    color: var(--primary-text-color);\n    font-size: 18px;\n    line-height: 1;\n    flex: 0 0 auto;\n  }\n  .icon-btn:hover { background: var(--divider-color, #e0e0e0); }\n  .icon-btn:disabled { opacity: 0.35; cursor: not-allowed; background: transparent; }\n  .icon-btn.plain { border: none; }\n  .icon-btn.danger { color: var(--error-color, #db4437); }\n\n  /* ---------------- inventory cards ---------------- */\n\n  .grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));\n    gap: 12px;\n  }\n\n  /* ---------------- ACE box ---------------- */\n\n  .ace-box {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 1px 3px rgba(0, 0, 0, 0.12));\n    padding: 16px;\n    margin-bottom: 16px;\n  }\n\n  .ace-grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n    gap: 10px;\n  }\n\n  .ace-slot {\n    display: flex;\n    flex-direction: column;\n    gap: 8px;\n    padding: 12px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 10px;\n  }\n  .ace-slot-active { border-color: var(--success-color, #43a047); }\n\n  .ace-slot-head {\n    display: flex;\n    align-items: center;\n    gap: 6px;\n    min-height: 22px;\n  }\n  .ace-slot-name {\n    font-size: 11px;\n    letter-spacing: 1px;\n    text-transform: uppercase;\n    color: var(--secondary-text-color, #727272);\n  }\n\n  .ace-slot-body { display: flex; align-items: center; gap: 10px; }\n\n  .ace-dot {\n    width: 28px;\n    height: 28px;\n    border-radius: 50%;\n    flex: 0 0 auto;\n    border: 2px solid rgba(0, 0, 0, 0.25);\n  }\n  .ace-dot-empty { border-style: dashed; }\n\n  .ace-unbound { font-style: italic; }\n\n  .ace-slot-amount { display: flex; align-items: center; gap: 8px; }\n  .ace-low { color: var(--error-color, #d32f2f); font-weight: 500; }\n\n  .ace-warn {\n    font-size: 11px;\n    color: var(--warning-color, #ffa600);\n  }\n\n  /* Pushed down so the buttons line up however tall the slot above is. */\n  .ace-slot-btn { margin-top: auto; justify-content: center; }\n\n  .spool-card { display: flex; flex-direction: column; gap: 10px; }\n\n  /* Pushed to the bottom edge of the card so the button sits in the same\n     place on every card, however much metadata the entry carries. */\n  .card-actions {\n    display: flex;\n    justify-content: flex-end;\n    margin-top: auto;\n    padding-top: 2px;\n  }\n\n  .spool-head { display: flex; align-items: flex-start; gap: 12px; }\n\n  .swatch {\n    width: 40px;\n    height: 40px;\n    border-radius: 50%;\n    flex: 0 0 auto;\n    border: 2px solid var(--divider-color, #e0e0e0);\n    box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.18);\n  }\n  .swatch.small { width: 26px; height: 26px; border-width: 1px; }\n\n  .spool-title { flex: 1; min-width: 0; }\n  .spool-title .name {\n    font-size: 15px;\n    font-weight: 500;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n  .spool-title .sub {\n    font-size: 13px;\n    color: var(--secondary-text-color, #727272);\n    margin-top: 2px;\n  }\n\n  .chips { display: flex; flex-wrap: wrap; gap: 6px; }\n  .chip {\n    display: inline-flex;\n    align-items: center;\n    gap: 4px;\n    font-size: 12px;\n    font-weight: 500;\n    padding: 3px 9px;\n    border-radius: 999px;\n    background: var(--divider-color, #e0e0e0);\n    color: var(--primary-text-color);\n    white-space: nowrap;\n  }\n  .chip.sealed { background: rgba(3, 169, 244, 0.16); color: var(--primary-color, #03a9f4); }\n  .chip.open { background: rgba(255, 152, 0, 0.18); color: #e08600; }\n  .chip.muted { background: transparent; border: 1px solid var(--divider-color, #e0e0e0); color: var(--secondary-text-color, #727272); }\n\n  .bar {\n    position: relative;\n    height: 8px;\n    border-radius: 999px;\n    background: var(--divider-color, #e0e0e0);\n    overflow: hidden;\n  }\n  .bar > span {\n    position: absolute;\n    inset: 0 auto 0 0;\n    border-radius: 999px;\n    background: var(--primary-color, #03a9f4);\n  }\n  .bar.unknown {\n    background: repeating-linear-gradient(\n      45deg,\n      var(--divider-color, #e0e0e0) 0 6px,\n      transparent 6px 12px\n    );\n  }\n  .bar.low > span { background: var(--error-color, #db4437); }\n  .bar.mid > span { background: var(--warning-color, #ffa600); }\n\n  .open-row {\n    display: flex;\n    align-items: center;\n    gap: 10px;\n    font-size: 13px;\n  }\n  .open-row .bar { flex: 1; }\n  .open-row .amount { color: var(--secondary-text-color, #727272); white-space: nowrap; }\n\n  .meta {\n    font-size: 12px;\n    color: var(--secondary-text-color, #727272);\n    display: flex;\n    flex-wrap: wrap;\n    gap: 4px 14px;\n  }\n\n  /* ---------------- lists (manage / admin) ---------------- */\n\n  .list { display: flex; flex-direction: column; gap: 8px; }\n\n  .row {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));\n    padding: 12px 14px;\n  }\n  .row-main {\n    display: flex;\n    align-items: center;\n    gap: 12px;\n    flex-wrap: wrap;\n  }\n  .row-main .grow { flex: 1 1 220px; min-width: 0; }\n  .row-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }\n\n  .counter {\n    display: inline-flex;\n    align-items: center;\n    gap: 6px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 999px;\n    padding: 2px;\n  }\n  .counter .num {\n    min-width: 34px;\n    text-align: center;\n    font-size: 15px;\n    font-weight: 500;\n    font-variant-numeric: tabular-nums;\n  }\n  .counter .icon-btn { width: 30px; height: 30px; border: none; }\n\n  /* empty weights inside the manufacturer dialog */\n  .tare-list {\n    display: flex;\n    flex-direction: column;\n    gap: 10px;\n    border-top: 1px solid var(--divider-color, #e0e0e0);\n    padding-top: 12px;\n  }\n  .tare-row {\n    display: flex;\n    align-items: flex-end;\n    gap: 12px;\n  }\n  .tare-row .grow { flex: 1; min-width: 0; }\n  .tare-row .name { font-size: 14px; font-weight: 500; }\n  .tare-row .num-field { width: 120px; flex: 0 0 auto; }\n\n  .sub-list {\n    margin-top: 12px;\n    padding-top: 12px;\n    border-top: 1px solid var(--divider-color, #e0e0e0);\n    display: flex;\n    flex-direction: column;\n    gap: 10px;\n  }\n\n  .spool-edit {\n    display: flex;\n    align-items: flex-end;\n    gap: 8px;\n    flex-wrap: wrap;\n  }\n  .spool-edit .num-field { width: 104px; flex: 0 0 auto; }\n  .spool-edit .grow { flex: 1 1 160px; }\n\n  /* ---------------- empty state ---------------- */\n\n  .empty {\n    text-align: center;\n    padding: 48px 16px;\n    color: var(--secondary-text-color, #727272);\n  }\n  .empty .big { font-size: 44px; line-height: 1; margin-bottom: 12px; }\n  .empty h3 { margin: 0 0 6px; color: var(--primary-text-color); font-weight: 500; }\n  .empty p { margin: 0 0 16px; }\n\n  /* ---------------- dialog ---------------- */\n\n  .overlay {\n    position: fixed;\n    inset: 0;\n    z-index: 10;\n    background: rgba(0, 0, 0, 0.45);\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    padding: 16px;\n  }\n  .dialog {\n    background: var(--card-background-color, #fff);\n    color: var(--primary-text-color);\n    border-radius: var(--ha-card-border-radius, 14px);\n    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);\n    width: min(640px, 100%);\n    max-height: min(88vh, 900px);\n    display: flex;\n    flex-direction: column;\n  }\n  .dialog h2 {\n    margin: 0;\n    padding: 20px 24px 8px;\n    font-size: 20px;\n    font-weight: 500;\n  }\n  .dialog .body { padding: 8px 24px 16px; overflow-y: auto; }\n  .dialog .actions {\n    display: flex;\n    justify-content: flex-end;\n    gap: 8px;\n    padding: 8px 16px 16px;\n    flex-wrap: wrap;\n  }\n  .dialog .actions .spacer { flex: 1; }\n\n  .form-grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n    gap: 14px;\n  }\n  .form-grid .span-2 { grid-column: 1 / -1; }\n  .color-field { display: flex; gap: 8px; align-items: flex-end; }\n  .color-field .grow { flex: 1; }\n\n  .error-text {\n    color: var(--error-color, #db4437);\n    font-size: 13px;\n    margin-top: 8px;\n  }\n\n  /* ---------------- toast ---------------- */\n\n  .toast {\n    position: fixed;\n    left: 50%;\n    bottom: 24px;\n    transform: translateX(-50%);\n    z-index: 20;\n    background: #323232;\n    color: #fff;\n    border-radius: 8px;\n    padding: 12px 18px;\n    font-size: 14px;\n    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);\n    max-width: calc(100vw - 32px);\n  }\n  .toast.error { background: var(--error-color, #db4437); }\n\n  .id-badge {\n    font-family: var(--code-font-family, monospace);\n    font-size: 11px;\n    color: var(--secondary-text-color, #727272);\n    background: var(--divider-color, #e0e0e0);\n    border-radius: 4px;\n    padding: 1px 6px;\n    cursor: pointer;\n    border: none;\n  }\n\n  @media (max-width: 600px) {\n    .content { padding: 12px; }\n    .grid { grid-template-columns: 1fr; }\n    .toolbar { font-size: 18px; }\n  }\n</style>\n      <div id="app"><div class="content"><div class="empty">…</div></div></div>\n      <div id="overlay"></div>\n      <div id="toast"></div>\n    ', this._onClick = this._onClick.bind(this), this._onInput = this._onInput.bind(this), this._onChange = this._onChange.bind(this), this._onKeyDown = this._onKeyDown.bind(this);
+      }, this._dialog = null, this.shadowRoot.innerHTML = '\n      <style>\n  :host {\n    display: block;\n    height: 100%;\n    background: var(--primary-background-color, #fafafa);\n    color: var(--primary-text-color, #212121);\n    font-family: var(--paper-font-body1_-_font-family, Roboto, sans-serif);\n    -moz-osx-font-smoothing: grayscale;\n    -webkit-font-smoothing: antialiased;\n  }\n\n  * { box-sizing: border-box; }\n\n  .app-header {\n    position: sticky;\n    top: 0;\n    z-index: 4;\n    background: var(--app-header-background-color, var(--primary-color, #03a9f4));\n    color: var(--app-header-text-color, #fff);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.16));\n  }\n\n  .toolbar {\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    height: 56px;\n    padding: 0 12px;\n    font-size: 20px;\n    font-weight: 400;\n  }\n\n  .toolbar .title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }\n\n  .menu-button {\n    display: none;\n    background: none;\n    border: none;\n    color: inherit;\n    cursor: pointer;\n    padding: 8px;\n    border-radius: 50%;\n    line-height: 0;\n  }\n  :host([narrow]) .menu-button { display: block; }\n  .menu-button:hover { background: rgba(255, 255, 255, 0.12); }\n\n  .tabs {\n    display: flex;\n    gap: 4px;\n    padding: 0 8px;\n    overflow-x: auto;\n    scrollbar-width: none;\n  }\n  .tabs::-webkit-scrollbar { display: none; }\n\n  .tab {\n    appearance: none;\n    background: none;\n    border: none;\n    border-bottom: 3px solid transparent;\n    color: inherit;\n    opacity: 0.72;\n    cursor: pointer;\n    font-size: 14px;\n    font-weight: 500;\n    letter-spacing: 0.4px;\n    padding: 12px 16px;\n    text-transform: uppercase;\n    white-space: nowrap;\n  }\n  .tab:hover { opacity: 1; }\n  .tab[aria-selected="true"] { opacity: 1; border-bottom-color: currentColor; }\n\n  .content {\n    max-width: 1240px;\n    margin: 0 auto;\n    padding: 16px;\n  }\n\n  /* ---------------- cards ---------------- */\n\n  .card {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));\n    border: var(--ha-card-border-width, 1px) solid var(--ha-card-border-color, transparent);\n    padding: 16px;\n  }\n\n  .section-title {\n    font-size: 16px;\n    font-weight: 500;\n    margin: 24px 0 12px;\n    display: flex;\n    align-items: center;\n    gap: 8px;\n    /* Title plus action button does not fit a narrow panel on one line. */\n    flex-wrap: wrap;\n  }\n  .section-title:first-child { margin-top: 0; }\n  .section-title .spacer { flex: 1; }\n\n  /* ---------------- summary strip ---------------- */\n\n  .summary {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n    gap: 12px;\n    margin-bottom: 16px;\n  }\n\n  .stat {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));\n    padding: 14px 16px;\n  }\n  .stat .value {\n    font-size: 26px;\n    font-weight: 500;\n    line-height: 1.15;\n    color: var(--primary-text-color);\n  }\n  .stat .label {\n    font-size: 12px;\n    letter-spacing: 0.4px;\n    text-transform: uppercase;\n    color: var(--secondary-text-color, #727272);\n    margin-top: 4px;\n  }\n\n  /* ---------------- filter bar ---------------- */\n\n  .filters {\n    display: flex;\n    flex-wrap: wrap;\n    gap: 8px;\n    align-items: center;\n    margin-bottom: 16px;\n  }\n  .filters .grow { flex: 1 1 200px; min-width: 160px; }\n\n  /* ---------------- form controls ---------------- */\n\n  input[type="text"],\n  input[type="number"],\n  input[type="date"],\n  input[type="search"],\n  select,\n  textarea {\n    width: 100%;\n    font: inherit;\n    font-size: 14px;\n    color: var(--primary-text-color);\n    background: var(--card-background-color, #fff);\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 8px;\n    padding: 9px 10px;\n  }\n  textarea { resize: vertical; min-height: 64px; }\n  input:disabled, select:disabled, textarea:disabled {\n    opacity: 0.5;\n    cursor: not-allowed;\n    background: var(--divider-color, #e0e0e0);\n  }\n  input:focus, select:focus, textarea:focus {\n    outline: none;\n    border-color: var(--primary-color, #03a9f4);\n    box-shadow: 0 0 0 1px var(--primary-color, #03a9f4);\n  }\n  input[type="color"] {\n    width: 48px;\n    height: 40px;\n    padding: 2px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 8px;\n    background: var(--card-background-color, #fff);\n    cursor: pointer;\n  }\n  label.field { display: block; }\n  label.field > .label-text {\n    display: block;\n    font-size: 12px;\n    font-weight: 500;\n    color: var(--secondary-text-color, #727272);\n    margin-bottom: 4px;\n  }\n  .hint {\n    font-size: 12px;\n    color: var(--secondary-text-color, #727272);\n    margin-top: 4px;\n  }\n\n  button {\n    font: inherit;\n    cursor: pointer;\n  }\n\n  .btn {\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    gap: 6px;\n    border: none;\n    border-radius: 8px;\n    font-size: 14px;\n    font-weight: 500;\n    padding: 9px 16px;\n    background: var(--primary-color, #03a9f4);\n    color: var(--text-primary-color, #fff);\n  }\n  .btn:hover { filter: brightness(1.08); }\n  .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: none; }\n\n  .btn.secondary {\n    background: transparent;\n    color: var(--primary-color, #03a9f4);\n    border: 1px solid var(--divider-color, #e0e0e0);\n  }\n  .btn.text {\n    background: transparent;\n    color: var(--primary-color, #03a9f4);\n    padding: 8px 10px;\n  }\n  .btn.danger { background: var(--error-color, #db4437); color: #fff; }\n  .btn.danger.text { background: transparent; color: var(--error-color, #db4437); }\n\n  .icon-btn {\n    display: inline-flex;\n    align-items: center;\n    justify-content: center;\n    width: 34px;\n    height: 34px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 50%;\n    background: transparent;\n    color: var(--primary-text-color);\n    font-size: 18px;\n    line-height: 1;\n    flex: 0 0 auto;\n  }\n  .icon-btn:hover { background: var(--divider-color, #e0e0e0); }\n  .icon-btn:disabled { opacity: 0.35; cursor: not-allowed; background: transparent; }\n  .icon-btn.plain { border: none; }\n  .icon-btn.danger { color: var(--error-color, #db4437); }\n\n  /* ---------------- inventory cards ---------------- */\n\n  .grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));\n    gap: 12px;\n  }\n\n  /* ---------------- ACE box ---------------- */\n\n  .ace-box {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 1px 3px rgba(0, 0, 0, 0.12));\n    padding: 16px;\n    margin-bottom: 16px;\n  }\n\n  .ace-grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));\n    gap: 10px;\n  }\n\n  .ace-slot {\n    display: flex;\n    flex-direction: column;\n    gap: 8px;\n    padding: 12px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 10px;\n  }\n  .ace-slot-active { border-color: var(--success-color, #43a047); }\n\n  .ace-slot-head {\n    display: flex;\n    align-items: center;\n    gap: 6px;\n    min-height: 22px;\n  }\n  .ace-slot-name {\n    font-size: 11px;\n    letter-spacing: 1px;\n    text-transform: uppercase;\n    color: var(--secondary-text-color, #727272);\n  }\n\n  .ace-slot-body { display: flex; align-items: center; gap: 10px; }\n\n  .ace-dot {\n    width: 28px;\n    height: 28px;\n    border-radius: 50%;\n    flex: 0 0 auto;\n    border: 2px solid rgba(0, 0, 0, 0.25);\n  }\n  .ace-dot-empty { border-style: dashed; }\n\n  .ace-unbound { font-style: italic; }\n\n  .ace-slot-amount { display: flex; align-items: center; gap: 8px; }\n  .ace-low { color: var(--error-color, #d32f2f); font-weight: 500; }\n\n  .ace-warn {\n    font-size: 11px;\n    color: var(--warning-color, #ffa600);\n  }\n\n  /* Pushed down so the buttons line up however tall the slot above is. */\n  .ace-slot-actions {\n    display: flex;\n    align-items: stretch;\n    gap: 6px;\n    margin-top: auto;\n  }\n  .ace-slot-actions .grow { flex: 1; min-width: 0; justify-content: center; }\n\n  /* Squared off and sized to the button beside it, so the pair reads as one\n     control rather than a button with a stray circle next to it. */\n  .ace-slot-actions .icon-btn {\n    width: 38px;\n    height: auto;\n    border-radius: 8px;\n  }\n\n  .spool-card { display: flex; flex-direction: column; gap: 10px; }\n\n  /* Pushed to the bottom edge of the card so the button sits in the same\n     place on every card, however much metadata the entry carries. */\n  .card-actions {\n    display: flex;\n    justify-content: flex-end;\n    margin-top: auto;\n    padding-top: 2px;\n  }\n\n  .spool-head { display: flex; align-items: flex-start; gap: 12px; }\n\n  .swatch {\n    width: 40px;\n    height: 40px;\n    border-radius: 50%;\n    flex: 0 0 auto;\n    border: 2px solid var(--divider-color, #e0e0e0);\n    box-shadow: inset 0 -6px 10px rgba(0, 0, 0, 0.18);\n  }\n  .swatch.small { width: 26px; height: 26px; border-width: 1px; }\n\n  .spool-title { flex: 1; min-width: 0; }\n  .spool-title .name {\n    font-size: 15px;\n    font-weight: 500;\n    overflow: hidden;\n    text-overflow: ellipsis;\n    white-space: nowrap;\n  }\n  .spool-title .sub {\n    font-size: 13px;\n    color: var(--secondary-text-color, #727272);\n    margin-top: 2px;\n  }\n\n  .chips { display: flex; flex-wrap: wrap; gap: 6px; }\n  .chip {\n    display: inline-flex;\n    align-items: center;\n    gap: 4px;\n    font-size: 12px;\n    font-weight: 500;\n    padding: 3px 9px;\n    border-radius: 999px;\n    background: var(--divider-color, #e0e0e0);\n    color: var(--primary-text-color);\n    white-space: nowrap;\n  }\n  .chip.sealed { background: rgba(3, 169, 244, 0.16); color: var(--primary-color, #03a9f4); }\n  .chip.open { background: rgba(255, 152, 0, 0.18); color: #e08600; }\n  .chip.muted { background: transparent; border: 1px solid var(--divider-color, #e0e0e0); color: var(--secondary-text-color, #727272); }\n\n  .bar {\n    position: relative;\n    height: 8px;\n    border-radius: 999px;\n    background: var(--divider-color, #e0e0e0);\n    overflow: hidden;\n  }\n  .bar > span {\n    position: absolute;\n    inset: 0 auto 0 0;\n    border-radius: 999px;\n    background: var(--primary-color, #03a9f4);\n  }\n  .bar.unknown {\n    background: repeating-linear-gradient(\n      45deg,\n      var(--divider-color, #e0e0e0) 0 6px,\n      transparent 6px 12px\n    );\n  }\n  .bar.low > span { background: var(--error-color, #db4437); }\n  .bar.mid > span { background: var(--warning-color, #ffa600); }\n\n  .open-row {\n    display: flex;\n    align-items: center;\n    gap: 10px;\n    font-size: 13px;\n  }\n  .open-row .bar { flex: 1; }\n  .open-row .amount { color: var(--secondary-text-color, #727272); white-space: nowrap; }\n\n  .meta {\n    font-size: 12px;\n    color: var(--secondary-text-color, #727272);\n    display: flex;\n    flex-wrap: wrap;\n    gap: 4px 14px;\n  }\n\n  /* ---------------- lists (manage / admin) ---------------- */\n\n  .list { display: flex; flex-direction: column; gap: 8px; }\n\n  .row {\n    background: var(--card-background-color, #fff);\n    border-radius: var(--ha-card-border-radius, 12px);\n    box-shadow: var(--ha-card-box-shadow, 0 2px 4px rgba(0, 0, 0, 0.1));\n    padding: 12px 14px;\n  }\n  .row-main {\n    display: flex;\n    align-items: center;\n    gap: 12px;\n    flex-wrap: wrap;\n  }\n  .row-main .grow { flex: 1 1 220px; min-width: 0; }\n  .row-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }\n\n  .counter {\n    display: inline-flex;\n    align-items: center;\n    gap: 6px;\n    border: 1px solid var(--divider-color, #e0e0e0);\n    border-radius: 999px;\n    padding: 2px;\n  }\n  .counter .num {\n    min-width: 34px;\n    text-align: center;\n    font-size: 15px;\n    font-weight: 500;\n    font-variant-numeric: tabular-nums;\n  }\n  .counter .icon-btn { width: 30px; height: 30px; border: none; }\n\n  /* empty weights inside the manufacturer dialog */\n  .tare-list {\n    display: flex;\n    flex-direction: column;\n    gap: 10px;\n    border-top: 1px solid var(--divider-color, #e0e0e0);\n    padding-top: 12px;\n  }\n  .tare-row {\n    display: flex;\n    align-items: flex-end;\n    gap: 12px;\n  }\n  .tare-row .grow { flex: 1; min-width: 0; }\n  .tare-row .name { font-size: 14px; font-weight: 500; }\n  .tare-row .num-field { width: 120px; flex: 0 0 auto; }\n\n  .sub-list {\n    margin-top: 12px;\n    padding-top: 12px;\n    border-top: 1px solid var(--divider-color, #e0e0e0);\n    display: flex;\n    flex-direction: column;\n    gap: 10px;\n  }\n\n  .spool-edit {\n    display: flex;\n    align-items: flex-end;\n    gap: 8px;\n    flex-wrap: wrap;\n  }\n  .spool-edit .num-field { width: 104px; flex: 0 0 auto; }\n  .spool-edit .grow { flex: 1 1 160px; }\n\n  /* ---------------- empty state ---------------- */\n\n  .empty {\n    text-align: center;\n    padding: 48px 16px;\n    color: var(--secondary-text-color, #727272);\n  }\n  .empty .big { font-size: 44px; line-height: 1; margin-bottom: 12px; }\n  .empty h3 { margin: 0 0 6px; color: var(--primary-text-color); font-weight: 500; }\n  .empty p { margin: 0 0 16px; }\n\n  /* ---------------- dialog ---------------- */\n\n  .overlay {\n    position: fixed;\n    inset: 0;\n    z-index: 10;\n    background: rgba(0, 0, 0, 0.45);\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    padding: 16px;\n  }\n  .dialog {\n    background: var(--card-background-color, #fff);\n    color: var(--primary-text-color);\n    border-radius: var(--ha-card-border-radius, 14px);\n    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.32);\n    width: min(640px, 100%);\n    max-height: min(88vh, 900px);\n    display: flex;\n    flex-direction: column;\n  }\n  .dialog h2 {\n    margin: 0;\n    padding: 20px 24px 8px;\n    font-size: 20px;\n    font-weight: 500;\n  }\n  .dialog .body { padding: 8px 24px 16px; overflow-y: auto; }\n  .dialog .actions {\n    display: flex;\n    justify-content: flex-end;\n    gap: 8px;\n    padding: 8px 16px 16px;\n    flex-wrap: wrap;\n  }\n  .dialog .actions .spacer { flex: 1; }\n\n  .form-grid {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));\n    gap: 14px;\n  }\n  .form-grid .span-2 { grid-column: 1 / -1; }\n  .color-field { display: flex; gap: 8px; align-items: flex-end; }\n  .color-field .grow { flex: 1; }\n\n  .error-text {\n    color: var(--error-color, #db4437);\n    font-size: 13px;\n    margin-top: 8px;\n  }\n\n  /* ---------------- toast ---------------- */\n\n  .toast {\n    position: fixed;\n    left: 50%;\n    bottom: 24px;\n    transform: translateX(-50%);\n    z-index: 20;\n    background: #323232;\n    color: #fff;\n    border-radius: 8px;\n    padding: 12px 18px;\n    font-size: 14px;\n    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);\n    max-width: calc(100vw - 32px);\n  }\n  .toast.error { background: var(--error-color, #db4437); }\n\n  .id-badge {\n    font-family: var(--code-font-family, monospace);\n    font-size: 11px;\n    color: var(--secondary-text-color, #727272);\n    background: var(--divider-color, #e0e0e0);\n    border-radius: 4px;\n    padding: 1px 6px;\n    cursor: pointer;\n    border: none;\n  }\n\n  @media (max-width: 600px) {\n    .content { padding: 12px; }\n    .grid { grid-template-columns: 1fr; }\n    .toolbar { font-size: 18px; }\n  }\n</style>\n      <div id="app"><div class="content"><div class="empty">…</div></div></div>\n      <div id="overlay"></div>\n      <div id="toast"></div>\n    ', this._onClick = this._onClick.bind(this), this._onInput = this._onInput.bind(this), this._onChange = this._onChange.bind(this), this._onKeyDown = this._onKeyDown.bind(this);
     }
     set hass(e) {
       const t = !this._hass;
@@ -1191,9 +1219,9 @@ ${n || ""}</textarea
     set route(e) {
       this._route = e;
       const t = (e && e.path ? e.path : "").split("/").filter(Boolean),
-        n = t.length ? t[t.length - 1] : "",
-        a = G.includes(n) ? n : "overview";
-      a !== this._state.view && (this._state.view = a, this._ready && this._renderApp());
+        a = t.length ? t[t.length - 1] : "",
+        n = G.includes(a) ? a : "overview";
+      n !== this._state.view && (this._state.view = n, this._ready && this._renderApp());
     }
     connectedCallback() {
       this.shadowRoot.addEventListener("click", this._onClick), this.shadowRoot.addEventListener("input", this._onInput), this.shadowRoot.addEventListener("change", this._onChange), this.shadowRoot.addEventListener("keydown", this._onKeyDown), this._hass && this._init();
@@ -1248,16 +1276,16 @@ ${n || ""}</textarea
     get _lookup() {
       return function (e) {
         const t = new Map((e.manufacturers || []).map(e => [e.id, e])),
-          n = new Map((e.materials || []).map(e => [e.id, e])),
-          a = new Map((e.spool_types || []).map(e => [l(e, "net_weight_g"), e]));
+          a = new Map((e.materials || []).map(e => [e.id, e])),
+          n = new Map((e.spool_types || []).map(e => [l(e, "net_weight_g"), e]));
         return {
           manufacturers: t,
-          materials: n,
-          spoolTypes: a,
+          materials: a,
+          spoolTypes: n,
           manufacturerName: e => t.get(e)?.name || "?",
-          materialName: e => n.get(e)?.name || "?",
-          material: e => n.get(e) || null,
-          spoolTypeFor: e => a.get(l(e, "spool_net_weight_g")) || null
+          materialName: e => a.get(e)?.name || "?",
+          material: e => a.get(e) || null,
+          spoolTypeFor: e => n.get(l(e, "spool_net_weight_g")) || null
         };
       }(this._data);
     }
@@ -1273,17 +1301,17 @@ ${n || ""}</textarea
     get _aceSlots() {
       const e = this._hass && this._hass.states || {},
         t = [];
-      for (const [n, a] of Object.entries(e)) {
-        const i = a.attributes || {},
+      for (const [a, n] of Object.entries(e)) {
+        const i = n.attributes || {},
           o = i.spool_info;
         if (!Array.isArray(o) || !o.length) continue;
-        const r = (e[n.replace(/_spools$/, "_active_filament")] || {}).attributes,
+        const r = (e[a.replace(/_spools$/, "_active_filament")] || {}).attributes,
           l = o.filter(e => e && e.printer_id && e.local_slot).map(e => ({
             ...e,
             is_active: Boolean(r && r.local_slot === e.local_slot && r.box_id === e.box_id)
           }));
         l.length && t.push({
-          name: i.friendly_name || n,
+          name: i.friendly_name || a,
           slots: l
         });
       }
@@ -1292,20 +1320,20 @@ ${n || ""}</textarea
     _renderApp() {
       const e = this.shadowRoot.getElementById("app"),
         t = this.shadowRoot.activeElement,
-        n = t && t.dataset && t.dataset.filter || null,
-        a = n && void 0 !== t.selectionStart ? t.selectionStart : null,
+        a = t && t.dataset && t.dataset.filter || null,
+        n = a && void 0 !== t.selectionStart ? t.selectionStart : null,
         i = this._context(),
         o = "admin" === this._state.view ? function (e) {
           const {
             data: t,
-            isAdmin: n
+            isAdmin: a
           } = e;
-          if (!n) return E({
+          if (!a) return E({
             emoji: "🔒",
             title: r("admin.only_admin.title"),
             text: r("admin.only_admin.text")
           });
-          const a = t.usage || {
+          const n = t.usage || {
             manufacturers: {},
             materials: {},
             spool_types: {}
@@ -1320,8 +1348,8 @@ ${n || ""}</textarea
     ${t.manufacturers.length ? g`<div class="list">
           ${t.manufacturers.map(e => j({
             entry: e,
-            subtitle: W(e, t),
-            usage: a.manufacturers[e.id] || 0,
+            subtitle: q(e, t),
+            usage: n.manufacturers[e.id] || 0,
             editAction: "edit-manufacturer",
             deleteAction: "delete-manufacturer"
           }))}
@@ -1337,8 +1365,8 @@ ${n || ""}</textarea
     ${t.materials.length ? g`<div class="list">
           ${t.materials.map(e => j({
             entry: e,
-            subtitle: q(e),
-            usage: a.materials[e.id] || 0,
+            subtitle: W(e),
+            usage: n.materials[e.id] || 0,
             editAction: "edit-material",
             deleteAction: "delete-material"
           }))}
@@ -1367,30 +1395,30 @@ ${n || ""}</textarea
             </div>` : ""}
       </div>
       <div class="content">${o}</div>
-    `), n) {
-        const t = e.querySelector(`[data-filter="${n}"]`);
-        if (t && (t.focus(), null !== a && t.setSelectionRange)) try {
-          t.setSelectionRange(a, a);
+    `), a) {
+        const t = e.querySelector(`[data-filter="${a}"]`);
+        if (t && (t.focus(), null !== n && t.setSelectionRange)) try {
+          t.setSelectionRange(n, n);
         } catch {}
       }
     }
     _renderOverlay(e = !1, t = !1) {
-      const n = this.shadowRoot.getElementById("overlay"),
-        a = this._dialog ? `${this._dialog.kind}:${this._dialog.id || "new"}:${this._dialog.error || ""}` : "";
-      if (!e && a === this._overlayKey) return;
-      if (this._overlayKey = a, !this._dialog) return void (n.innerHTML = "");
+      const a = this.shadowRoot.getElementById("overlay"),
+        n = this._dialog ? `${this._dialog.kind}:${this._dialog.id || "new"}:${this._dialog.error || ""}` : "";
+      if (!e && n === this._overlayKey) return;
+      if (this._overlayKey = n, !this._dialog) return void (a.innerHTML = "");
       const i = this._dialog.values || {};
       let o, l;
       if ("slot" === this._dialog.kind) o = function (e, t) {
         const {
-          candidates: n,
-          loading: a,
+          candidates: a,
+          loading: n,
           assignment: i,
           needsTare: o,
           materialType: l
         } = t;
-        if (a) return g`<div class="empty">${r("app.loading")}</div>`;
-        const s = [...(n || []).map(e => ({
+        if (n) return g`<div class="empty">${r("app.loading")}</div>`;
+        const s = [...(a || []).map(e => ({
           value: `${e.item_id}:${e.spool_id || ""}`,
           label: null === e.spool_id ? r("ace.option_new", {
             label: e.label
@@ -1401,7 +1429,7 @@ ${n || ""}</textarea
           label: r("ace.option_release")
         });
         const d = e.candidate === C,
-          c = (n || []).find(t => `${t.item_id}:${t.spool_id || ""}` === e.candidate),
+          c = (a || []).find(t => `${t.item_id}:${t.spool_id || ""}` === e.candidate),
           p = c ? c.tare_g : i ? i.tare_g : null,
           m = null == p;
         return g`<div class="form-grid">
@@ -1460,8 +1488,8 @@ ${n || ""}</textarea
               ${r("action.delete")}
             </button>` : ""
         });
-      } else "manufacturer" === this._dialog.kind ? (o = function (e, t, n) {
-        const a = (t.spool_types || []).filter(t => t.manufacturer_id === e.id);
+      } else "manufacturer" === this._dialog.kind ? (o = function (e, t, a) {
+        const n = (t.spool_types || []).filter(t => t.manufacturer_id === e.id);
         return g`<div class="form-grid">
     <div class="span-2">
       ${L({
@@ -1490,14 +1518,14 @@ ${n || ""}</textarea
     <div class="span-2">
       <div class="section-title" style="margin:8px 0 4px">${r("admin.spool_types")}</div>
       <div class="hint" style="margin-bottom:10px">${r("admin.spool_types_hint")}</div>
-      ${a.length ? g`<div class="tare-list">
-            ${a.map(a => {
-          const i = (t.usage?.spool_types || {})[a.id] || 0;
+      ${n.length ? g`<div class="tare-list">
+            ${n.map(n => {
+          const i = (t.usage?.spool_types || {})[n.id] || 0;
           return g`<div class="tare-row">
                 <div class="grow">
                   <div class="name">
-                    ${n.materialName(a.material_id)} ·
-                    ${b(a.net_weight_g)} g
+                    ${a.materialName(n.material_id)} ·
+                    ${b(n.net_weight_g)} g
                   </div>
                   <div class="hint">
                     ${i ? r(1 === i ? "admin.used_in_one" : "admin.used_in", {
@@ -1507,12 +1535,12 @@ ${n || ""}</textarea
                 </div>
                 <div class="num-field">
                   ${L({
-            name: `spool_type__${a.id}`,
+            name: `spool_type__${n.id}`,
             label: r("field.empty_weight_short"),
             type: "number",
             min: 0,
             step: .1,
-            value: e[`spool_type__${a.id}`]
+            value: e[`spool_type__${n.id}`]
           })}
                 </div>
               </div>`;
@@ -1586,19 +1614,19 @@ ${n || ""}</textarea
         confirmLabel: this._dialog.confirmLabel || r("action.delete"),
         danger: !0
       }));
-      if (n.innerHTML = String(function ({
+      if (a.innerHTML = String(function ({
         title: e,
         body: t,
-        actions: n,
-        error: a
+        actions: a,
+        error: n
       }) {
         return g`<div class="overlay" data-action="dialog-backdrop">
     <div class="dialog" role="dialog" aria-modal="true" data-stop>
       <h2>${e}</h2>
       <div class="body">
-        ${t} ${a ? g`<div class="error-text">${a}</div>` : ""}
+        ${t} ${n ? g`<div class="error-text">${n}</div>` : ""}
       </div>
-      <div class="actions">${n}</div>
+      <div class="actions">${a}</div>
     </div>
   </div>`;
       }({
@@ -1607,7 +1635,7 @@ ${n || ""}</textarea
         actions: l,
         error: this._dialog.error
       })), !t) return;
-      const s = n.querySelector("[data-field]");
+      const s = a.querySelector("[data-field]");
       s && s.focus();
     }
     _itemSignature(e) {
@@ -1618,14 +1646,14 @@ ${n || ""}</textarea
       if (!e || "item" !== e.kind || "edit" !== e.mode) return;
       const t = this._findItem(e.id);
       if (!t) return void this._closeDialog();
-      const n = this.shadowRoot.activeElement,
-        a = Boolean(n && n.closest && n.closest(".overlay"));
-      this._itemSignature(t) === e.signature && a || this._renderOverlay(!0);
+      const a = this.shadowRoot.activeElement,
+        n = Boolean(a && a.closest && a.closest(".overlay"));
+      this._itemSignature(t) === e.signature && n || this._renderOverlay(!0);
     }
     _toast(e, t = !1) {
-      const n = this.shadowRoot.getElementById("toast");
-      n.innerHTML = String(g`<div class="toast ${t ? "error" : ""}">${e}</div>`), this._toastTimer && clearTimeout(this._toastTimer), this._toastTimer = setTimeout(() => {
-        n.innerHTML = "";
+      const a = this.shadowRoot.getElementById("toast");
+      a.innerHTML = String(g`<div class="toast ${t ? "error" : ""}">${e}</div>`), this._toastTimer && clearTimeout(this._toastTimer), this._toastTimer = setTimeout(() => {
+        a.innerHTML = "";
       }, t ? 6e3 : 2500);
     }
     _navigate(e) {
@@ -1652,16 +1680,16 @@ ${n || ""}</textarea
     _confirm({
       previous: e,
       title: t,
-      text: n,
-      confirmLabel: a,
+      text: a,
+      confirmLabel: n,
       onConfirm: i
     }) {
       this._openDialog({
         kind: "confirm",
         previous: e,
         title: t,
-        text: n,
-        confirmLabel: a,
+        text: a,
+        confirmLabel: n,
         onConfirm: i
       });
     }
@@ -1692,11 +1720,11 @@ ${n || ""}</textarea
       if (!t || !t.dataset) return;
       if (this._applyFilter(t)) return;
       if (this._captureDialogField(t)) return void ("slot" === this._dialog.kind && "candidate" === t.dataset.field && this._renderOverlay(!0));
-      const n = t.closest(".spool-edit");
-      n && t.dataset.field && this._call({
+      const a = t.closest(".spool-edit");
+      a && t.dataset.field && this._call({
         type: `${K}/spool/update`,
-        item_id: n.dataset.item,
-        spool_id: n.dataset.spool,
+        item_id: a.dataset.item,
+        spool_id: a.dataset.spool,
         [t.dataset.field]: "" === t.value ? null : t.value
       }).catch(() => {});
     }
@@ -1704,11 +1732,11 @@ ${n || ""}</textarea
       const t = e.composedPath().find(e => e.dataset && e.dataset.action);
       if (!t) return;
       const {
-        action: n
+        action: a
       } = t.dataset;
-      if ("dialog-backdrop" === n && e.target !== t) return;
-      const a = this._actions()[n];
-      a && (e.preventDefault(), e.stopPropagation(), a(t.dataset, t));
+      if ("dialog-backdrop" === a && e.target !== t) return;
+      const n = this._actions()[a];
+      n && (e.preventDefault(), e.stopPropagation(), n(t.dataset, t));
     }
     _actions() {
       const e = e => this._call(e).catch(() => {});
@@ -1753,7 +1781,7 @@ ${n || ""}</textarea
         "setup-item": e => {
           const t = this._findItem(e.item);
           if (!t) return;
-          const n = this._lookup.spoolTypeFor(t);
+          const a = this._lookup.spoolTypeFor(t);
           this._openDialog({
             kind: "item",
             mode: "edit",
@@ -1772,8 +1800,8 @@ ${n || ""}</textarea
               nozzle_temp: t.nozzle_temp ?? "",
               bed_temp: t.bed_temp ?? "",
               notes: t.notes,
-              ...(n ? {
-                [`spool_type__${n.id}`]: n.empty_weight_g ?? ""
+              ...(a ? {
+                [`spool_type__${a.id}`]: a.empty_weight_g ?? ""
               } : {})
             }
           });
@@ -1794,19 +1822,19 @@ ${n || ""}</textarea
           });
         },
         "sealed-plus": t => {
-          const n = this._findItem(t.item);
-          n && e({
+          const a = this._findItem(t.item);
+          a && e({
             type: `${K}/item/set_sealed`,
-            item_id: n.id,
-            sealed_count: Number(n.sealed_count || 0) + 1
+            item_id: a.id,
+            sealed_count: Number(a.sealed_count || 0) + 1
           });
         },
         "sealed-minus": t => {
-          const n = this._findItem(t.item);
-          !n || Number(n.sealed_count || 0) < 1 || e({
+          const a = this._findItem(t.item);
+          !a || Number(a.sealed_count || 0) < 1 || e({
             type: `${K}/item/set_sealed`,
-            item_id: n.id,
-            sealed_count: Number(n.sealed_count) - 1
+            item_id: a.id,
+            sealed_count: Number(a.sealed_count) - 1
           });
         },
         "open-spool": t => {
@@ -1834,6 +1862,24 @@ ${n || ""}</textarea
           });
         },
         "assign-slot": e => this._openSlotDialog(e),
+        "clear-slot": e => {
+          this._confirm({
+            title: r("ace.clear_title"),
+            text: r("ace.clear_text", {
+              name: e.label || r("ace.clear_fallback"),
+              slot: e.slot
+            }),
+            confirmLabel: r("ace.clear_confirm"),
+            onConfirm: async () => {
+              await this._call({
+                type: `${K}/slot/clear`,
+                printer_id: String(e.printer),
+                box_id: Number(e.box),
+                local_slot: Number(e.slot)
+              }), this._toast(r("ace.clear_toast"));
+            }
+          });
+        },
         "copy-id": async e => {
           try {
             await navigator.clipboard.writeText(e.id), this._toast(r("toast.id_copied"));
@@ -1873,8 +1919,8 @@ ${n || ""}</textarea
         "delete-manufacturer": e => {
           const t = this._data.manufacturers.find(t => t.id === e.id);
           if (!t) return;
-          const n = (this._data.usage.manufacturers || {})[t.id] || 0;
-          n > 0 ? this._toast(this._blockedMessage(t.name, n), !0) : this._confirm({
+          const a = (this._data.usage.manufacturers || {})[t.id] || 0;
+          a > 0 ? this._toast(this._blockedMessage(t.name, a), !0) : this._confirm({
             title: r("admin.delete_manufacturer_title"),
             text: r("admin.delete_text", {
               name: t.name
@@ -1923,8 +1969,8 @@ ${n || ""}</textarea
         "delete-material": e => {
           const t = this._data.materials.find(t => t.id === e.id);
           if (!t) return;
-          const n = (this._data.usage.materials || {})[t.id] || 0;
-          n > 0 ? this._toast(this._blockedMessage(t.name, n), !0) : this._confirm({
+          const a = (this._data.usage.materials || {})[t.id] || 0;
+          a > 0 ? this._toast(this._blockedMessage(t.name, a), !0) : this._confirm({
             title: r("admin.delete_material_title"),
             text: r("admin.delete_text", {
               name: t.name
@@ -1948,14 +1994,14 @@ ${n || ""}</textarea
         box_id: Number(e.box),
         local_slot: Number(e.slot)
       };
-      let n;
+      let a;
       this._openDialog({
         kind: "slot",
         id: `${t.printer_id}:${t.box_id}:${t.local_slot}`,
         title: r("ace.dialog_title", {
           slot: t.local_slot
         }),
-        values: R(null),
+        values: M(null),
         slot: {
           ...t,
           loading: !0,
@@ -1963,7 +2009,7 @@ ${n || ""}</textarea
         }
       });
       try {
-        n = await this._call({
+        a = await this._call({
           type: `${K}/slot/candidates`,
           ...t
         });
@@ -1973,18 +2019,18 @@ ${n || ""}</textarea
       this._dialog && "slot" === this._dialog.kind && (this._dialog.slot = {
         ...t,
         loading: !1,
-        candidates: n.candidates || [],
-        assignment: n.assignment || null,
-        needsTare: Boolean(n.needs_tare),
-        materialType: n.material_type || null
-      }, this._dialog.values = R(n.assignment || null), this._renderOverlay(!0));
+        candidates: a.candidates || [],
+        assignment: a.assignment || null,
+        needsTare: Boolean(a.needs_tare),
+        materialType: a.material_type || null
+      }, this._dialog.values = M(a.assignment || null), this._renderOverlay(!0));
     }
     async _commitSlot() {
       const {
           values: e,
           slot: t
         } = this._dialog,
-        n = {
+        a = {
           printer_id: t.printer_id,
           box_id: t.box_id,
           local_slot: t.local_slot
@@ -1993,21 +2039,21 @@ ${n || ""}</textarea
         try {
           if (e.candidate === C) await this._call({
             type: `${K}/slot/clear`,
-            ...n
+            ...a
           });else {
-            const [t, a] = String(e.candidate).split(":");
+            const [t, n] = String(e.candidate).split(":");
             await this._call({
               type: `${K}/slot/assign`,
-              ...n,
+              ...a,
               item_id: t,
-              spool_id: a || null
+              spool_id: n || null
             });
             const i = parseFloat(e.gross_weight_g);
             if (!isNaN(i)) {
               const t = parseFloat(e.empty_weight_g);
               await this._call({
                 type: `${K}/slot/weigh`,
-                ...n,
+                ...a,
                 gross_weight_g: i,
                 empty_weight_g: isNaN(t) ? null : t
               });
@@ -2024,8 +2070,8 @@ ${n || ""}</textarea
       const {
         kind: e,
         mode: t,
-        id: n,
-        values: a
+        id: a,
+        values: n
       } = this._dialog;
       if ("confirm" === e) {
         const {
@@ -2035,8 +2081,8 @@ ${n || ""}</textarea
       }
       if ("slot" === e) return void (await this._commitSlot());
       if ("item" === e) {
-        if (!a.manufacturer_id || !a.material_id) return void this._setDialogError(r("error.item_required"));
-      } else if (!String(a.name || "").trim()) return void this._setDialogError(r("error.name_required"));
+        if (!n.manufacturer_id || !n.material_id) return void this._setDialogError(r("error.item_required"));
+      } else if (!String(n.name || "").trim()) return void this._setDialogError(r("error.name_required"));
       const i = {
           item: "item",
           manufacturer: "manufacturer",
@@ -2044,11 +2090,11 @@ ${n || ""}</textarea
         }[e],
         o = {
           type: `${K}/${i}/${"edit" === t ? "update" : "create"}`,
-          ...this._cleanValues(a)
+          ...this._cleanValues(n)
         };
-      "edit" === t && (o[`${i}_id`] = n);
+      "edit" === t && (o[`${i}_id`] = a);
       try {
-        await this._call(o), await this._saveSpoolTypeWeights(a);
+        await this._call(o), await this._saveSpoolTypeWeights(n);
       } catch {
         return;
       }
@@ -2056,10 +2102,10 @@ ${n || ""}</textarea
     }
     async _saveSpoolTypeWeights(e) {
       const t = new Map((this._data.spool_types || []).map(e => [e.id, e.empty_weight_g]));
-      for (const [n, a] of Object.entries(e)) {
-        if (!n.startsWith("spool_type__")) continue;
-        const e = n.slice(12),
-          i = "" === a || null === a ? null : Number(a);
+      for (const [a, n] of Object.entries(e)) {
+        if (!a.startsWith("spool_type__")) continue;
+        const e = a.slice(12),
+          i = "" === n || null === n ? null : Number(n);
         t.has(e) && t.get(e) !== i && (await this._call({
           type: `${K}/spool_type/update`,
           spool_type_id: e,
@@ -2069,7 +2115,7 @@ ${n || ""}</textarea
     }
     _cleanValues(e) {
       const t = {};
-      for (const [n, a] of Object.entries(e)) n.startsWith("spool_type__") || "id" === n || (t[n] = "" === a ? null : a);
+      for (const [a, n] of Object.entries(e)) a.startsWith("spool_type__") || "id" === a || (t[a] = "" === n ? null : n);
       return t;
     }
   }

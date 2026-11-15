@@ -80,17 +80,35 @@ function slotCard(slot, isAdmin) {
       ? html`<div class="ace-warn">${t("ace.changed")}</div>`
       : ""}
 
-    <button
-      class="btn ${assignment ? "secondary" : ""} ace-slot-btn"
-      data-action="assign-slot"
-      data-printer="${slot.printer_id}"
-      data-box="${slot.box_id}"
-      data-slot="${slot.local_slot}"
-      ${raw(isAdmin ? "" : "disabled")}
-    >
-      ${icon(assignment ? "pencil" : "plus")}
-      ${assignment ? t("ace.change") : t("ace.assign")}
-    </button>
+    <div class="ace-slot-actions">
+      <button
+        class="btn ${assignment ? "secondary" : ""} grow"
+        data-action="assign-slot"
+        data-printer="${slot.printer_id}"
+        data-box="${slot.box_id}"
+        data-slot="${slot.local_slot}"
+        ${raw(isAdmin ? "" : "disabled")}
+      >
+        ${icon(assignment ? "pencil" : "plus")}
+        ${assignment ? t("ace.change") : t("ace.assign")}
+      </button>
+
+      ${assignment
+        ? html`<button
+            class="icon-btn danger"
+            data-action="clear-slot"
+            data-printer="${slot.printer_id}"
+            data-box="${slot.box_id}"
+            data-slot="${slot.local_slot}"
+            data-label="${assignment.item_label || ""}"
+            title="${t("ace.clear")}"
+            aria-label="${t("ace.clear")}"
+            ${raw(isAdmin ? "" : "disabled")}
+          >
+            ${icon("delete")}
+          </button>`
+        : ""}
+    </div>
   </div>`;
 }
 

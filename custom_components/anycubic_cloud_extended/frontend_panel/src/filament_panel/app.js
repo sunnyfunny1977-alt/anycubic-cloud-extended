@@ -701,6 +701,28 @@ class FilamentManagerPanel extends HTMLElement {
       // ---- ACE slots ----
       "assign-slot": (dataset) => this._openSlotDialog(dataset),
 
+      // Only the binding goes: the roll keeps the remaining weight the
+      // automatic deduction has arrived at and stays in the cupboard.
+      "clear-slot": (dataset) => {
+        this._confirm({
+          title: t("ace.clear_title"),
+          text: t("ace.clear_text", {
+            name: dataset.label || t("ace.clear_fallback"),
+            slot: dataset.slot,
+          }),
+          confirmLabel: t("ace.clear_confirm"),
+          onConfirm: async () => {
+            await this._call({
+              type: `${WS}/slot/clear`,
+              printer_id: String(dataset.printer),
+              box_id: Number(dataset.box),
+              local_slot: Number(dataset.slot),
+            });
+            this._toast(t("ace.clear_toast"));
+          },
+        });
+      },
+
       "copy-id": async (dataset) => {
         try {
           await navigator.clipboard.writeText(dataset.id);

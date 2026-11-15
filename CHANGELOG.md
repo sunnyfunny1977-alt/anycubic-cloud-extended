@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- **A slot bound from the panel never had anything deducted.** The panel sends
+  the item and the spool, not the signature of what the slot holds -- that is
+  built in Python, and a second implementation in the frontend would be one
+  more thing to keep in step. The reconciler compared the empty stored value
+  against the real one, read the difference as a filament swap, and marked the
+  binding stale a second after it was made; a stale binding is deliberately
+  never charged. An empty signature now means nobody has recorded the slot yet,
+  so the current one is adopted. A real swap is still caught.
+
+### Added
+
+- **Löschen beside Ändern on every bound ACE slot.** Releasing a binding was
+  only reachable as an entry in the roll picker inside the slot dialog, which
+  put a one-step action behind two steps and a dropdown. It removes the binding
+  only: the roll stays in the cupboard with whatever remaining weight the
+  automatic deduction has arrived at.
+
 ## 2.0.0
 
 Merges the standalone Filament Manager into this integration, so a slot in the

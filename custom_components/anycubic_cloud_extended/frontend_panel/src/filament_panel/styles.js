@@ -321,7 +321,21 @@ export const panelStyles = `
   }
 
   /* Pushed down so the buttons line up however tall the slot above is. */
-  .ace-slot-btn { margin-top: auto; justify-content: center; }
+  .ace-slot-actions {
+    display: flex;
+    align-items: stretch;
+    gap: 6px;
+    margin-top: auto;
+  }
+  .ace-slot-actions .grow { flex: 1; min-width: 0; justify-content: center; }
+
+  /* Squared off and sized to the button beside it, so the pair reads as one
+     control rather than a button with a stray circle next to it. */
+  .ace-slot-actions .icon-btn {
+    width: 38px;
+    height: auto;
+    border-radius: 8px;
+  }
 
   .spool-card { display: flex; flex-direction: column; gap: 10px; }
 

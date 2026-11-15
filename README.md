@@ -207,6 +207,11 @@ Filamentwechsels für ein paar Sekunden einen leeren Slot. Die Zuordnung wird
 deshalb nie automatisch gelöscht, sondern nur markiert, und eine Rückkehr zum
 bekannten Filament hebt die Markierung von selbst wieder auf.
 
+Von Hand lässt sie sich jederzeit lösen: neben **Ändern** sitzt bei jedem
+belegten Slot ein **Löschen**-Button. Er entfernt nur die Zuordnung — die Rolle
+bleibt mit dem Restgewicht im Bestand, das der automatische Abzug bis dahin
+errechnet hat.
+
 ### Services
 
 Für Automationen und NFC-Tags stehen dieselben Aktionen als Services bereit:
