@@ -418,6 +418,12 @@
       },
       "total_print_count": {
         "name": "Total Prints"
+      },
+      "job_filament_used": {
+        "name": "Job Filament Used"
+      },
+      "job_filament_total": {
+        "name": "Job Filament Total"
       }
     },
     "switch": {

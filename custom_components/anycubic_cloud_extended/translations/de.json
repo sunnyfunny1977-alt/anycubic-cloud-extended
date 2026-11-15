@@ -418,6 +418,12 @@
       },
       "total_print_count": {
         "name": "Gedruckte Projekte"
+      },
+      "job_filament_used": {
+        "name": "Filament verbraucht"
+      },
+      "job_filament_total": {
+        "name": "Filament geplant"
       }
     },
     "switch": {

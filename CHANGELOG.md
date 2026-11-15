@@ -35,6 +35,20 @@ ACE can point at a specific roll in the cupboard.
   `allowSpoolAssignment`.
 - Integration options for the low-stock threshold, the inventory currency, and
   whether non-admin users may assign and weigh spools.
+- **Filament of the current job, in grams.** `job_filament_used` climbs while
+  the job runs and `job_filament_total` is what it was sliced to need, so a
+  dashboard can show "2 g / 161 g". The live figure comes from
+  `print_supplies_usage`, which the payload never labels and which counts
+  *millimetres* of filament, so it is converted here rather than surfaced raw.
+  - Preferred conversion is the slicer's own: `paint_infos` carries grams and
+    millimetres per material, and their ratio is exact for whatever is loaded,
+    assuming nothing about diameter or density. The cloud currently sends only
+    the grams, so in practice the fallback runs.
+  - The fallback is the nominal 1.75 mm cross-section and a density looked up
+    from the material in the active slot. Measured against the lifetime counter
+    on an isolated 4 h PLA job it came out 1.7 % high. Which path produced a
+    value is on the `source` attribute, next to the raw `used_mm`.
+  - Measurement, not a total: the figure resets with every job.
 - **The printer's lifetime counters as sensors.** `total_print_time` (hours),
   `total_material_used` (kg) and `total_print_count`, with
   `state_class: total_increasing` so they reach long-term statistics. The cloud

@@ -306,6 +306,8 @@ Der Dienst benennt nur Entity-Registry-Eintraege dieser Integration um. Er legt 
 - Eigener Sensor je ACE-Slot (`ACE Slot 1`–`4`, bei zweiter Box zusaetzlich `Secondary ACE Slot 1`–`4`) mit Materialtyp und Farbe als Zustand, z. B. `PLA #FF0000` — frei im Dashboard platzierbar
 - Dateimanager (MQTT benötigt)
 - Sensoren: Temp, Speed, Fan, Job-Fortschritt, Name, Zeit, …
+- Filamentverbrauch des laufenden Jobs: `Filament verbraucht` (g, laeuft
+  waehrend des Drucks mit) und `Filament geplant` (g, Angabe des Slicers)
 - Lebensdauer-Zaehler des Druckers als eigene Sensoren mit Langzeitstatistik:
   `Gesamte Druckzeit` (h), `Gesamt verbrauchtes Filament` (kg) und
   `Gedruckte Projekte`. Die Cloud fuehrt diese Zaehler selbst; die Integration

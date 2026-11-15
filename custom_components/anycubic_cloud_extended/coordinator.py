@@ -77,6 +77,7 @@ from .helpers import (
     get_drying_preset_from_entry_options,
     printer_attributes_for_key,
     printer_entity_unique_id,
+    printer_job_filament,
     printer_material_used_kg,
     printer_state_connected_ace_units,
     printer_state_for_key,
@@ -257,6 +258,10 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             printer.secondary_multi_color_box_active_slot,
         )
 
+        # Needs the active spool: without the slicer's own figures the
+        # conversion falls back to that material's density.
+        job_filament = printer_job_filament(printer, primary_ace_active_spool)
+
         file_list_local = printer.local_file_list_object
         file_list_udisk = printer.udisk_file_list_object
         file_list_cloud = self._cloud_file_list
@@ -334,6 +339,8 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             # What the printer has done in its life. The cloud keeps these
             # counters itself and sends them with every info poll, so there is
             # nothing to accumulate here.
+            "job_filament_used": job_filament["used_g"],
+            "job_filament_total": job_filament["total_g"],
             "total_print_time": printer_total_print_hours(printer),
             "total_material_used": printer_material_used_kg(printer),
             "total_print_count": printer.print_count,
@@ -385,6 +392,11 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             # The exact figures behind the two rounded lifetime sensors, so a
             # dashboard can show "10d 21h 57m" without reaching into another
             # entity's attributes for it.
+            "job_filament_used": {
+                "used_mm": job_filament["used_mm"],
+                "total_g": job_filament["total_g"],
+                "source": job_filament["source"],
+            },
             "total_print_time": {
                 "dhm": printer.total_print_time_dhm_str,
                 "raw": printer.total_print_time,

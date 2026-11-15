@@ -370,6 +370,25 @@ SENSOR_TYPES: list[AnycubicSensorEntityDescription] = list([
         translation_key="job_z_thick",
         printer_entity_type=PrinterEntityType.PRINTER,
     ),
+    # Per job, so measurement rather than a total: it resets with every print.
+    AnycubicSensorEntityDescription(
+        key="job_filament_used",
+        translation_key="job_filament_used",
+        native_unit_of_measurement=UnitOfMass.GRAMS,
+        device_class=SensorDeviceClass.WEIGHT,
+        suggested_display_precision=0,
+        printer_entity_type=PrinterEntityType.PRINTER,
+        create_when_available=True,
+    ),
+    AnycubicSensorEntityDescription(
+        key="job_filament_total",
+        translation_key="job_filament_total",
+        native_unit_of_measurement=UnitOfMass.GRAMS,
+        device_class=SensorDeviceClass.WEIGHT,
+        suggested_display_precision=0,
+        printer_entity_type=PrinterEntityType.PRINTER,
+        create_when_available=True,
+    ),
     # Lifetime counters kept by the cloud itself. `create_when_available`
     # because not every printer reports all three: one that does not simply
     # gets no entity, rather than one that is permanently unknown.

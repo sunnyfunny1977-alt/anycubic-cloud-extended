@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 from enum import IntEnum
 from types import MappingProxyType
@@ -54,6 +55,23 @@ MATERIAL_USED_TO_KG: dict[str, float] = {
     "g": 0.001,
 }
 
+# Only the fallback conversion uses these. When the slicer reported both grams
+# and millimetres for the job, its own figures give the ratio and nothing about
+# the filament has to be assumed at all.
+FILAMENT_DIAMETER_MM = 1.75
+DEFAULT_FILAMENT_DENSITY_G_CM3 = 1.24
+FILAMENT_DENSITY_G_CM3: dict[str, float] = {
+    "PLA": 1.24,
+    "PETG": 1.27,
+    "ABS": 1.04,
+    "ASA": 1.07,
+    "TPU": 1.21,
+    "PA": 1.14,
+    "PC": 1.20,
+    "HIPS": 1.04,
+    "PACF": 1.20,
+}
+
 
 class AnycubicMQTTConnectMode(IntEnum):
     Printing_Only = 1
@@ -92,6 +110,109 @@ def get_drying_preset_from_entry_options(
         preset_duration,
         preset_temperature,
     )
+
+
+def _slice_grams_per_mm(project: Any) -> float | None:
+    """Grams per millimetre, taken from the slicer's own figures for this job.
+
+    `paint_infos` carries grams *and* millimetres per material, so their ratio
+    is exact for whatever is actually loaded -- no diameter, no density, no
+    table. In a multi-material job it is the weighted average across all of
+    them, which is what a single running total needs anyway.
+    """
+    materials = project.slice_material_info_list
+
+    if not materials:
+        return None
+
+    grams = 0.0
+    millimetres = 0.0
+
+    for material in materials:
+        used_g = material.get("filament_used")
+        used_mm = material.get("filament_used_mm")
+
+        if used_g is None or used_mm is None:
+            continue
+
+        grams += float(used_g)
+        millimetres += float(used_mm)
+
+    if grams <= 0 or millimetres <= 0:
+        return None
+
+    return grams / millimetres
+
+
+def _density_grams_per_mm(material_type: Any) -> float:
+    """Grams per millimetre from the nominal cross-section and a density.
+
+    The approximation of last resort: it assumes 1.75 mm filament and reads the
+    density off a table by material name. Good to a few percent, and wrong by
+    whatever the real diameter is off by.
+    """
+    token = re.sub(r"[^A-Z0-9+]", "", str(material_type or "").upper())
+    density = FILAMENT_DENSITY_G_CM3.get(token)
+
+    if density is None:
+        for name, value in FILAMENT_DENSITY_G_CM3.items():
+            if token.endswith(name):
+                density = value
+                break
+
+    if density is None:
+        density = DEFAULT_FILAMENT_DENSITY_G_CM3
+
+    area_mm2 = math.pi * (FILAMENT_DIAMETER_MM / 2) ** 2
+
+    # mm2 * mm = mm3, and a thousand of those make the cm3 the density is per.
+    return area_mm2 * density / 1000.0
+
+
+def printer_job_filament(
+    printer: AnycubicPrinter,
+    active_spool: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """What the current job has used so far, and what it was sliced to use.
+
+    `print_supplies_usage` is the live figure and climbs while the job runs, but
+    it counts *millimetres* of filament -- nothing in the payload says so, and
+    nothing else in the integration is in millimetres, so it is converted here
+    and never surfaced raw as a measurement.
+    """
+    empty: dict[str, Any] = {
+        "used_g": None,
+        "total_g": None,
+        "used_mm": None,
+        "source": None,
+    }
+
+    project = printer.latest_project
+
+    if project is None:
+        return empty
+
+    used_mm = project.print_supplies_usage
+    total_g = project.slice_total_filament_used
+
+    if used_mm is None:
+        return {**empty, "total_g": total_g}
+
+    grams_per_mm = _slice_grams_per_mm(project)
+    source = "slicer"
+
+    if grams_per_mm is None:
+        grams_per_mm = _density_grams_per_mm(
+            (active_spool or {}).get("material_type")
+        )
+        source = "estimate"
+
+    return {
+        "used_g": round(float(used_mm) * grams_per_mm, 1),
+        "total_g": total_g,
+        "used_mm": int(used_mm),
+        "source": source,
+    }
 
 
 def printer_total_print_hours(printer: AnycubicPrinter) -> float | None:
