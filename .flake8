@@ -1,6 +1,10 @@
 [flake8]
 filename = *.py, *.pyx, *.pxd
 max-line-length = 135
+# E203 is black's slice spacing (`x[a :]`), which pycodestyle reads as an error.
+# black documents disabling it; pyproject.toml configures black for this repo
+# with the same line length, so the two were meant to agree all along.
+extend-ignore = E203
 exclude = example/*
 in-place = true
 recursive = true
