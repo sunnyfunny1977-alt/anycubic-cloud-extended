@@ -356,6 +356,13 @@ Der Dienst benennt nur Entity-Registry-Eintraege dieser Integration um. Er legt 
 
 Ein vollstaendiges Beispiel-Dashboard liegt als [`examples/dashboard-kobra-s1.yaml`](examples/dashboard-kobra-s1.yaml) bei. Es zeigt Kamera, Druckfortschritt, Temperaturen, ACE-Slots mit Farbringen, aktives Filament, Luefter, Geschwindigkeit und Firmware-Updates.
 
+Dazu zwei Karten rund um den Filamentverbrauch:
+
+- **Verbrauch des laufenden Jobs** direkt unter den ACE-Slots, als `2 g / 161 g` mit Fortschrittsbalken
+- **Lebensdauer-Zaehler des Druckers** im Infobereich: Druckzeit, verbrauchtes Filament und gedruckte Projekte
+
+Beide brauchen nur die Integration selbst, keine zusaetzlichen Helfer.
+
 Einfuegen ueber **Dashboard → Stift → Drei-Punkte-Menue → Raw-Konfigurationseditor**, den Block unter `views:` einhaengen.
 
 ### ⚠️ Die Kameraflaeche nutzt eine externe Kamera

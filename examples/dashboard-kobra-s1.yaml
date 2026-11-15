@@ -239,7 +239,7 @@ sections:
       - font-style: italic
       - margin-top: 2px
     show_label: true
-    label: Auto-Aus nach 90 s
+    label: Auto-Aus nach 30 s
     grid_options:
       columns: 6
       rows: auto
@@ -399,106 +399,6 @@ sections:
 - type: grid
   cards:
   - type: custom:button-card
-    name: status
-    icon: mdi:printer-3d-nozzle
-    show_state: false
-    styles:
-      card:
-      - background: '#050510'
-      - border-radius: 12px
-      - padding: 10px 16px
-      - border-bottom: 2px solid "#00d4ff"
-      - margin-top: 8px
-      - box-shadow: '0 0 12px #00d4ff44'
-      name:
-      - font-family: monospace
-      - font-size: 13px
-      - letter-spacing: 2px
-      - color: '#00d4ff'
-      - text-transform: lowercase
-      icon:
-      - color: '#00d4ff'
-      - width: 18px
-    tap_action:
-      action: none
-  - type: custom:button-card
-    entity: sensor.anycubic_kobra_s1_current_status
-    name: Status
-    icon: mdi:printer-3d
-    show_state: true
-    show_label: true
-    label: '[[[ var j = states[''sensor.anycubic_kobra_s1_job_name''].state; return (j && j !== ''unknown'' && j !== ''unavailable'' && j !== '''') ? j : ''—''; ]]]'
-    tap_action:
-      action: none
-    styles:
-      card:
-      - background: '[[[ var s = entity.state; return (s === ''printing'' || s === ''busy'') ? ''#0d2818'' : (s === ''paused'' ? ''#2d2500'' : ''#2c2c2e''); ]]]'
-      - border-radius: 12px
-      - padding: 14px
-      - border: '[[[ var s = entity.state; return (s === ''printing'' || s === ''busy'') ? ''1px solid #27ae60'' : (s === ''paused'' ? ''1px solid #f1c40f'' : ''1px solid #444''); ]]]'
-      name:
-      - color: '#888'
-      - font-size: 11px
-      - text-transform: uppercase
-      - letter-spacing: 1px
-      state:
-      - font-size: 22px
-      - color: '[[[ var s = entity.state; return (s === ''printing'' || s === ''busy'') ? ''#27ae60'' : (s === ''paused'' ? ''#f1c40f'' : ''#aaa''); ]]]'
-      - font-weight: 700
-      - text-transform: uppercase
-      label:
-      - color: '#aaa'
-      - font-size: 12px
-      icon:
-      - color: '[[[ var s = entity.state; return (s === ''printing'' || s === ''busy'') ? ''#27ae60'' : (s === ''paused'' ? ''#f1c40f'' : ''#555''); ]]]'
-      - width: 28px
-  - type: horizontal-stack
-    cards:
-    - type: custom:button-card
-      entity: sensor.anycubic_kobra_s1_job_current_layer
-      name: Layer
-      icon: mdi:layers-triple
-      show_state: true
-      show_label: true
-      label: '[[[ var t = states[''sensor.anycubic_kobra_s1_job_total_layers''].state; return ''/ '' + ((t && t !== ''unknown'') ? t : ''—''); ]]]'
-      tap_action:
-        action: none
-      styles:
-        card:
-        - background: '#2c2c2e'
-        - border-radius: 12px
-        - padding: 14px
-        name:
-        - color: '#888'
-        - font-size: 11px
-        - text-transform: uppercase
-        - letter-spacing: 1px
-        state:
-        - font-size: 22px
-        - color: '#fff'
-        - font-weight: 700
-        label:
-        - color: '#aaa'
-        - font-size: 12px
-        icon:
-        - color: '#9b59b6'
-        - width: 24px
-    - type: tile
-      entity: sensor.anycubic_kobra_s1_job_eta
-      name: ETA
-  - type: picture-entity
-    entity: image.anycubic_kobra_s1_job_preview
-    name: Job Preview
-    show_state: false
-    show_name: false
-    tap_action:
-      action: none
-    hold_action:
-      action: none
-- type: grid
-  column_span: 1
-  cards:
-  - type: custom:button-card
     name: temperaturen
     icon: mdi:thermometer
     show_state: false
@@ -603,6 +503,106 @@ sections:
     - type: numeric-input
       style: slider
   - type: custom:button-card
+    name: status
+    icon: mdi:printer-3d-nozzle
+    show_state: false
+    styles:
+      card:
+      - background: '#050510'
+      - border-radius: 12px
+      - padding: 10px 16px
+      - border-bottom: 2px solid "#00d4ff"
+      - margin-top: 8px
+      - box-shadow: '0 0 12px #00d4ff44'
+      name:
+      - font-family: monospace
+      - font-size: 13px
+      - letter-spacing: 2px
+      - color: '#00d4ff'
+      - text-transform: lowercase
+      icon:
+      - color: '#00d4ff'
+      - width: 18px
+    tap_action:
+      action: none
+  - type: custom:button-card
+    entity: sensor.anycubic_kobra_s1_current_status
+    name: Status
+    icon: mdi:printer-3d
+    show_state: true
+    show_label: true
+    label: '[[[ var j = states[''sensor.anycubic_kobra_s1_job_name''].state; return (j && j !== ''unknown'' && j !== ''unavailable'' && j !== '''') ? j : ''—''; ]]]'
+    tap_action:
+      action: none
+    styles:
+      card:
+      - background: '[[[ var s = entity.state; return (s === ''printing'' || s === ''busy'') ? ''#0d2818'' : (s === ''paused'' ? ''#2d2500'' : ''#2c2c2e''); ]]]'
+      - border-radius: 12px
+      - padding: 14px
+      - border: '[[[ var s = entity.state; return (s === ''printing'' || s === ''busy'') ? ''1px solid #27ae60'' : (s === ''paused'' ? ''1px solid #f1c40f'' : ''1px solid #444''); ]]]'
+      name:
+      - color: '#888'
+      - font-size: 11px
+      - text-transform: uppercase
+      - letter-spacing: 1px
+      state:
+      - font-size: 22px
+      - color: '[[[ var s = entity.state; return (s === ''printing'' || s === ''busy'') ? ''#27ae60'' : (s === ''paused'' ? ''#f1c40f'' : ''#aaa''); ]]]'
+      - font-weight: 700
+      - text-transform: uppercase
+      label:
+      - color: '#aaa'
+      - font-size: 12px
+      icon:
+      - color: '[[[ var s = entity.state; return (s === ''printing'' || s === ''busy'') ? ''#27ae60'' : (s === ''paused'' ? ''#f1c40f'' : ''#555''); ]]]'
+      - width: 28px
+  - type: horizontal-stack
+    cards:
+    - type: custom:button-card
+      entity: sensor.anycubic_kobra_s1_job_current_layer
+      name: Layer
+      icon: mdi:layers-triple
+      show_state: true
+      show_label: true
+      label: '[[[ var t = states[''sensor.anycubic_kobra_s1_job_total_layers''].state; return ''/ '' + ((t && t !== ''unknown'') ? t : ''—''); ]]]'
+      tap_action:
+        action: none
+      styles:
+        card:
+        - background: '#2c2c2e'
+        - border-radius: 12px
+        - padding: 14px
+        name:
+        - color: '#888'
+        - font-size: 11px
+        - text-transform: uppercase
+        - letter-spacing: 1px
+        state:
+        - font-size: 22px
+        - color: '#fff'
+        - font-weight: 700
+        label:
+        - color: '#aaa'
+        - font-size: 12px
+        icon:
+        - color: '#9b59b6'
+        - width: 24px
+    - type: tile
+      entity: sensor.anycubic_kobra_s1_job_eta
+      name: ETA
+  - type: picture-entity
+    entity: image.anycubic_kobra_s1_job_preview
+    name: Job Preview
+    show_state: false
+    show_name: false
+    tap_action:
+      action: none
+    hold_action:
+      action: none
+- type: grid
+  column_span: 1
+  cards:
+  - type: custom:button-card
     name: ace pro
     icon: mdi:tray-full
     show_state: false
@@ -637,13 +637,14 @@ sections:
       slot2: '[[[ var e = states[''sensor.anycubic_kobra_s1_ace_spools'']; var a = (e && e.attributes) ? e.attributes : {}; var info = a.spool_info || null; var s = info && info[1]; var af = states[''sensor.anycubic_kobra_s1_ace_active_filament'']; var act = (!!af && !!af.attributes && af.attributes.local_slot === 2); var lbl = act ? ''<div style="color:#27ae60;font-size:9px;font-weight:700;letter-spacing:1px;">AKTIV</div>'' : ''<div style="font-size:9px;">&nbsp;</div>''; if (!s || !s.spool_loaded) { return ''<div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="color:#888;font-size:9px;text-transform:uppercase;letter-spacing:1px;">Slot 2</div><div style="width:34px;height:34px;border-radius:50%;background:#1a1a1a;border:2px dashed #555;"></div><div style="color:#666;font-size:11px;">leer</div>'' + lbl + ''</div>''; } var c = s.color || [80,80,80]; var rgb = ''rgb('' + c[0] + '','' + c[1] + '','' + c[2] + '')''; var mat = s.material_type || ''-''; var ring = act ? ''3px solid #27ae60'' : ''2px solid #666''; var glow = act ? ''box-shadow:0 0 10px #27ae60aa;'' : ''box-shadow:0 0 4px rgba(0,0,0,0.6),inset 0 0 6px rgba(0,0,0,0.3);''; return ''<div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="color:#888;font-size:9px;text-transform:uppercase;letter-spacing:1px;">Slot 2</div><div style="width:34px;height:34px;border-radius:50%;background:'' + rgb + '';border:'' + ring + '';'' + glow + ''"></div><div style="color:#fff;font-size:12px;font-weight:700;">'' + mat + ''</div>'' + lbl + ''</div>''; ]]]'
       slot3: '[[[ var e = states[''sensor.anycubic_kobra_s1_ace_spools'']; var a = (e && e.attributes) ? e.attributes : {}; var info = a.spool_info || null; var s = info && info[2]; var af = states[''sensor.anycubic_kobra_s1_ace_active_filament'']; var act = (!!af && !!af.attributes && af.attributes.local_slot === 3); var lbl = act ? ''<div style="color:#27ae60;font-size:9px;font-weight:700;letter-spacing:1px;">AKTIV</div>'' : ''<div style="font-size:9px;">&nbsp;</div>''; if (!s || !s.spool_loaded) { return ''<div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="color:#888;font-size:9px;text-transform:uppercase;letter-spacing:1px;">Slot 3</div><div style="width:34px;height:34px;border-radius:50%;background:#1a1a1a;border:2px dashed #555;"></div><div style="color:#666;font-size:11px;">leer</div>'' + lbl + ''</div>''; } var c = s.color || [80,80,80]; var rgb = ''rgb('' + c[0] + '','' + c[1] + '','' + c[2] + '')''; var mat = s.material_type || ''-''; var ring = act ? ''3px solid #27ae60'' : ''2px solid #666''; var glow = act ? ''box-shadow:0 0 10px #27ae60aa;'' : ''box-shadow:0 0 4px rgba(0,0,0,0.6),inset 0 0 6px rgba(0,0,0,0.3);''; return ''<div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="color:#888;font-size:9px;text-transform:uppercase;letter-spacing:1px;">Slot 3</div><div style="width:34px;height:34px;border-radius:50%;background:'' + rgb + '';border:'' + ring + '';'' + glow + ''"></div><div style="color:#fff;font-size:12px;font-weight:700;">'' + mat + ''</div>'' + lbl + ''</div>''; ]]]'
       slot4: '[[[ var e = states[''sensor.anycubic_kobra_s1_ace_spools'']; var a = (e && e.attributes) ? e.attributes : {}; var info = a.spool_info || null; var s = info && info[3]; var af = states[''sensor.anycubic_kobra_s1_ace_active_filament'']; var act = (!!af && !!af.attributes && af.attributes.local_slot === 4); var lbl = act ? ''<div style="color:#27ae60;font-size:9px;font-weight:700;letter-spacing:1px;">AKTIV</div>'' : ''<div style="font-size:9px;">&nbsp;</div>''; if (!s || !s.spool_loaded) { return ''<div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="color:#888;font-size:9px;text-transform:uppercase;letter-spacing:1px;">Slot 4</div><div style="width:34px;height:34px;border-radius:50%;background:#1a1a1a;border:2px dashed #555;"></div><div style="color:#666;font-size:11px;">leer</div>'' + lbl + ''</div>''; } var c = s.color || [80,80,80]; var rgb = ''rgb('' + c[0] + '','' + c[1] + '','' + c[2] + '')''; var mat = s.material_type || ''-''; var ring = act ? ''3px solid #27ae60'' : ''2px solid #666''; var glow = act ? ''box-shadow:0 0 10px #27ae60aa;'' : ''box-shadow:0 0 4px rgba(0,0,0,0.6),inset 0 0 6px rgba(0,0,0,0.3);''; return ''<div style="display:flex;flex-direction:column;align-items:center;gap:5px;"><div style="color:#888;font-size:9px;text-transform:uppercase;letter-spacing:1px;">Slot 4</div><div style="width:34px;height:34px;border-radius:50%;background:'' + rgb + '';border:'' + ring + '';'' + glow + ''"></div><div style="color:#fff;font-size:12px;font-weight:700;">'' + mat + ''</div>'' + lbl + ''</div>''; ]]]'
+      verbrauch: '[[[ var bad=[''unknown'',''unavailable'',''None'']; var u = states[''sensor.anycubic_kobra_s1_job_filament_used'']; var t = states[''sensor.anycubic_kobra_s1_job_filament_total'']; var uv = (u && bad.indexOf(u.state)===-1) ? parseFloat(u.state) : null; var tv = (t && bad.indexOf(t.state)===-1) ? parseFloat(t.state) : null; if (uv===null && tv===null) return `<div style="border-top:1px solid #3a3a3c;margin-top:2px;padding-top:10px;color:#666;font-size:11px;text-align:center;">kein Druckauftrag</div>`; var pct = (uv!==null && tv) ? Math.max(0, Math.min(100, uv/tv*100)) : 0; var val = uv===null ? ''—'' : Math.round(uv) + '' g''; var tot = tv ? `<span style="color:#888;font-size:13px;font-weight:400;"> / ${Math.round(tv)} g</span>` : ''''; var rest = (uv!==null && tv) ? `<span style="color:#e67e22;font-size:12px;font-weight:700;margin-left:6px;">${Math.round(pct)} %</span>` : ''''; return `<div style="border-top:1px solid #3a3a3c;margin-top:2px;padding-top:10px;"><div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px;"><span style="color:#888;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Filament</span><span><span style="color:#fff;font-size:15px;font-weight:700;">${val}</span>${tot}${rest}</span></div><div style="height:5px;border-radius:3px;background:#1a1a1a;overflow:hidden;"><div style="height:100%;width:${pct}%;background:#e67e22;border-radius:3px;"></div></div></div>`; ]]]'
     styles:
       card:
       - background: '#2c2c2e'
       - border-radius: 12px
       - padding: 14px
       grid:
-      - grid-template-areas: '"slot1 slot2 slot3 slot4"'
+      - grid-template-areas: '"slot1 slot2 slot3 slot4" "verbrauch verbrauch verbrauch verbrauch"'
       - grid-template-columns: 1fr 1fr 1fr 1fr
       - gap: 8px
   - type: horizontal-stack
@@ -778,6 +779,26 @@ sections:
       - width: 18px
     tap_action:
       action: none
+  - type: custom:button-card
+    show_icon: false
+    show_name: false
+    show_state: false
+    show_label: false
+    tap_action:
+      action: none
+    custom_fields:
+      druckzeit: '[[[ var bad=[''unknown'',''unavailable'',''None'']; var e = states[''sensor.anycubic_kobra_s1_total_print_time'']; var ok = e && bad.indexOf(e.state)===-1; var v = ok ? Math.round(parseFloat(e.state)) + '' h'' : ''—''; var sub = ''''; if (ok && e.attributes && e.attributes.dhm) { var p = String(e.attributes.dhm).split('':''); if (p.length === 3) sub = ''<div style="color:#888;font-size:11px;">'' + parseInt(p[0]) + ''d '' + parseInt(p[1]) + ''h '' + parseInt(p[2]) + ''m</div>''; } return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><ha-icon icon="mdi:timer-outline" style="color:#4fc3f7;--mdc-icon-size:22px;"></ha-icon><div style="color:#888;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Druckzeit</div><div style="color:#fff;font-size:20px;font-weight:700;">${v}</div>${sub}</div>`; ]]]'
+      filament: '[[[ var bad=[''unknown'',''unavailable'',''None'']; var e = states[''sensor.anycubic_kobra_s1_total_material_used'']; var ok = e && bad.indexOf(e.state)===-1; var v = ok ? parseFloat(e.state).toFixed(2).replace(''.'', '','') + '' kg'' : ''—''; return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><ha-icon icon="mdi:printer-3d-nozzle" style="color:#e67e22;--mdc-icon-size:22px;"></ha-icon><div style="color:#888;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Filament</div><div style="color:#fff;font-size:20px;font-weight:700;">${v}</div></div>`; ]]]'
+      projekte: '[[[ var bad=[''unknown'',''unavailable'',''None'']; var e = states[''sensor.anycubic_kobra_s1_total_print_count'']; var ok = e && bad.indexOf(e.state)===-1; var v = ok ? parseInt(e.state) : ''—''; return `<div style="display:flex;flex-direction:column;align-items:center;gap:4px;"><ha-icon icon="mdi:package-variant-closed" style="color:#9b59b6;--mdc-icon-size:22px;"></ha-icon><div style="color:#888;font-size:10px;text-transform:uppercase;letter-spacing:1px;">Projekte</div><div style="color:#fff;font-size:20px;font-weight:700;">${v}</div></div>`; ]]]'
+    styles:
+      card:
+      - background: '#2c2c2e'
+      - border-radius: 12px
+      - padding: 14px
+      grid:
+      - grid-template-areas: '"druckzeit filament projekte"'
+      - grid-template-columns: 1fr 1fr 1fr
+      - gap: 12px
   - type: horizontal-stack
     cards:
     - type: custom:button-card
@@ -842,6 +863,7 @@ sections:
         - background: '#2c2c2e'
         - border-radius: 12px
         - padding: 14px
+        - height: 100%
         name:
         - color: '#888'
         - font-size: 11px
@@ -866,7 +888,9 @@ sections:
         - background: '[[[ return entity.state === ''on'' ? ''#0d2818'' : ''#2a0a0a'' ]]]'
         - border-radius: 12px
         - padding: 14px
-        - border: '[[[ return entity.state === ''on'' ? ''1px solid #27ae60'' : ''1px solid #e74c3c'' ]]]'
+        - outline: '[[[ return entity.state === ''on'' ? ''1px solid #27ae60'' : ''1px solid #e74c3c'' ]]]'
+        - outline-offset: -1px
+        - height: 100%
         name:
         - color: '#888'
         - font-size: 11px
