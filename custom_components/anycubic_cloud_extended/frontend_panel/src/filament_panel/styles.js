@@ -260,6 +260,69 @@ export const panelStyles = `
     gap: 12px;
   }
 
+  /* ---------------- ACE box ---------------- */
+
+  .ace-box {
+    background: var(--card-background-color, #fff);
+    border-radius: var(--ha-card-border-radius, 12px);
+    box-shadow: var(--ha-card-box-shadow, 0 1px 3px rgba(0, 0, 0, 0.12));
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .ace-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  .ace-slot {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid var(--divider-color, #e0e0e0);
+    border-radius: 10px;
+  }
+  .ace-slot-active { border-color: var(--success-color, #43a047); }
+
+  .ace-slot-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 22px;
+  }
+  .ace-slot-name {
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--secondary-text-color, #727272);
+  }
+
+  .ace-slot-body { display: flex; align-items: center; gap: 10px; }
+
+  .ace-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    flex: 0 0 auto;
+    border: 2px solid rgba(0, 0, 0, 0.25);
+  }
+  .ace-dot-empty { border-style: dashed; }
+
+  .ace-unbound { font-style: italic; }
+
+  .ace-slot-amount { display: flex; align-items: center; gap: 8px; }
+  .ace-low { color: var(--error-color, #d32f2f); font-weight: 500; }
+
+  .ace-warn {
+    font-size: 11px;
+    color: var(--warning-color, #ffa600);
+  }
+
+  /* Pushed down so the buttons line up however tall the slot above is. */
+  .ace-slot-btn { margin-top: auto; justify-content: center; }
+
   .spool-card { display: flex; flex-direction: column; gap: 10px; }
 
   /* Pushed to the bottom edge of the card so the button sits in the same

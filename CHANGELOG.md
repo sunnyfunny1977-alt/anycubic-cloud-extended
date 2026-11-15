@@ -35,6 +35,31 @@ ACE can point at a specific roll in the cupboard.
   `allowSpoolAssignment`.
 - Integration options for the low-stock threshold, the inventory currency, and
   whether non-admin users may assign and weigh spools.
+- **The ACE box at the top of the inventory, and automatic deduction.** Each
+  slot is bound to a spool from the cupboard right there; what the printer eats
+  then comes off that spool by itself, so the stock stays roughly right without
+  anybody reaching for a scale.
+  - The slot data comes from the printer's own sensors, which Home Assistant
+    pushes anyway, so the section needs no polling and no websocket command of
+    its own. Each slot entry already carries the three fields a binding is
+    keyed by.
+  - Weighing before loading is offered in the same dialog and is optional. The
+    automatic deduction is what keeps the cupboard current; weighing only
+    corrects the drift that builds up over time.
+  - Deduction is continuous but floored at a gram, so a four-hour print writes
+    the inventory a few dozen times rather than a thousand. The amount already
+    booked is persisted with the job it belongs to: a restart mid-print would
+    otherwise see the job's whole total as new and subtract it twice. The
+    offline suite tests exactly that, and that a tracker without the restored
+    baseline does double-charge.
+  - Nothing is charged to a slot with no binding, or to one whose binding has
+    gone stale -- there is no spool to take it from, and picking one would be a
+    guess. Multi-material jobs follow the active slot by themselves.
+  - When the estimate reaches zero the spool stops there and the binding is
+    flagged, so a drifted estimate says so instead of quietly reading 0 g. A
+    fresh weighing clears the flag.
+  - New option **Deduct filament use from the inventory automatically**, on by
+    default.
 - **Filament of the current job, in grams.** `job_filament_used` climbs while
   the job runs and `job_filament_total` is what it was sliced to need, so a
   dashboard can show "2 g / 161 g". The live figure comes from

@@ -703,9 +703,84 @@ class FilamentStore:
 
         existing["stale"] = False
         existing["stale_since"] = None
+        existing["depleted"] = False
+        existing["depleted_since"] = None
         existing["weighed_at"] = utcnow_iso()
         self._save_and_notify()
         return existing
+
+    def consume_from_slot(
+        self,
+        printer_id: Any,
+        box_id: Any,
+        local_slot: Any,
+        grams: float,
+    ) -> float | None:
+        """Take `grams` off the spool bound to one slot.
+
+        This is the automatic half of keeping the cupboard current: the printer
+        says how much it has eaten, and it comes off whatever is bound to the
+        slot that ate it. Nothing happens without a binding -- there is nothing
+        to subtract from, and guessing which spool it was would be worse than
+        leaving the number alone.
+
+        The stored scale reading is cleared, because the remaining amount is no
+        longer something that was weighed. Leaving it would also let a later
+        tare correction recompute the spool back up to its pre-print weight.
+        """
+        if grams <= 0:
+            return None
+
+        assignment = self.find_assignment(printer_id, box_id, local_slot)
+        if assignment is None:
+            return None
+
+        if assignment.get("stale"):
+            # The binding no longer describes what is in the slot, so whatever
+            # is printing is not this spool. Charging it would be a guess.
+            return None
+
+        item = next(
+            (e for e in self._data["items"] if e["id"] == assignment["item_id"]),
+            None,
+        )
+        if item is None:
+            return None
+
+        spool = next(
+            (
+                s
+                for s in item.get("open_spools", [])
+                if s.get("id") == assignment["spool_id"]
+            ),
+            None,
+        )
+        if spool is None:
+            return None
+
+        before = spool.get("remaining_grams")
+        if before is None:
+            # Never weighed and never set: the net weight of a full spool is
+            # the only honest starting point.
+            before = float(item.get("spool_net_weight_g") or 0)
+
+        after = max(0.0, float(before) - grams)
+
+        spool["remaining_grams"] = round(after, 1)
+        spool["gross_weight_g"] = None
+        item["updated_at"] = utcnow_iso()
+
+        if after <= 0 and not assignment.get("depleted"):
+            assignment["depleted"] = True
+            assignment["depleted_since"] = utcnow_iso()
+        elif after > 0 and assignment.get("depleted"):
+            # Reweighed or swapped since: the warning has served its purpose.
+            assignment["depleted"] = False
+            assignment["depleted_since"] = None
+
+        self._save_and_notify()
+
+        return round(after, 1)
 
     def apply_slot_state(self, changes: list[dict[str, Any]]) -> bool:
         """Apply reconciliation results from the coordinator in one go.
@@ -769,6 +844,7 @@ class FilamentStore:
             "net_weight_g": net,
             "tare_g": self.item_tare(item),
             "stale": bool(assignment.get("stale")),
+            "depleted": bool(assignment.get("depleted")),
             "weighed_at": assignment.get("weighed_at"),
         }
 

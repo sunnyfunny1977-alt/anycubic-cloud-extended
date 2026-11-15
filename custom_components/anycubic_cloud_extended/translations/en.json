@@ -107,7 +107,8 @@
         "data": {
           "low_stock_threshold": "Low stock warning below this many spools",
           "currency": "Currency for the inventory value",
-          "allow_non_admin_weighing": "Let non-admin users assign and weigh spools"
+          "allow_non_admin_weighing": "Let non-admin users assign and weigh spools",
+          "auto_deduct_filament": "Deduct filament use from the inventory automatically"
         }
       }
     }

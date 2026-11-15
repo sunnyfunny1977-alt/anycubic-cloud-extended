@@ -7,6 +7,7 @@
  */
 
 import { t } from "../i18n.js";
+import { renderAceSection } from "./ace.js";
 import {
   emptyState,
   fmtCurrency,
@@ -192,8 +193,10 @@ export function renderOverview(ctx) {
     ? ""
     : html`<div class="card" style="margin-bottom:12px">${t("readonly.notice")}</div>`;
 
+  const ace = renderAceSection(ctx);
+
   if (!items.length) {
-    return html`${header} ${notice} ${summaryStrip(data.summary)}
+    return html`${ace} ${header} ${notice} ${summaryStrip(data.summary)}
     ${emptyState({
       emoji: "🧵",
       title: t("overview.empty.title"),
@@ -205,7 +208,7 @@ export function renderOverview(ctx) {
 
   const visible = filterAndSort(items, state.filters, lookup);
 
-  return html`${header} ${notice} ${summaryStrip(data.summary)}
+  return html`${ace} ${header} ${notice} ${summaryStrip(data.summary)}
   ${filterBar(data, state.filters)}
   ${visible.length
     ? html`<div class="grid">${visible.map((item) => itemCard(item, lookup, isAdmin))}</div>`

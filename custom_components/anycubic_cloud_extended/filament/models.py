@@ -131,6 +131,11 @@ class SlotAssignment(TypedDict):
     fp_sku: str
     fp_status: int | None
     stale: bool
+    # Set when automatic deduction ran the spool down to zero. The estimate and
+    # the real spool have parted ways at that point, so it is worth saying so
+    # rather than quietly showing 0 g.
+    depleted: bool
+    depleted_since: str | None
     stale_since: str | None
     assigned_at: str
     weighed_at: str | None
@@ -392,6 +397,8 @@ def normalize_assignment(
         "fp_status": _opt_int(base.get("fp_status"), 0, 255),
         "stale": bool(base.get("stale", False)),
         "stale_since": _str(base.get("stale_since")) or None,
+        "depleted": bool(base.get("depleted", False)),
+        "depleted_since": _str(base.get("depleted_since")) or None,
         "assigned_at": _str(base.get("assigned_at")) or utcnow_iso(),
         "weighed_at": _str(base.get("weighed_at")) or None,
     }

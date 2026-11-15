@@ -115,6 +115,15 @@ CONF_CURRENCY = "currency"
 DEFAULT_CURRENCY = "EUR"
 CONF_ALLOW_NON_ADMIN_WEIGHING = "allow_non_admin_weighing"
 DEFAULT_ALLOW_NON_ADMIN_WEIGHING = True
+CONF_AUTO_DEDUCT_FILAMENT = "auto_deduct_filament"
+DEFAULT_AUTO_DEDUCT_FILAMENT = True
+
+# How much the job must have eaten before the inventory is written again. The
+# printer reports every few seconds; without a floor the whole cupboard would
+# be pushed to every open panel for a tenth of a gram.
+FILAMENT_DEDUCT_THRESHOLD_G = 1.0
+STORAGE_KEY_CONSUMPTION = f"{DOMAIN}_consumption"
+CONSUMPTION_SAVE_DELAY = 10
 
 API_SETUP_RETRIES = 3
 API_SETUP_RETRY_INTERVAL_SECONDS = 10

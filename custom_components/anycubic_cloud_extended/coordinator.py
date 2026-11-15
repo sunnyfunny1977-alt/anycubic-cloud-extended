@@ -58,12 +58,17 @@ from .const import (
     STORAGE_KEY,
     PUSH_ONLY_PRINTER_VALUES,
     PUSH_STATE_SAVE_DELAY,
+    CONF_AUTO_DEDUCT_FILAMENT,
+    CONSUMPTION_SAVE_DELAY,
+    DEFAULT_AUTO_DEDUCT_FILAMENT,
     STORAGE_KEY_ACE_STATE,
+    STORAGE_KEY_CONSUMPTION,
     STORAGE_KEY_PUSH_STATE,
     STORAGE_VERSION,
     PrinterEntityType,
 )
 from .filament.legacy_import import async_import_legacy_anycubic
+from .filament.consumption import ConsumptionTracker
 from .filament.slot_binding import SlotBindingManager
 from .helpers import (
     AnycubicMQTTConnectMode,
@@ -130,6 +135,10 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         self._unregistered_descriptors: dict[int, dict[str, list[AnycubicCloudEntityDescription]]] = dict()
         self._ace_state_store: Store[dict[str, Any]] = Store(hass, STORAGE_VERSION, STORAGE_KEY_ACE_STATE)
         self._push_state_store: Store[dict[str, Any]] = Store(hass, STORAGE_VERSION, STORAGE_KEY_PUSH_STATE)
+        self._consumption_store: Store[dict[str, Any]] = Store(
+            hass, STORAGE_VERSION, STORAGE_KEY_CONSUMPTION
+        )
+        self._consumption = ConsumptionTracker(hass)
         self._slot_binding = SlotBindingManager(hass)
         self._ace_active_slots_saved: dict[str, Any] | None = None
         self._push_state: dict[str, dict[str, Any]] = dict()
@@ -261,6 +270,9 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         # Needs the active spool: without the slicer's own figures the
         # conversion falls back to that material's density.
         job_filament = printer_job_filament(printer, primary_ace_active_spool)
+
+        self._deduct_job_filament(printer, job_filament, primary_ace_active_spool,
+                                  secondary_ace_active_spool)
 
         file_list_local = printer.local_file_list_object
         file_list_udisk = printer.udisk_file_list_object
@@ -507,6 +519,7 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
         self._save_ace_active_slots_if_changed()
         self._save_push_state_if_changed()
+        self._save_consumption_if_changed()
 
         return data_dict
 
@@ -555,6 +568,57 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             return None
 
         return self._push_state.get(str(printer.id), dict()).get(name)
+
+    def _deduct_job_filament(
+        self,
+        printer: AnycubicPrinter,
+        job_filament: dict[str, Any],
+        primary_active: dict[str, Any] | None,
+        secondary_active: dict[str, Any] | None,
+    ) -> None:
+        """Book what the job has eaten against the spool that is feeding it."""
+        if not self.entry.options.get(
+            CONF_AUTO_DEDUCT_FILAMENT, DEFAULT_AUTO_DEDUCT_FILAMENT
+        ):
+            return
+
+        project = printer.latest_project
+
+        if project is None:
+            return
+
+        # Only one box feeds at a time; the primary is the one that does unless
+        # it reports nothing loaded.
+        active = primary_active if primary_active else secondary_active
+
+        self._consumption.apply(
+            printer.id,
+            project.id,
+            job_filament["used_g"],
+            active,
+        )
+
+    @callback
+    def _save_consumption_if_changed(self) -> None:
+        """Persist how much of the running job has already been deducted.
+
+        Without this a restart mid-print would see the job's whole total as
+        new and subtract it a second time.
+        """
+        if not self._consumption.take_dirty():
+            return
+
+        self._consumption_store.async_delay_save(
+            lambda: self._consumption.progress,
+            CONSUMPTION_SAVE_DELAY,
+        )
+
+    async def _restore_consumption(self) -> None:
+        """Reload what a previous run had already deducted."""
+        try:
+            self._consumption.restore(await self._consumption_store.async_load())
+        except Exception as error:  # noqa: BLE001
+            LOGGER.warning(f"Could not restore filament consumption state: {error}")
 
     @callback
     def _save_push_state_if_changed(self) -> None:
@@ -1144,6 +1208,7 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 await self._setup_anycubic_printer_objects()
                 await self._restore_ace_active_slots()
                 await self._restore_push_state()
+                await self._restore_consumption()
                 self.hass.create_task(
                     self._async_request_missing_multi_color_box_info_after_startup(),
                     f"Anycubic coordinator {self.entry.entry_id} missing multi-color info startup request",

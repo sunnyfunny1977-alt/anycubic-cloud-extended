@@ -18,6 +18,11 @@ import {
   icon,
   setFormatting,
 } from "./ui.js";
+import {
+  OPTION_NONE,
+  newSlotValues,
+  slotDialogBody,
+} from "./views/ace.js";
 import { renderOverview } from "./views/overview.js";
 import { newItemValues, setupDialogBody } from "./views/setup.js";
 import {
@@ -213,7 +218,49 @@ class FilamentManagerPanel extends HTMLElement {
       state: this._state,
       lookup: this._lookup,
       isAdmin: this._isAdmin,
+      slots: this._aceSlots,
     };
+  }
+
+  /**
+   * The ACE boxes the printers report, straight out of `hass.states`.
+   *
+   * Home Assistant pushes those sensors anyway, so reading them here costs no
+   * traffic and needs no refresh of its own. Each entry already carries the
+   * `printer_id`, `box_id` and `local_slot` a binding is keyed by.
+   */
+  get _aceSlots() {
+    const states = (this._hass && this._hass.states) || {};
+    const boxes = [];
+
+    for (const [entityId, state] of Object.entries(states)) {
+      const attributes = state.attributes || {};
+      const info = attributes.spool_info;
+
+      if (!Array.isArray(info) || !info.length) continue;
+
+      // The matching active-filament sensor shares this one's prefix. Missing
+      // is fine: the box simply shows no active marker.
+      const active = (states[entityId.replace(/_spools$/, "_active_filament")] || {})
+        .attributes;
+
+      const slots = info
+        .filter((slot) => slot && slot.printer_id && slot.local_slot)
+        .map((slot) => ({
+          ...slot,
+          is_active: Boolean(
+            active &&
+              active.local_slot === slot.local_slot &&
+              active.box_id === slot.box_id
+          ),
+        }));
+
+      if (slots.length) {
+        boxes.push({ name: attributes.friendly_name || entityId, slots });
+      }
+    }
+
+    return boxes.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   _renderApp() {
@@ -285,7 +332,10 @@ class FilamentManagerPanel extends HTMLElement {
     let body;
     let actions;
 
-    if (this._dialog.kind === "item") {
+    if (this._dialog.kind === "slot") {
+      body = slotDialogBody(values, this._dialog.slot);
+      actions = dialogActions({ confirmLabel: t("action.save") });
+    } else if (this._dialog.kind === "item") {
       const item = this._dialog.mode === "edit" ? this._findItem(this._dialog.id) : null;
 
       if (this._dialog.mode === "edit" && !item) {
@@ -497,7 +547,14 @@ class FilamentManagerPanel extends HTMLElement {
     const target = event.target;
     if (!target || !target.dataset) return;
     if (this._applyFilter(target)) return;
-    if (this._captureDialogField(target)) return;
+    if (this._captureDialogField(target)) {
+      // Picking a roll decides the tare, and the tare decides whether the
+      // weight field is usable at all -- so this one field has to repaint.
+      if (this._dialog.kind === "slot" && target.dataset.field === "candidate") {
+        this._renderOverlay(true);
+      }
+      return;
+    }
     // Inline editing of an opened spool, inside the setup dialog.
     const editor = target.closest(".spool-edit");
     if (editor && target.dataset.field) {
@@ -641,6 +698,9 @@ class FilamentManagerPanel extends HTMLElement {
         });
       },
 
+      // ---- ACE slots ----
+      "assign-slot": (dataset) => this._openSlotDialog(dataset),
+
       "copy-id": async (dataset) => {
         try {
           await navigator.clipboard.writeText(dataset.id);
@@ -756,6 +816,99 @@ class FilamentManagerPanel extends HTMLElement {
     };
   }
 
+  /**
+   * Open the dialog for one ACE slot and fetch what may go in it.
+   *
+   * The candidate list is filtered server-side by the material the slot
+   * reports, so the same normalisation decides here and in the printer panel.
+   */
+  async _openSlotDialog(dataset) {
+    const slot = {
+      printer_id: String(dataset.printer),
+      box_id: Number(dataset.box),
+      local_slot: Number(dataset.slot),
+    };
+
+    this._openDialog({
+      kind: "slot",
+      id: `${slot.printer_id}:${slot.box_id}:${slot.local_slot}`,
+      title: t("ace.dialog_title", { slot: slot.local_slot }),
+      values: newSlotValues(null),
+      slot: { ...slot, loading: true, candidates: [] },
+    });
+
+    let result;
+    try {
+      result = await this._call({ type: `${WS}/slot/candidates`, ...slot });
+    } catch {
+      this._closeDialog();
+      return;
+    }
+
+    // The dialog may have been closed while the request was in flight.
+    if (!this._dialog || this._dialog.kind !== "slot") return;
+
+    this._dialog.slot = {
+      ...slot,
+      loading: false,
+      candidates: result.candidates || [],
+      assignment: result.assignment || null,
+      needsTare: Boolean(result.needs_tare),
+      materialType: result.material_type || null,
+    };
+    this._dialog.values = newSlotValues(result.assignment || null);
+    this._renderOverlay(true);
+  }
+
+  /**
+   * Apply the dialog: bind the roll, and book a fresh weighing if one was
+   * entered. The weight is optional on purpose -- the automatic deduction is
+   * what keeps the cupboard current, and weighing only corrects its drift.
+   */
+  async _commitSlot() {
+    const { values, slot } = this._dialog;
+    const target = {
+      printer_id: slot.printer_id,
+      box_id: slot.box_id,
+      local_slot: slot.local_slot,
+    };
+
+    if (!values.candidate) {
+      this._setDialogError(t("ace.error_pick"));
+      return;
+    }
+
+    try {
+      if (values.candidate === OPTION_NONE) {
+        await this._call({ type: `${WS}/slot/clear`, ...target });
+      } else {
+        const [itemId, spoolId] = String(values.candidate).split(":");
+        await this._call({
+          type: `${WS}/slot/assign`,
+          ...target,
+          item_id: itemId,
+          spool_id: spoolId || null,
+        });
+
+        const gross = parseFloat(values.gross_weight_g);
+        if (!isNaN(gross)) {
+          const tare = parseFloat(values.empty_weight_g);
+          await this._call({
+            type: `${WS}/slot/weigh`,
+            ...target,
+            gross_weight_g: gross,
+            empty_weight_g: isNaN(tare) ? null : tare,
+          });
+        }
+      }
+    } catch {
+      return;
+    }
+
+    this._closeDialog();
+    this._toast(t("toast.saved"));
+  }
+
   async _commitDialog() {
     if (!this._dialog) return;
     const { kind, mode, id, values } = this._dialog;
@@ -764,6 +917,11 @@ class FilamentManagerPanel extends HTMLElement {
       const { onConfirm } = this._dialog;
       this._closeDialog();
       if (onConfirm) await onConfirm().catch(() => {});
+      return;
+    }
+
+    if (kind === "slot") {
+      await this._commitSlot();
       return;
     }
 

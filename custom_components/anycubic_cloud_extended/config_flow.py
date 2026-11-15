@@ -29,9 +29,11 @@ from .anycubic_cloud_api.anycubic_api import AnycubicMQTTAPI as AnycubicAPI
 from .anycubic_cloud_api.models.auth import AnycubicAuthMode
 from .const import (
     CONF_ALLOW_NON_ADMIN_WEIGHING,
+    CONF_AUTO_DEDUCT_FILAMENT,
     CONF_CURRENCY,
     CONF_LOW_STOCK_THRESHOLD,
     DEFAULT_ALLOW_NON_ADMIN_WEIGHING,
+    DEFAULT_AUTO_DEDUCT_FILAMENT,
     DEFAULT_CURRENCY,
     DEFAULT_LOW_STOCK_THRESHOLD,
     CONF_CARD_CONFIG,
@@ -645,6 +647,13 @@ class AnycubicCloudOptionsFlowHandler(OptionsFlow):
                     default=self.entry.options.get(
                         CONF_ALLOW_NON_ADMIN_WEIGHING,
                         DEFAULT_ALLOW_NON_ADMIN_WEIGHING,
+                    ),
+                ): BooleanSelector(),
+                vol.Optional(
+                    CONF_AUTO_DEDUCT_FILAMENT,
+                    default=self.entry.options.get(
+                        CONF_AUTO_DEDUCT_FILAMENT,
+                        DEFAULT_AUTO_DEDUCT_FILAMENT,
                     ),
                 ): BooleanSelector(),
             }),

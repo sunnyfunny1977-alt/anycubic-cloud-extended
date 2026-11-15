@@ -31,6 +31,7 @@ from anycubic_cloud_extended.const import (  # noqa: E402
     STORAGE_KEY_FILAMENT,
 )
 from anycubic_cloud_extended.filament.material_match import material_matches  # noqa: E402
+from anycubic_cloud_extended.filament.consumption import ConsumptionTracker  # noqa: E402
 from anycubic_cloud_extended.filament.slot_binding import SlotBindingManager  # noqa: E402
 from anycubic_cloud_extended.filament.store import FilamentStore  # noqa: E402
 from anycubic_cloud_extended.helpers import spool_fingerprint  # noqa: E402
@@ -264,6 +265,105 @@ store3 = FilamentStore(hass3)
 run(store3.async_load())
 check("items persisted", len(store3.items) == 2, len(store3.items))
 check("no dangling assignments after reload", store3.assignments == [], store3.assignments)
+
+# --------------------------------------------------------------------------
+print("\n7. Automatic deduction: the job's filament comes off the feeding spool")
+
+hass4 = ha_stubs.HomeAssistant()
+store4 = FilamentStore(hass4)
+run(store4.async_load())
+hass4.data[DOMAIN] = {DATA_FILAMENT_STORE: store4}
+
+item4 = store4.add_item({
+    "manufacturer_id": store4.manufacturers[0]["id"],
+    "material_id": store4.materials[0]["id"],
+    "color_name": "Rot",
+    "spool_net_weight_g": 1000,
+    "sealed_count": 2,
+})
+spool4 = store4.open_spool(item4["id"])
+store4.update_open_spool(item4["id"], spool4["id"], {"remaining_grams": 500.0})
+
+SLOT4 = ("42", 0, 1)
+store4.set_assignment({
+    "printer_id": "42", "box_id": 0, "local_slot": 1,
+    "item_id": item4["id"], "spool_id": spool4["id"],
+})
+ACTIVE = {"box_id": 0, "local_slot": 1}
+
+
+def remaining4():
+    return store4.assignment_detail(store4.find_assignment(*SLOT4))["remaining_grams"]
+
+
+tracker = ConsumptionTracker(hass4)
+
+tracker.apply("42", "job-1", 10.0, ACTIVE)
+check("first look books the whole 10 g", remaining4() == 490.0, remaining4())
+
+tracker.apply("42", "job-1", 25.0, ACTIVE)
+check("only the difference is booked", remaining4() == 475.0, remaining4())
+
+tracker.apply("42", "job-1", 25.4, ACTIVE)
+check("below the 1 g floor writes nothing", remaining4() == 475.0, remaining4())
+
+tracker.apply("42", "job-1", 26.5, ACTIVE)
+check("the held fraction is not lost", remaining4() == 473.5, remaining4())
+
+print("\n7b. A restart mid-print must not charge the job twice")
+restored = ConsumptionTracker(hass4)
+restored.restore({"42": dict(tracker.progress["42"])})
+restored.apply("42", "job-1", 26.5, ACTIVE)
+check("same total after restart deducts nothing", remaining4() == 473.5, remaining4())
+restored.apply("42", "job-1", 36.5, ACTIVE)
+check("only what came after the restart", remaining4() == 463.5, remaining4())
+
+print("\n7c. A tracker that lost its memory would double-charge -- proving the guard matters")
+naive = ConsumptionTracker(hass4)
+naive.apply("42", "job-1", 36.5, ACTIVE)
+check("without the restored baseline the whole job is booked again",
+      remaining4() == 427.0, remaining4())
+
+print("\n7d. A new job starts the count again")
+before_job2 = remaining4()
+naive.apply("42", "job-2", 5.0, ACTIVE)
+check("new job books its own 5 g", remaining4() == before_job2 - 5.0, remaining4())
+
+print("\n7e. A counter that falls back re-anchors instead of crediting filament")
+before_drop = remaining4()
+naive.apply("42", "job-2", 2.0, ACTIVE)
+check("no filament is handed back", remaining4() == before_drop, remaining4())
+naive.apply("42", "job-2", 12.0, ACTIVE)
+check("counting resumes from the new anchor", remaining4() == before_drop - 10.0, remaining4())
+
+print("\n7f. Nothing is charged to a slot with no binding, or a stale one")
+unbound = ConsumptionTracker(hass4)
+unbound.apply("42", "job-3", 50.0, {"box_id": 0, "local_slot": 3})
+check("unbound slot leaves every spool alone", remaining4() == before_drop - 10.0, remaining4())
+
+store4.apply_slot_state([{
+    "printer_id": "42", "box_id": 0, "local_slot": 1,
+    "stale": True, "stale_since": "2026-01-01T00:00:00+00:00",
+}])
+stale_before = remaining4()
+unbound.apply("42", "job-4", 50.0, ACTIVE)
+check("a stale binding is not charged", remaining4() == stale_before, remaining4())
+store4.apply_slot_state([{
+    "printer_id": "42", "box_id": 0, "local_slot": 1, "stale": False, "stale_since": None,
+}])
+
+print("\n7g. The estimate stops at zero and says so")
+drain = ConsumptionTracker(hass4)
+drain.apply("42", "job-5", 99999.0, ACTIVE)
+check("remaining clamped at 0", remaining4() == 0.0, remaining4())
+check("binding flagged as depleted",
+      store4.find_assignment(*SLOT4)["depleted"] is True)
+check("flag reaches the panel data",
+      store4.assignment_detail(store4.find_assignment(*SLOT4))["depleted"] is True)
+
+store4.weigh_assignment("42", 0, 1, 1000.0, empty_weight_g=200.0)
+check("weighing clears the flag", store4.find_assignment(*SLOT4)["depleted"] is False)
+check("and restores a real figure", remaining4() == 800.0, remaining4())
 
 # --------------------------------------------------------------------------
 print("\n" + "=" * 60)

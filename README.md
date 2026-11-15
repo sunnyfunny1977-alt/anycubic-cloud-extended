@@ -128,6 +128,35 @@ vernichten.
 Das Leergewicht wird erst beim Speichern geschrieben. Nach dem ersten Eintragen
 also einmal speichern, danach nimmt das Feld für den Wiegewert einen Wert an.
 
+### ACE-Slots im Filament Manager
+
+Ganz oben im Bestand steht die ACE-Box mit ihren Slots. Je Slot zeigt sie, was
+der Drucker meldet (Material, Farbe, aktiver Slot) und welche Rolle aus dem
+Bestand daran haengt. Ein Klick auf **Zuordnen** oeffnet die Auswahl, gefiltert
+auf das Material des Slots.
+
+**Vor dem Einlegen wiegen ist optional.** Im selben Dialog gibt es ein Feld
+dafuer, aber es muss leer bleiben duerfen: Der Verbrauch wird ohnehin
+automatisch abgezogen, Wiegen korrigiert nur, was sich ueber die Zeit
+angesammelt hat.
+
+### Verbrauch wird automatisch abgezogen
+
+Haengt an einem Slot eine Rolle, zieht die Integration ab, was der Drucker
+waehrend des Jobs verbraucht — fortlaufend, nicht erst am Ende, und immer von
+der Rolle im gerade aktiven Slot. Bei Mehrfarbdruck wandert der Abzug
+automatisch mit.
+
+- Geschrieben wird erst ab einem Gramm Differenz, damit nicht jede Sekunde der
+  komplette Bestand an alle offenen Panels geht.
+- Was bereits abgezogen wurde, wird zusammen mit dem Job gespeichert. Ein
+  HA-Neustart mitten im Druck zieht deshalb nichts doppelt ab.
+- Ein Slot **ohne** Zuordnung wird nicht belastet, ebensowenig einer, dessen
+  Zuordnung als *zu pruefen* markiert ist.
+- Erreicht die Schaetzung null, bleibt die Rolle bei 0 g stehen und wird
+  markiert — ein Nachwiegen loescht die Markierung.
+- Abschaltbar ueber die Option **Verbrauch automatisch vom Bestand abziehen**.
+
 ### Rolle einem ACE-Slot zuordnen
 
 Ein Klick auf einen ACE-Slot im Panel oder in der Lovelace-Card öffnet den

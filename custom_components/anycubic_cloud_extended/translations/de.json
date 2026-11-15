@@ -107,7 +107,8 @@
         "data": {
           "low_stock_threshold": "Warnung ab weniger als so vielen Rollen",
           "currency": "Währung für den Bestandswert",
-          "allow_non_admin_weighing": "Nicht-Admins dürfen Rollen zuordnen und wiegen"
+          "allow_non_admin_weighing": "Nicht-Admins dürfen Rollen zuordnen und wiegen",
+          "auto_deduct_filament": "Verbrauch automatisch vom Bestand abziehen"
         }
       }
     }
