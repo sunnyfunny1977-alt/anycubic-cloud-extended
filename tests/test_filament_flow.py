@@ -30,8 +30,8 @@ from anycubic_cloud_extended.const import (  # noqa: E402
     DOMAIN,
     STORAGE_KEY_FILAMENT,
 )
-from anycubic_cloud_extended.filament.material_match import material_matches  # noqa: E402
 from anycubic_cloud_extended.filament.consumption import ConsumptionTracker  # noqa: E402
+from anycubic_cloud_extended.filament.material_match import material_matches  # noqa: E402
 from anycubic_cloud_extended.filament.slot_binding import SlotBindingManager  # noqa: E402
 from anycubic_cloud_extended.filament.store import FilamentStore  # noqa: E402
 from anycubic_cloud_extended.helpers import spool_fingerprint  # noqa: E402
