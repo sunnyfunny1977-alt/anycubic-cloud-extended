@@ -712,6 +712,12 @@ class FilamentManagerPanel extends HTMLElement {
       // ---- ACE slots ----
       "assign-slot": (dataset) => this._openSlotDialog(dataset),
 
+      "slot-show-all": () => {
+        if (this._dialog && this._dialog.kind === "slot") {
+          this._loadCandidates(true);
+        }
+      },
+
       // Only the binding goes: the roll keeps the remaining weight the
       // automatic deduction has arrived at and stays in the cupboard.
       // The warning asks whether the binding still describes the slot.
@@ -882,17 +888,47 @@ class FilamentManagerPanel extends HTMLElement {
       local_slot: Number(dataset.slot),
     };
 
+    // What the slot reports is what the server filters the cupboard by. The
+    // card has always sent it; without it the matcher reads "empty slot" and
+    // offers everything, which is how the panel came to list PETG for a slot
+    // holding PLA.
+    const materialType = dataset.material || null;
+
     this._openDialog({
       kind: "slot",
       id: `${slot.printer_id}:${slot.box_id}:${slot.local_slot}`,
       title: t("ace.dialog_title", { slot: slot.local_slot }),
       values: newSlotValues(null),
-      slot: { ...slot, loading: true, candidates: [] },
+      slot: { ...slot, materialType, loading: true, candidates: [] },
     });
+
+    await this._loadCandidates(false);
+  }
+
+  /**
+   * Fetch what may go in the open slot dialog.
+   *
+   * `showAll` drops the material filter. It is offered only when filtering
+   * leaves nothing to pick, so a type the matcher does not know -- or a
+   * material named something it cannot place -- is an inconvenience rather
+   * than a dead end.
+   */
+  async _loadCandidates(showAll) {
+    const { slot } = this._dialog;
+    const target = {
+      printer_id: slot.printer_id,
+      box_id: slot.box_id,
+      local_slot: slot.local_slot,
+    };
 
     let result;
     try {
-      result = await this._call({ type: `${WS}/slot/candidates`, ...slot });
+      result = await this._call({
+        type: `${WS}/slot/candidates`,
+        ...target,
+        material_type: slot.materialType,
+        include_non_matching: Boolean(showAll),
+      });
     } catch {
       this._closeDialog();
       return;
@@ -901,15 +937,19 @@ class FilamentManagerPanel extends HTMLElement {
     // The dialog may have been closed while the request was in flight.
     if (!this._dialog || this._dialog.kind !== "slot") return;
 
+    const first = this._dialog.slot.loading;
     this._dialog.slot = {
       ...slot,
       loading: false,
+      showingAll: Boolean(showAll),
       candidates: result.candidates || [],
       assignment: result.assignment || null,
       needsTare: Boolean(result.needs_tare),
-      materialType: result.material_type || null,
+      materialType: slot.materialType,
     };
-    this._dialog.values = newSlotValues(result.assignment || null);
+    if (first) {
+      this._dialog.values = newSlotValues(result.assignment || null);
+    }
     this._renderOverlay(true);
   }
 

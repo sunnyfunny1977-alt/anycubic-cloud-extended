@@ -25,7 +25,9 @@
         "ace.placeholder_material": "— passend zu {material} —",
         "ace.option_new": "{label} — neue Rolle anbrechen",
         "ace.option_release": "Zuordnung lösen",
-        "ace.no_candidates": "Keine passende Rolle im Bestand. Lege zuerst eine an.",
+        "ace.no_candidates": "Keine Rolle im Bestand passt zu diesem Filament.",
+        "ace.no_candidates_at_all": "Es ist noch gar keine Rolle im Bestand.",
+        "ace.show_all": "Trotzdem alle anzeigen",
         "ace.section_weigh": "Vor dem Einlegen wiegen",
         "ace.weigh_hint": "Optional. Ohne Eingabe wird der Verbrauch automatisch abgezogen; wiegen korrigiert nur, was sich über die Zeit angesammelt hat.",
         "ace.tare_hint": "Gilt für alle Farben dieser Rollensorte.",
@@ -189,7 +191,9 @@
         "ace.placeholder_material": "— matching {material} —",
         "ace.option_new": "{label} — open a new spool",
         "ace.option_release": "Release the assignment",
-        "ace.no_candidates": "No matching spool in the inventory. Add one first.",
+        "ace.no_candidates": "No roll in the inventory matches this filament.",
+        "ace.no_candidates_at_all": "There is no roll in the inventory yet.",
+        "ace.show_all": "Show all anyway",
         "ace.section_weigh": "Weigh before loading",
         "ace.weigh_hint": "Optional. Left empty, consumption is deducted automatically; weighing only corrects the drift that builds up over time.",
         "ace.tare_hint": "Applies to every colour of this spool type.",
@@ -330,38 +334,38 @@
         "setup.no_spool_type": "No spool type for this entry yet."
       }
     },
-    n = Object.keys(t);
-  let a = {},
+    a = Object.keys(t);
+  let n = {},
     i = {};
   async function o(o) {
     const r = function (t) {
       if (!t) return e;
-      const a = String(t).toLowerCase();
-      if (n.includes(a)) return a;
-      const i = a.split("-")[0];
-      return n.includes(i) ? i : e;
+      const n = String(t).toLowerCase();
+      if (a.includes(n)) return n;
+      const i = n.split("-")[0];
+      return a.includes(i) ? i : e;
     }(o);
-    return i = t[e], a = t[r] || i, r;
+    return i = t[e], n = t[r] || i, r;
   }
   function r(e, t = {}) {
-    return (a[e] ?? i[e] ?? e).replace(/\{(\w+)\}/g, (e, n) => Object.hasOwn(t, n) ? String(t[n]) : e);
+    return (n[e] ?? i[e] ?? e).replace(/\{(\w+)\}/g, (e, a) => Object.hasOwn(t, a) ? String(t[a]) : e);
   }
   function l(e, t) {
     return [e.manufacturer_id, e.material_id, Math.round(Number(e[t]) || 0)].join("|");
   }
   function s(e, t) {
     if (void 0 !== e.tare_g) return e.tare_g;
-    const n = t && t.spoolTypeFor ? t.spoolTypeFor(e) : null;
-    return n ? n.empty_weight_g : null;
+    const a = t && t.spoolTypeFor ? t.spoolTypeFor(e) : null;
+    return a ? a.empty_weight_g : null;
   }
   function d(e, t) {
     return [t.manufacturerName(e.manufacturer_id), t.materialName(e.material_id), e.color_name].filter(Boolean).join(" ");
   }
   function c(e, t) {
     if (null !== e.remaining_percent && void 0 !== e.remaining_percent) return Number(e.remaining_percent);
-    const n = e.remaining_grams,
-      a = Number(t || 0);
-    return null == n || a <= 0 ? null : Math.round(10 * Math.min(100, Math.max(0, Number(n) / a * 100))) / 10;
+    const a = e.remaining_grams,
+      n = Number(t || 0);
+    return null == a || n <= 0 ? null : Math.round(10 * Math.min(100, Math.max(0, Number(a) / n * 100))) / 10;
   }
   function p(e) {
     const t = Number(e.spool_net_weight_g || 0);
@@ -386,9 +390,9 @@
   }
   const h = e => new m(String(e));
   function g(e, ...t) {
-    let n = e[0];
-    for (let a = 0; a < t.length; a += 1) n += _(t[a]) + e[a + 1];
-    return new m(n);
+    let a = e[0];
+    for (let n = 0; n < t.length; n += 1) a += _(t[n]) + e[n + 1];
+    return new m(a);
   }
   let f = "en",
     b = "EUR";
@@ -434,40 +438,40 @@
     scissors: "M19,3L13,9L15,11L22,4V3M12,12.5A0.5,0.5 0 0,1 11.5,12A0.5,0.5 0 0,1 12,11.5A0.5,0.5 0 0,1 12.5,12A0.5,0.5 0 0,1 12,12.5M6,20A2,2 0 0,1 4,18C4,16.89 4.9,16 6,16A2,2 0 0,1 8,18C8,19.11 7.1,20 6,20M6,8A2,2 0 0,1 4,6C4,4.89 4.9,4 6,4A2,2 0 0,1 8,6C8,7.11 7.1,8 6,8M9.64,7.64C9.87,7.14 10,6.59 10,6A4,4 0 0,0 6,2A4,4 0 0,0 2,6A4,4 0 0,0 6,10C6.59,10 7.14,9.87 7.64,9.64L10,12L7.64,14.36C7.14,14.13 6.59,14 6,14A4,4 0 0,0 2,18A4,4 0 0,0 6,22A4,4 0 0,0 10,18C10,17.41 9.87,16.86 9.64,16.36L12,14L19,21H22V20L9.64,7.64Z"
   };
   function k(e, t = 20) {
-    const n = $[e];
-    return n ? g`<svg
+    const a = $[e];
+    return a ? g`<svg
     viewBox="0 0 24 24"
     width="${t}"
     height="${t}"
     fill="currentColor"
     aria-hidden="true"
   >
-    <path d="${n}"></path>
+    <path d="${a}"></path>
   </svg>` : h("");
   }
   function z(e, t = !1) {
-    const n = function (e) {
+    const a = function (e) {
       const t = String(e || "").replace("#", "");
       if (6 !== t.length) return .5;
-      const [n, a, i] = [0, 2, 4].map(e => parseInt(t.slice(e, e + 2), 16) / 255);
-      return .2126 * n + .7152 * a + .0722 * i;
+      const [a, n, i] = [0, 2, 4].map(e => parseInt(t.slice(e, e + 2), 16) / 255);
+      return .2126 * a + .7152 * n + .0722 * i;
     }(e) > .75 ? "rgba(0,0,0,.35)" : "rgba(0,0,0,.12)";
     return g`<span
     class="swatch ${t ? "small" : ""}"
-    style="background:${e}; border-color:${n}"
+    style="background:${e}; border-color:${a}"
   ></span>`;
   }
-  function N(e, t, n) {
+  function N(e, t, a) {
     return g`<label class="field">
     <span class="label-text">${e}</span>
-    ${t} ${n ? g`<span class="hint">${n}</span>` : ""}
+    ${t} ${a ? g`<span class="hint">${a}</span>` : ""}
   </label>`;
   }
   function L({
     name: e,
     label: t,
-    value: n = "",
-    type: a = "text",
+    value: a = "",
+    type: n = "text",
     placeholder: i = "",
     hint: o = "",
     min: r,
@@ -480,10 +484,10 @@
     const m = [void 0 !== r ? `min="${u(r)}"` : "", void 0 !== l ? `max="${u(l)}"` : "", void 0 !== s ? `step="${u(s)}"` : "", d ? `title="${u(d)}"` : "", c ? "disabled" : ""].join(" ");
     return N(t, g`<input
     class="${p}"
-    type="${a}"
+    type="${n}"
     name="${e}"
     data-field="${e}"
-    value="${n ?? ""}"
+    value="${a ?? ""}"
     placeholder="${i}"
     ${h(m)}
   />`, o);
@@ -491,16 +495,16 @@
   function S({
     name: e,
     label: t,
-    value: n = "",
-    options: a = [],
+    value: a = "",
+    options: n = [],
     hint: i = "",
     placeholder: o = ""
   }) {
     return N(t, g`<select name="${e}" data-field="${e}">
-    ${o ? g`<option value="" ${h(n ? "" : "selected")}>${o}</option>` : ""}
-    ${a.map(e => g`<option
+    ${o ? g`<option value="" ${h(a ? "" : "selected")}>${o}</option>` : ""}
+    ${n.map(e => g`<option
           value="${e.value}"
-          ${h(String(e.value) === String(n) ? "selected" : "")}
+          ${h(String(e.value) === String(a) ? "selected" : "")}
         >
           ${e.label}
         </option>`)}
@@ -514,37 +518,37 @@
   function E({
     emoji: e,
     title: t,
-    text: n,
-    actionLabel: a,
+    text: a,
+    actionLabel: n,
     action: i
   }) {
     return g`<div class="empty">
     <div class="big">${e}</div>
     <h3>${t}</h3>
-    <p>${n}</p>
-    ${a ? g`<button class="btn" data-action="${i}">${a}</button>` : ""}
+    <p>${a}</p>
+    ${n ? g`<button class="btn" data-action="${i}">${n}</button>` : ""}
   </div>`;
   }
-  function D({
+  function C({
     confirmLabel: e,
     danger: t = !1,
-    extra: n
+    extra: a
   }) {
-    return g`${n || ""}
+    return g`${a || ""}
     <span class="spacer"></span>
     <button class="btn text" data-action="dialog-cancel">${r("action.cancel")}</button>
     <button class="btn ${t ? "danger" : ""}" data-action="dialog-confirm">
       ${e}
     </button>`;
   }
-  const C = "__none__";
+  const D = "__none__";
   function R(e, t) {
-    const n = e.assignment || null,
-      a = Boolean(e.spool_loaded),
+    const a = e.assignment || null,
+      n = Boolean(e.spool_loaded),
       i = Boolean(e.is_active),
-      o = Boolean(n && n.stale && !e.stale_confirmed),
-      l = n ? n.remaining_grams : null,
-      s = n ? n.remaining_percent : null,
+      o = Boolean(a && a.stale && !e.stale_confirmed),
+      l = a ? a.remaining_grams : null,
+      s = a ? a.remaining_percent : null,
       d = null != s && s < 10;
     return g`<div class="ace-slot ${i ? "ace-slot-active" : ""}">
     <div class="ace-slot-head">
@@ -556,28 +560,28 @@
 
     <div class="ace-slot-body">
       <span
-        class="ace-dot ${a ? "" : "ace-dot-empty"}"
-        style="background:${a ? function (e) {
+        class="ace-dot ${n ? "" : "ace-dot-empty"}"
+        style="background:${n ? function (e) {
       const t = e.color;
       return Array.isArray(t) && t.length >= 3 ? `rgb(${Number(t[0])},${Number(t[1])},${Number(t[2])})` : e.color_hex || "#555";
     }(e) : "transparent"}"
       ></span>
       <div class="grow">
-        <div class="name">${a ? e.material_type || "–" : r("ace.empty")}</div>
+        <div class="name">${n ? e.material_type || "–" : r("ace.empty")}</div>
         <div class="sub hint">
-          ${n ? n.item_label : g`<span class="ace-unbound">${r("ace.no_assignment")}</span>`}
+          ${a ? a.item_label : g`<span class="ace-unbound">${r("ace.no_assignment")}</span>`}
         </div>
       </div>
     </div>
 
-    ${n ? g`<div class="ace-slot-amount">
+    ${a ? g`<div class="ace-slot-amount">
           ${A(void 0 === s ? null : s)}
           <span class="amount ${d ? "ace-low" : ""}">
             ${null == l ? "? g" : `${v(l)} g`}
           </span>
         </div>` : ""}
 
-    ${n && n.depleted ? g`<div class="ace-warn">${r("ace.depleted")}</div>` : ""}
+    ${a && a.depleted ? g`<div class="ace-warn">${r("ace.depleted")}</div>` : ""}
     ${o ? g`<div class="ace-warn ace-warn-row">
           <span class="grow">${r("ace.changed")}</span>
           <button
@@ -594,24 +598,25 @@
 
     <div class="ace-slot-actions">
       <button
-        class="btn ${n ? "secondary" : ""} grow"
+        class="btn ${a ? "secondary" : ""} grow"
         data-action="assign-slot"
         data-printer="${e.printer_id}"
         data-box="${e.box_id}"
         data-slot="${e.local_slot}"
+        data-material="${e.material_type || ""}"
         ${h(t ? "" : "disabled")}
       >
-        ${k(n ? "pencil" : "plus")}
-        ${r(n ? "ace.change" : "ace.assign")}
+        ${k(a ? "pencil" : "plus")}
+        ${r(a ? "ace.change" : "ace.assign")}
       </button>
 
-      ${n ? g`<button
+      ${a ? g`<button
             class="icon-btn danger"
             data-action="clear-slot"
             data-printer="${e.printer_id}"
             data-box="${e.box_id}"
             data-slot="${e.local_slot}"
-            data-label="${n.item_label || ""}"
+            data-label="${a.item_label || ""}"
             title="${r("ace.clear")}"
             aria-label="${r("ace.clear")}"
             ${h(t ? "" : "disabled")}
@@ -628,7 +633,7 @@
       empty_weight_g: ""
     };
   }
-  function H(e) {
+  function T(e) {
     return g`<div class="summary">
     ${[{
       value: v(e.total_spools),
@@ -654,15 +659,15 @@
       </div>`)}
   </div>`;
   }
-  function F(e, t, n) {
-    const a = Number(e.spool_net_weight_g || 0),
+  function F(e, t, a) {
+    const n = Number(e.spool_net_weight_g || 0),
       i = Number(e.sealed_count || 0),
       o = e.open_spools || [],
       l = function (e, t) {
-        const n = t.material(e.material_id);
+        const a = t.material(e.material_id);
         return {
-          nozzle: e.nozzle_temp ?? n?.nozzle_temp ?? null,
-          bed: e.bed_temp ?? n?.bed_temp ?? null,
+          nozzle: e.nozzle_temp ?? a?.nozzle_temp ?? null,
+          bed: e.bed_temp ?? a?.bed_temp ?? null,
           nozzleIsDefault: null === e.nozzle_temp || void 0 === e.nozzle_temp,
           bedIsDefault: null === e.bed_temp || void 0 === e.bed_temp
         };
@@ -679,7 +684,7 @@
         </div>
         <div class="sub">
           ${e.color_name || "–"} · ${(u = e.diameter, `${v(u, Number(u) % 1 == 0 ? 0 : 2)} mm`)} ·
-          ${v(a)} g
+          ${v(n)} g
         </div>
       </div>
       <div class="chip muted">${y(p(e))}</div>
@@ -698,15 +703,15 @@
     </div>
 
     ${o.map((e, t) => {
-      const n = c(e, a),
+      const a = c(e, n),
         i = null !== e.remaining_grams && void 0 !== e.remaining_grams;
       return g`<div class="open-row">
         <span class="chip muted">${r("label.spool_index", {
         index: t + 1
       })}</span>
-        ${A(n)}
+        ${A(a)}
         <span class="amount">
-          ${i ? `${v(n, 0)} % · ${v(e.remaining_grams)} g` : r("label.not_measured")}
+          ${i ? `${v(a, 0)} % · ${v(e.remaining_grams)} g` : r("label.not_measured")}
         </span>
       </div>`;
     })}
@@ -718,7 +723,7 @@
         class="btn secondary"
         data-action="setup-item"
         data-item="${e.id}"
-        ${h(n ? "" : "disabled")}
+        ${h(a ? "" : "disabled")}
       >
         ${k("pencil")} ${r("overview.setup")}
       </button>
@@ -726,11 +731,11 @@
   </div>`;
     var u;
   }
-  function T(e) {
+  function H(e) {
     const {
         data: t,
-        state: n,
-        lookup: a,
+        state: a,
+        lookup: n,
         isAdmin: i
       } = e,
       o = t.items || [],
@@ -745,18 +750,18 @@
       d = function (e) {
         const {
           slots: t,
-          isAdmin: n
+          isAdmin: a
         } = e;
         return t && t.length ? g`${t.map(e => g`<div class="ace-box">
       <div class="section-title" style="margin:0 0 10px">
         <span>${e.name}</span>
       </div>
       <div class="ace-grid">
-        ${e.slots.map(e => R(e, n))}
+        ${e.slots.map(e => R(e, a))}
       </div>
     </div>`)}` : "";
       }(e);
-    if (!o.length) return g`${d} ${l} ${s} ${H(t.summary)}
+    if (!o.length) return g`${d} ${l} ${s} ${T(t.summary)}
     ${E({
       emoji: "🧵",
       title: r("overview.empty.title"),
@@ -764,19 +769,19 @@
       actionLabel: i ? r("overview.empty.action") : "",
       action: "new-item"
     })}`;
-    const c = function (e, t, n) {
-      const a = (t.q || "").trim().toLowerCase(),
-        i = e.filter(e => (!t.manufacturer || e.manufacturer_id === t.manufacturer) && (!t.material || e.material_id === t.material) && !("sealed" === t.condition && Number(e.sealed_count || 0) < 1) && !("open" === t.condition && (e.open_spools || []).length < 1) && (!a || [n.manufacturerName(e.manufacturer_id), n.materialName(e.material_id), e.color_name, e.location, e.notes].join(" ").toLowerCase().includes(a))),
+    const c = function (e, t, a) {
+      const n = (t.q || "").trim().toLowerCase(),
+        i = e.filter(e => (!t.manufacturer || e.manufacturer_id === t.manufacturer) && (!t.material || e.material_id === t.material) && !("sealed" === t.condition && Number(e.sealed_count || 0) < 1) && !("open" === t.condition && (e.open_spools || []).length < 1) && (!n || [a.manufacturerName(e.manufacturer_id), a.materialName(e.material_id), e.color_name, e.location, e.notes].join(" ").toLowerCase().includes(n))),
         o = {
-          manufacturer: (e, t) => n.manufacturerName(e.manufacturer_id).localeCompare(n.manufacturerName(t.manufacturer_id)) || n.materialName(e.material_id).localeCompare(n.materialName(t.material_id)),
-          material: (e, t) => n.materialName(e.material_id).localeCompare(n.materialName(t.material_id)) || n.manufacturerName(e.manufacturer_id).localeCompare(n.manufacturerName(t.manufacturer_id)),
+          manufacturer: (e, t) => a.manufacturerName(e.manufacturer_id).localeCompare(a.manufacturerName(t.manufacturer_id)) || a.materialName(e.material_id).localeCompare(a.materialName(t.material_id)),
+          material: (e, t) => a.materialName(e.material_id).localeCompare(a.materialName(t.material_id)) || a.manufacturerName(e.manufacturer_id).localeCompare(a.manufacturerName(t.manufacturer_id)),
           color: (e, t) => (e.color_name || "").localeCompare(t.color_name || ""),
           remaining: (e, t) => p(e) - p(t),
           updated: (e, t) => String(t.updated_at || "").localeCompare(String(e.updated_at || ""))
         }[t.sort || "manufacturer"];
       return i.slice().sort((e, t) => o(e, t) || (e.color_name || "").localeCompare(t.color_name || ""));
-    }(o, n.filters, a);
-    return g`${d} ${l} ${s} ${H(t.summary)}
+    }(o, a.filters, n);
+    return g`${d} ${l} ${s} ${T(t.summary)}
   ${function (e, t) {
       return g`<div class="filters">
     <div class="grow">
@@ -821,8 +826,8 @@
         </option>`)}
     </select>
   </div>`;
-    }(t, n.filters)}
-  ${c.length ? g`<div class="grid">${c.map(e => F(e, a, i))}</div>` : E({
+    }(t, a.filters)}
+  ${c.length ? g`<div class="grid">${c.map(e => F(e, n, i))}</div>` : E({
       emoji: "🔍",
       title: r("overview.no_match.title"),
       text: r("overview.no_match.text"),
@@ -834,23 +839,23 @@
     V = [1.75, 2.85, 3],
     I = "margin:8px 0 4px";
   function O(e, t) {
-    const n = e.open_spools || [],
-      a = null != t;
+    const a = e.open_spools || [],
+      n = null != t;
     return g`<div class="span-2">
     <div class="section-title" style="${I}">${r("setup.open_spools_title")}</div>
     <div class="hint">
       ${r("field.remaining_hint")}
-      ${a ? ` ${r("field.gross_weight_hint")}` : ` ${r("field.gross_weight_disabled")}`}
+      ${n ? ` ${r("field.gross_weight_hint")}` : ` ${r("field.gross_weight_disabled")}`}
     </div>
-    ${n.length ? g`<div class="sub-list">
-          ${n.map((n, a) => function (e, t, n, a) {
-      const i = null != a,
+    ${a.length ? g`<div class="sub-list">
+          ${a.map((a, n) => function (e, t, a, n) {
+      const i = null != n,
         o = c(t, Number(e.spool_net_weight_g || 0));
       return g`<div class="spool-edit" data-item="${e.id}" data-spool="${t.id}">
     <div class="grow">
       <div class="open-row">
         <span class="chip muted">${r("label.spool_index", {
-        index: n + 1
+        index: a + 1
       })}</span>
         ${A(o)}
         <span class="amount">${null === o ? "–" : `${v(o, 0)} %`}</span>
@@ -898,12 +903,12 @@
       ${r("setup.consume")}
     </button>
   </div>`;
-    }(e, n, a, t))}
+    }(e, a, n, t))}
         </div>` : g`<div class="hint">${r("setup.no_open_spools")}</div>`}
   </div>`;
   }
-  function P(e, t, n, a, i) {
-    const o = a ? s(a, n) : null;
+  function P(e, t, a, n, i) {
+    const o = n ? s(n, a) : null;
     return g`<div class="form-grid">
     ${S({
       name: "manufacturer_id",
@@ -930,8 +935,8 @@
       ${function ({
       nameText: e,
       nameHex: t,
-      label: n,
-      textValue: a,
+      label: a,
+      textValue: n,
       hexValue: i,
       placeholder: o
     }) {
@@ -939,8 +944,8 @@
     <div class="grow">
       ${L({
         name: e,
-        label: n,
-        value: a,
+        label: a,
+        value: n,
         placeholder: o || ""
       })}
     </div>
@@ -981,7 +986,7 @@
       value: e.location,
       placeholder: r("field.location_placeholder")
     })}
-    ${a ? "" : L({
+    ${n ? "" : L({
       name: "sealed_count",
       label: r("field.sealed_count"),
       type: "number",
@@ -1030,12 +1035,12 @@
       ${function ({
       name: e,
       label: t,
-      value: n = "",
-      hint: a = ""
+      value: a = "",
+      hint: n = ""
     }) {
       return N(t, g`<textarea name="${e}" data-field="${e}">
-${n || ""}</textarea
-  >`, a);
+${a || ""}</textarea
+  >`, n);
     }({
       name: "notes",
       label: r("field.notes"),
@@ -1043,15 +1048,15 @@ ${n || ""}</textarea
     })}
     </div>
 
-    ${a ? function (e, t) {
-      const n = Number(e.sealed_count || 0);
+    ${n ? function (e, t) {
+      const a = Number(e.sealed_count || 0);
       return g`<div class="span-2">
     <div class="section-title" style="${I}">${r("setup.section_stock")}</div>
     <div class="row-main">
       <div class="grow">
         <div class="name">${r("setup.sealed_count")}</div>
         <div class="sub hint">${r("label.sealed", {
-        count: n
+        count: a
       })}</div>
       </div>
       <span class="counter">
@@ -1060,11 +1065,11 @@ ${n || ""}</textarea
           data-action="sealed-minus"
           data-item="${e.id}"
           title="-1"
-          ${h(!t || n < 1 ? "disabled" : "")}
+          ${h(!t || a < 1 ? "disabled" : "")}
         >
           ${k("minus")}
         </button>
-        <span class="num">${n}</span>
+        <span class="num">${a}</span>
         <button
           class="icon-btn plain"
           data-action="sealed-plus"
@@ -1079,32 +1084,32 @@ ${n || ""}</textarea
         class="btn secondary"
         data-action="open-spool"
         data-item="${e.id}"
-        ${h(!t || n < 1 ? "disabled" : "")}
+        ${h(!t || a < 1 ? "disabled" : "")}
       >
         ${r("setup.open_spool")}
       </button>
     </div>
   </div>`;
-    }(a, i) : ""}
-    ${a ? function (e, t, n) {
-      const a = n.spoolTypeFor(e),
-        i = a ? g`<div class="tare-list">
+    }(n, i) : ""}
+    ${n ? function (e, t, a) {
+      const n = a.spoolTypeFor(e),
+        i = n ? g`<div class="tare-list">
         <div class="tare-row">
           <div class="grow">
             <div class="name">
-              ${n.manufacturerName(a.manufacturer_id)}
-              ${n.materialName(a.material_id)} ·
-              ${v(a.net_weight_g)} g
+              ${a.manufacturerName(n.manufacturer_id)}
+              ${a.materialName(n.material_id)} ·
+              ${v(n.net_weight_g)} g
             </div>
           </div>
           <div class="num-field">
             ${L({
-          name: `spool_type__${a.id}`,
+          name: `spool_type__${n.id}`,
           label: r("field.empty_weight_short"),
           type: "number",
           min: 0,
           step: .1,
-          value: t[`spool_type__${a.id}`]
+          value: t[`spool_type__${n.id}`]
         })}
           </div>
         </div>
@@ -1114,13 +1119,13 @@ ${n || ""}</textarea
     <div class="hint">${r("setup.tare_hint")}</div>
     ${i}
   </div>`;
-    }(a, e, n) : ""}
-    ${a ? O(a, o) : ""}
-    ${a ? g`<div class="span-2">
+    }(n, e, a) : ""}
+    ${n ? O(n, o) : ""}
+    ${n ? g`<div class="span-2">
           <div class="hint">
             ID:
-            <button class="id-badge" data-action="copy-id" data-id="${a.id}" title="${r("setup.copy_id")}">
-              ${a.id}
+            <button class="id-badge" data-action="copy-id" data-id="${n.id}" title="${r("setup.copy_id")}">
+              ${n.id}
             </button>
           </div>
         </div>` : ""}
@@ -1129,8 +1134,8 @@ ${n || ""}</textarea
   function j({
     entry: e,
     subtitle: t,
-    usage: n,
-    editAction: a,
+    usage: a,
+    editAction: n,
     deleteAction: i
   }) {
     return g`<div class="row">
@@ -1140,12 +1145,12 @@ ${n || ""}</textarea
         <div class="sub hint">${t}</div>
       </div>
       <div class="row-actions">
-        ${(o = n, 0 === o ? g`<span class="chip muted">${r("admin.unused")}</span>` : g`<span class="chip">${r(1 === o ? "admin.used_in_one" : "admin.used_in", {
+        ${(o = a, 0 === o ? g`<span class="chip muted">${r("admin.unused")}</span>` : g`<span class="chip">${r(1 === o ? "admin.used_in_one" : "admin.used_in", {
       count: o
     })}</span>`)}
         <button
           class="icon-btn"
-          data-action="${a}"
+          data-action="${n}"
           data-id="${e.id}"
           title="${r("action.edit")}"
         >
@@ -1156,7 +1161,7 @@ ${n || ""}</textarea
           data-action="${i}"
           data-id="${e.id}"
           title="${r("action.delete")}"
-          ${h(n > 0 ? "disabled" : "")}
+          ${h(a > 0 ? "disabled" : "")}
         >
           ${k("delete")}
         </button>
@@ -1166,12 +1171,12 @@ ${n || ""}</textarea
     var o;
   }
   function q(e, t) {
-    const n = (t.spool_types || []).filter(t => t.manufacturer_id === e.id),
-      a = n.filter(e => null === e.empty_weight_g || void 0 === e.empty_weight_g).length,
+    const a = (t.spool_types || []).filter(t => t.manufacturer_id === e.id),
+      n = a.filter(e => null === e.empty_weight_g || void 0 === e.empty_weight_g).length,
       i = e.website || "—";
-    return a ? `${i} · ${r("admin.tare_open", {
-      count: a,
-      total: n.length
+    return n ? `${i} · ${r("admin.tare_open", {
+      count: n,
+      total: a.length
     })}` : i;
   }
   function W(e) {
@@ -1236,9 +1241,9 @@ ${n || ""}</textarea
     set route(e) {
       this._route = e;
       const t = (e && e.path ? e.path : "").split("/").filter(Boolean),
-        n = t.length ? t[t.length - 1] : "",
-        a = G.includes(n) ? n : "overview";
-      a !== this._state.view && (this._state.view = a, this._ready && this._renderApp());
+        a = t.length ? t[t.length - 1] : "",
+        n = G.includes(a) ? a : "overview";
+      n !== this._state.view && (this._state.view = n, this._ready && this._renderApp());
     }
     connectedCallback() {
       this.shadowRoot.addEventListener("click", this._onClick), this.shadowRoot.addEventListener("input", this._onInput), this.shadowRoot.addEventListener("change", this._onChange), this.shadowRoot.addEventListener("keydown", this._onKeyDown), this._hass && this._init();
@@ -1293,16 +1298,16 @@ ${n || ""}</textarea
     get _lookup() {
       return function (e) {
         const t = new Map((e.manufacturers || []).map(e => [e.id, e])),
-          n = new Map((e.materials || []).map(e => [e.id, e])),
-          a = new Map((e.spool_types || []).map(e => [l(e, "net_weight_g"), e]));
+          a = new Map((e.materials || []).map(e => [e.id, e])),
+          n = new Map((e.spool_types || []).map(e => [l(e, "net_weight_g"), e]));
         return {
           manufacturers: t,
-          materials: n,
-          spoolTypes: a,
+          materials: a,
+          spoolTypes: n,
           manufacturerName: e => t.get(e)?.name || "?",
-          materialName: e => n.get(e)?.name || "?",
-          material: e => n.get(e) || null,
-          spoolTypeFor: e => a.get(l(e, "spool_net_weight_g")) || null
+          materialName: e => a.get(e)?.name || "?",
+          material: e => a.get(e) || null,
+          spoolTypeFor: e => n.get(l(e, "spool_net_weight_g")) || null
         };
       }(this._data);
     }
@@ -1318,11 +1323,11 @@ ${n || ""}</textarea
     get _aceSlots() {
       const e = this._hass && this._hass.states || {},
         t = [];
-      for (const [n, a] of Object.entries(e)) {
-        const i = a.attributes || {},
+      for (const [a, n] of Object.entries(e)) {
+        const i = n.attributes || {},
           o = i.spool_info;
         if (!Array.isArray(o) || !o.length) continue;
-        const r = (e[n.replace(/_spools$/, "_active_filament")] || {}).attributes,
+        const r = (e[a.replace(/_spools$/, "_active_filament")] || {}).attributes,
           l = o.filter(e => e && e.printer_id && e.local_slot).map(e => {
             const t = `${e.printer_id}:${e.box_id}:${e.local_slot}`;
             return Boolean(e.assignment && e.assignment.stale) || this._confirmedSlots.delete(t), {
@@ -1332,7 +1337,7 @@ ${n || ""}</textarea
             };
           });
         l.length && t.push({
-          name: i.friendly_name || n,
+          name: i.friendly_name || a,
           slots: l
         });
       }
@@ -1341,20 +1346,20 @@ ${n || ""}</textarea
     _renderApp() {
       const e = this.shadowRoot.getElementById("app"),
         t = this.shadowRoot.activeElement,
-        n = t && t.dataset && t.dataset.filter || null,
-        a = n && void 0 !== t.selectionStart ? t.selectionStart : null,
+        a = t && t.dataset && t.dataset.filter || null,
+        n = a && void 0 !== t.selectionStart ? t.selectionStart : null,
         i = this._context(),
         o = "admin" === this._state.view ? function (e) {
           const {
             data: t,
-            isAdmin: n
+            isAdmin: a
           } = e;
-          if (!n) return E({
+          if (!a) return E({
             emoji: "🔒",
             title: r("admin.only_admin.title"),
             text: r("admin.only_admin.text")
           });
-          const a = t.usage || {
+          const n = t.usage || {
             manufacturers: {},
             materials: {},
             spool_types: {}
@@ -1370,7 +1375,7 @@ ${n || ""}</textarea
           ${t.manufacturers.map(e => j({
             entry: e,
             subtitle: q(e, t),
-            usage: a.manufacturers[e.id] || 0,
+            usage: n.manufacturers[e.id] || 0,
             editAction: "edit-manufacturer",
             deleteAction: "delete-manufacturer"
           }))}
@@ -1387,13 +1392,13 @@ ${n || ""}</textarea
           ${t.materials.map(e => j({
             entry: e,
             subtitle: W(e),
-            usage: a.materials[e.id] || 0,
+            usage: n.materials[e.id] || 0,
             editAction: "edit-material",
             deleteAction: "delete-material"
           }))}
         </div>` : g`<div class="card">${r("admin.no_materials")}</div>`}
 `;
-        }(i) : T(i),
+        }(i) : H(i),
         l = G.filter(e => "admin" !== e || this._isAdmin);
       if (e.innerHTML = String(g`
       <div class="app-header">
@@ -1416,43 +1421,44 @@ ${n || ""}</textarea
             </div>` : ""}
       </div>
       <div class="content">${o}</div>
-    `), n) {
-        const t = e.querySelector(`[data-filter="${n}"]`);
-        if (t && (t.focus(), null !== a && t.setSelectionRange)) try {
-          t.setSelectionRange(a, a);
+    `), a) {
+        const t = e.querySelector(`[data-filter="${a}"]`);
+        if (t && (t.focus(), null !== n && t.setSelectionRange)) try {
+          t.setSelectionRange(n, n);
         } catch {}
       }
     }
     _renderOverlay(e = !1, t = !1) {
-      const n = this.shadowRoot.getElementById("overlay"),
-        a = this._dialog ? `${this._dialog.kind}:${this._dialog.id || "new"}:${this._dialog.error || ""}` : "";
-      if (!e && a === this._overlayKey) return;
-      if (this._overlayKey = a, !this._dialog) return void (n.innerHTML = "");
+      const a = this.shadowRoot.getElementById("overlay"),
+        n = this._dialog ? `${this._dialog.kind}:${this._dialog.id || "new"}:${this._dialog.error || ""}` : "";
+      if (!e && n === this._overlayKey) return;
+      if (this._overlayKey = n, !this._dialog) return void (a.innerHTML = "");
       const i = this._dialog.values || {};
       let o, l;
       if ("slot" === this._dialog.kind) o = function (e, t) {
         const {
-          candidates: n,
-          loading: a,
+          candidates: a,
+          loading: n,
           assignment: i,
           needsTare: o,
-          materialType: l
+          materialType: l,
+          showingAll: s
         } = t;
-        if (a) return g`<div class="empty">${r("app.loading")}</div>`;
-        const s = [...(n || []).map(e => ({
+        if (n) return g`<div class="empty">${r("app.loading")}</div>`;
+        const d = [...(a || []).map(e => ({
           value: `${e.item_id}:${e.spool_id || ""}`,
           label: null === e.spool_id ? r("ace.option_new", {
             label: e.label
           }) : `${e.label} — ${v(e.remaining_grams)} g`
         }))];
-        i && s.push({
-          value: C,
+        i && d.push({
+          value: D,
           label: r("ace.option_release")
         });
-        const d = e.candidate === C,
-          c = (n || []).find(t => `${t.item_id}:${t.spool_id || ""}` === e.candidate),
-          p = c ? c.tare_g : i ? i.tare_g : null,
-          m = null == p;
+        const c = e.candidate === D,
+          p = (a || []).find(t => `${t.item_id}:${t.spool_id || ""}` === e.candidate),
+          m = p ? p.tare_g : i ? i.tare_g : null,
+          u = null == m;
         return g`<div class="form-grid">
     <div class="span-2">
       ${S({
@@ -1462,12 +1468,17 @@ ${n || ""}</textarea
           placeholder: l ? r("ace.placeholder_material", {
             material: l
           }) : "—",
-          options: s
+          options: d
         })}
-      ${s.length ? "" : g`<div class="hint">${r("ace.no_candidates")}</div>`}
+      ${d.length ? "" : g`<div class="hint">
+            ${r(s ? "ace.no_candidates_at_all" : "ace.no_candidates")}
+            ${s ? "" : g`<button class="btn text" data-action="slot-show-all">
+                  ${r("ace.show_all")}
+                </button>`}
+          </div>`}
     </div>
 
-    ${d ? "" : g`<div class="span-2">
+    ${c ? "" : g`<div class="span-2">
           <div class="section-title" style="margin:8px 0 4px">
             ${r("ace.section_weigh")}
           </div>
@@ -1480,11 +1491,11 @@ ${n || ""}</textarea
           min: 0,
           step: 1,
           value: e.gross_weight_g,
-          placeholder: m ? "—" : "",
-          disabled: m && !e.empty_weight_g,
-          title: r(m ? "field.gross_weight_disabled" : "field.gross_weight_hint")
+          placeholder: u ? "—" : "",
+          disabled: u && !e.empty_weight_g,
+          title: r(u ? "field.gross_weight_disabled" : "field.gross_weight_hint")
         })}
-        ${m || o ? L({
+        ${u || o ? L({
           name: "empty_weight_g",
           label: r("field.empty_weight_short"),
           type: "number",
@@ -1494,23 +1505,23 @@ ${n || ""}</textarea
           hint: r("ace.tare_hint")
         }) : g`<div class="num-field">
               <div class="hint" style="padding-top:18px">
-                ${r("label.empty_weight")}: ${v(p)} g
+                ${r("label.empty_weight")}: ${v(m)} g
               </div>
             </div>`}`}
   </div>`;
-      }(i, this._dialog.slot), l = D({
+      }(i, this._dialog.slot), l = C({
         confirmLabel: r("action.save")
       });else if ("item" === this._dialog.kind) {
         const e = "edit" === this._dialog.mode ? this._findItem(this._dialog.id) : null;
         if ("edit" === this._dialog.mode && !e) return void this._closeDialog();
-        this._dialog.signature = this._itemSignature(e), o = P(i, this._data, this._lookup, e, this._isAdmin), l = D({
+        this._dialog.signature = this._itemSignature(e), o = P(i, this._data, this._lookup, e, this._isAdmin), l = C({
           confirmLabel: r("action.save"),
           extra: e ? g`<button class="btn danger text" data-action="delete-item" data-item="${e.id}">
               ${r("action.delete")}
             </button>` : ""
         });
-      } else "manufacturer" === this._dialog.kind ? (o = function (e, t, n) {
-        const a = (t.spool_types || []).filter(t => t.manufacturer_id === e.id);
+      } else "manufacturer" === this._dialog.kind ? (o = function (e, t, a) {
+        const n = (t.spool_types || []).filter(t => t.manufacturer_id === e.id);
         return g`<div class="form-grid">
     <div class="span-2">
       ${L({
@@ -1539,14 +1550,14 @@ ${n || ""}</textarea
     <div class="span-2">
       <div class="section-title" style="margin:8px 0 4px">${r("admin.spool_types")}</div>
       <div class="hint" style="margin-bottom:10px">${r("admin.spool_types_hint")}</div>
-      ${a.length ? g`<div class="tare-list">
-            ${a.map(a => {
-          const i = (t.usage?.spool_types || {})[a.id] || 0;
+      ${n.length ? g`<div class="tare-list">
+            ${n.map(n => {
+          const i = (t.usage?.spool_types || {})[n.id] || 0;
           return g`<div class="tare-row">
                 <div class="grow">
                   <div class="name">
-                    ${n.materialName(a.material_id)} ·
-                    ${v(a.net_weight_g)} g
+                    ${a.materialName(n.material_id)} ·
+                    ${v(n.net_weight_g)} g
                   </div>
                   <div class="hint">
                     ${i ? r(1 === i ? "admin.used_in_one" : "admin.used_in", {
@@ -1556,12 +1567,12 @@ ${n || ""}</textarea
                 </div>
                 <div class="num-field">
                   ${L({
-            name: `spool_type__${a.id}`,
+            name: `spool_type__${n.id}`,
             label: r("field.empty_weight_short"),
             type: "number",
             min: 0,
             step: .1,
-            value: e[`spool_type__${a.id}`]
+            value: e[`spool_type__${n.id}`]
           })}
                 </div>
               </div>`;
@@ -1569,7 +1580,7 @@ ${n || ""}</textarea
           </div>` : g`<div class="hint">${r("admin.no_spool_types_for_manufacturer")}</div>`}
     </div>
   </div>`;
-      }(i, this._data, this._lookup), l = D({
+      }(i, this._data, this._lookup), l = C({
         confirmLabel: r("action.save")
       })) : "material" === this._dialog.kind ? (o = function (e) {
         return g`<div class="form-grid">
@@ -1629,25 +1640,25 @@ ${n || ""}</textarea
         })}
     </div>
   </div>`;
-      }(i), l = D({
+      }(i), l = C({
         confirmLabel: r("action.save")
-      })) : (o = g`<p>${this._dialog.text}</p>`, l = D({
+      })) : (o = g`<p>${this._dialog.text}</p>`, l = C({
         confirmLabel: this._dialog.confirmLabel || r("action.delete"),
         danger: !0
       }));
-      if (n.innerHTML = String(function ({
+      if (a.innerHTML = String(function ({
         title: e,
         body: t,
-        actions: n,
-        error: a
+        actions: a,
+        error: n
       }) {
         return g`<div class="overlay" data-action="dialog-backdrop">
     <div class="dialog" role="dialog" aria-modal="true" data-stop>
       <h2>${e}</h2>
       <div class="body">
-        ${t} ${a ? g`<div class="error-text">${a}</div>` : ""}
+        ${t} ${n ? g`<div class="error-text">${n}</div>` : ""}
       </div>
-      <div class="actions">${n}</div>
+      <div class="actions">${a}</div>
     </div>
   </div>`;
       }({
@@ -1656,7 +1667,7 @@ ${n || ""}</textarea
         actions: l,
         error: this._dialog.error
       })), !t) return;
-      const s = n.querySelector("[data-field]");
+      const s = a.querySelector("[data-field]");
       s && s.focus();
     }
     _itemSignature(e) {
@@ -1667,14 +1678,14 @@ ${n || ""}</textarea
       if (!e || "item" !== e.kind || "edit" !== e.mode) return;
       const t = this._findItem(e.id);
       if (!t) return void this._closeDialog();
-      const n = this.shadowRoot.activeElement,
-        a = Boolean(n && n.closest && n.closest(".overlay"));
-      this._itemSignature(t) === e.signature && a || this._renderOverlay(!0);
+      const a = this.shadowRoot.activeElement,
+        n = Boolean(a && a.closest && a.closest(".overlay"));
+      this._itemSignature(t) === e.signature && n || this._renderOverlay(!0);
     }
     _toast(e, t = !1) {
-      const n = this.shadowRoot.getElementById("toast");
-      n.innerHTML = String(g`<div class="toast ${t ? "error" : ""}">${e}</div>`), this._toastTimer && clearTimeout(this._toastTimer), this._toastTimer = setTimeout(() => {
-        n.innerHTML = "";
+      const a = this.shadowRoot.getElementById("toast");
+      a.innerHTML = String(g`<div class="toast ${t ? "error" : ""}">${e}</div>`), this._toastTimer && clearTimeout(this._toastTimer), this._toastTimer = setTimeout(() => {
+        a.innerHTML = "";
       }, t ? 6e3 : 2500);
     }
     _navigate(e) {
@@ -1701,16 +1712,16 @@ ${n || ""}</textarea
     _confirm({
       previous: e,
       title: t,
-      text: n,
-      confirmLabel: a,
+      text: a,
+      confirmLabel: n,
       onConfirm: i
     }) {
       this._openDialog({
         kind: "confirm",
         previous: e,
         title: t,
-        text: n,
-        confirmLabel: a,
+        text: a,
+        confirmLabel: n,
         onConfirm: i
       });
     }
@@ -1741,11 +1752,11 @@ ${n || ""}</textarea
       if (!t || !t.dataset) return;
       if (this._applyFilter(t)) return;
       if (this._captureDialogField(t)) return void ("slot" === this._dialog.kind && "candidate" === t.dataset.field && this._renderOverlay(!0));
-      const n = t.closest(".spool-edit");
-      n && t.dataset.field && this._call({
+      const a = t.closest(".spool-edit");
+      a && t.dataset.field && this._call({
         type: `${K}/spool/update`,
-        item_id: n.dataset.item,
-        spool_id: n.dataset.spool,
+        item_id: a.dataset.item,
+        spool_id: a.dataset.spool,
         [t.dataset.field]: "" === t.value ? null : t.value
       }).catch(() => {});
     }
@@ -1753,11 +1764,11 @@ ${n || ""}</textarea
       const t = e.composedPath().find(e => e.dataset && e.dataset.action);
       if (!t) return;
       const {
-        action: n
+        action: a
       } = t.dataset;
-      if ("dialog-backdrop" === n && e.target !== t) return;
-      const a = this._actions()[n];
-      a && (e.preventDefault(), e.stopPropagation(), a(t.dataset, t));
+      if ("dialog-backdrop" === a && e.target !== t) return;
+      const n = this._actions()[a];
+      n && (e.preventDefault(), e.stopPropagation(), n(t.dataset, t));
     }
     _actions() {
       const e = e => this._call(e).catch(() => {});
@@ -1802,7 +1813,7 @@ ${n || ""}</textarea
         "setup-item": e => {
           const t = this._findItem(e.item);
           if (!t) return;
-          const n = this._lookup.spoolTypeFor(t);
+          const a = this._lookup.spoolTypeFor(t);
           this._openDialog({
             kind: "item",
             mode: "edit",
@@ -1821,8 +1832,8 @@ ${n || ""}</textarea
               nozzle_temp: t.nozzle_temp ?? "",
               bed_temp: t.bed_temp ?? "",
               notes: t.notes,
-              ...(n ? {
-                [`spool_type__${n.id}`]: n.empty_weight_g ?? ""
+              ...(a ? {
+                [`spool_type__${a.id}`]: a.empty_weight_g ?? ""
               } : {})
             }
           });
@@ -1843,19 +1854,19 @@ ${n || ""}</textarea
           });
         },
         "sealed-plus": t => {
-          const n = this._findItem(t.item);
-          n && e({
+          const a = this._findItem(t.item);
+          a && e({
             type: `${K}/item/set_sealed`,
-            item_id: n.id,
-            sealed_count: Number(n.sealed_count || 0) + 1
+            item_id: a.id,
+            sealed_count: Number(a.sealed_count || 0) + 1
           });
         },
         "sealed-minus": t => {
-          const n = this._findItem(t.item);
-          !n || Number(n.sealed_count || 0) < 1 || e({
+          const a = this._findItem(t.item);
+          !a || Number(a.sealed_count || 0) < 1 || e({
             type: `${K}/item/set_sealed`,
-            item_id: n.id,
-            sealed_count: Number(n.sealed_count) - 1
+            item_id: a.id,
+            sealed_count: Number(a.sealed_count) - 1
           });
         },
         "open-spool": t => {
@@ -1883,6 +1894,9 @@ ${n || ""}</textarea
           });
         },
         "assign-slot": e => this._openSlotDialog(e),
+        "slot-show-all": () => {
+          this._dialog && "slot" === this._dialog.kind && this._loadCandidates(!0);
+        },
         "confirm-slot": async e => {
           try {
             await this._call({
@@ -1953,8 +1967,8 @@ ${n || ""}</textarea
         "delete-manufacturer": e => {
           const t = this._data.manufacturers.find(t => t.id === e.id);
           if (!t) return;
-          const n = (this._data.usage.manufacturers || {})[t.id] || 0;
-          n > 0 ? this._toast(this._blockedMessage(t.name, n), !0) : this._confirm({
+          const a = (this._data.usage.manufacturers || {})[t.id] || 0;
+          a > 0 ? this._toast(this._blockedMessage(t.name, a), !0) : this._confirm({
             title: r("admin.delete_manufacturer_title"),
             text: r("admin.delete_text", {
               name: t.name
@@ -2003,8 +2017,8 @@ ${n || ""}</textarea
         "delete-material": e => {
           const t = this._data.materials.find(t => t.id === e.id);
           if (!t) return;
-          const n = (this._data.usage.materials || {})[t.id] || 0;
-          n > 0 ? this._toast(this._blockedMessage(t.name, n), !0) : this._confirm({
+          const a = (this._data.usage.materials || {})[t.id] || 0;
+          a > 0 ? this._toast(this._blockedMessage(t.name, a), !0) : this._confirm({
             title: r("admin.delete_material_title"),
             text: r("admin.delete_text", {
               name: t.name
@@ -2024,11 +2038,11 @@ ${n || ""}</textarea
     }
     async _openSlotDialog(e) {
       const t = {
-        printer_id: String(e.printer),
-        box_id: Number(e.box),
-        local_slot: Number(e.slot)
-      };
-      let n;
+          printer_id: String(e.printer),
+          box_id: Number(e.box),
+          local_slot: Number(e.slot)
+        },
+        a = e.material || null;
       this._openDialog({
         kind: "slot",
         id: `${t.printer_id}:${t.box_id}:${t.local_slot}`,
@@ -2038,56 +2052,73 @@ ${n || ""}</textarea
         values: M(null),
         slot: {
           ...t,
+          materialType: a,
           loading: !0,
           candidates: []
         }
-      });
+      }), await this._loadCandidates(!1);
+    }
+    async _loadCandidates(e) {
+      const {
+          slot: t
+        } = this._dialog,
+        a = {
+          printer_id: t.printer_id,
+          box_id: t.box_id,
+          local_slot: t.local_slot
+        };
+      let n;
       try {
         n = await this._call({
           type: `${K}/slot/candidates`,
-          ...t
+          ...a,
+          material_type: t.materialType,
+          include_non_matching: Boolean(e)
         });
       } catch {
         return void this._closeDialog();
       }
-      this._dialog && "slot" === this._dialog.kind && (this._dialog.slot = {
+      if (!this._dialog || "slot" !== this._dialog.kind) return;
+      const i = this._dialog.slot.loading;
+      this._dialog.slot = {
         ...t,
         loading: !1,
+        showingAll: Boolean(e),
         candidates: n.candidates || [],
         assignment: n.assignment || null,
         needsTare: Boolean(n.needs_tare),
-        materialType: n.material_type || null
-      }, this._dialog.values = M(n.assignment || null), this._renderOverlay(!0));
+        materialType: t.materialType
+      }, i && (this._dialog.values = M(n.assignment || null)), this._renderOverlay(!0);
     }
     async _commitSlot() {
       const {
           values: e,
           slot: t
         } = this._dialog,
-        n = {
+        a = {
           printer_id: t.printer_id,
           box_id: t.box_id,
           local_slot: t.local_slot
         };
       if (e.candidate) {
         try {
-          if (e.candidate === C) await this._call({
+          if (e.candidate === D) await this._call({
             type: `${K}/slot/clear`,
-            ...n
+            ...a
           });else {
-            const [t, a] = String(e.candidate).split(":");
+            const [t, n] = String(e.candidate).split(":");
             await this._call({
               type: `${K}/slot/assign`,
-              ...n,
+              ...a,
               item_id: t,
-              spool_id: a || null
+              spool_id: n || null
             });
             const i = parseFloat(e.gross_weight_g);
             if (!isNaN(i)) {
               const t = parseFloat(e.empty_weight_g);
               await this._call({
                 type: `${K}/slot/weigh`,
-                ...n,
+                ...a,
                 gross_weight_g: i,
                 empty_weight_g: isNaN(t) ? null : t
               });
@@ -2104,8 +2135,8 @@ ${n || ""}</textarea
       const {
         kind: e,
         mode: t,
-        id: n,
-        values: a
+        id: a,
+        values: n
       } = this._dialog;
       if ("confirm" === e) {
         const {
@@ -2115,8 +2146,8 @@ ${n || ""}</textarea
       }
       if ("slot" === e) return void (await this._commitSlot());
       if ("item" === e) {
-        if (!a.manufacturer_id || !a.material_id) return void this._setDialogError(r("error.item_required"));
-      } else if (!String(a.name || "").trim()) return void this._setDialogError(r("error.name_required"));
+        if (!n.manufacturer_id || !n.material_id) return void this._setDialogError(r("error.item_required"));
+      } else if (!String(n.name || "").trim()) return void this._setDialogError(r("error.name_required"));
       const i = {
           item: "item",
           manufacturer: "manufacturer",
@@ -2124,11 +2155,11 @@ ${n || ""}</textarea
         }[e],
         o = {
           type: `${K}/${i}/${"edit" === t ? "update" : "create"}`,
-          ...this._cleanValues(a)
+          ...this._cleanValues(n)
         };
-      "edit" === t && (o[`${i}_id`] = n);
+      "edit" === t && (o[`${i}_id`] = a);
       try {
-        await this._call(o), await this._saveSpoolTypeWeights(a);
+        await this._call(o), await this._saveSpoolTypeWeights(n);
       } catch {
         return;
       }
@@ -2136,10 +2167,10 @@ ${n || ""}</textarea
     }
     async _saveSpoolTypeWeights(e) {
       const t = new Map((this._data.spool_types || []).map(e => [e.id, e.empty_weight_g]));
-      for (const [n, a] of Object.entries(e)) {
-        if (!n.startsWith("spool_type__")) continue;
-        const e = n.slice(12),
-          i = "" === a || null === a ? null : Number(a);
+      for (const [a, n] of Object.entries(e)) {
+        if (!a.startsWith("spool_type__")) continue;
+        const e = a.slice(12),
+          i = "" === n || null === n ? null : Number(n);
         t.has(e) && t.get(e) !== i && (await this._call({
           type: `${K}/spool_type/update`,
           spool_type_id: e,
@@ -2149,7 +2180,7 @@ ${n || ""}</textarea
     }
     _cleanValues(e) {
       const t = {};
-      for (const [n, a] of Object.entries(e)) n.startsWith("spool_type__") || "id" === n || (t[n] = "" === a ? null : a);
+      for (const [a, n] of Object.entries(e)) a.startsWith("spool_type__") || "id" === a || (t[a] = "" === n ? null : n);
       return t;
     }
   }

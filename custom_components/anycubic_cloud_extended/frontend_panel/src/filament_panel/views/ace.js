@@ -105,6 +105,7 @@ function slotCard(slot, isAdmin) {
         data-printer="${slot.printer_id}"
         data-box="${slot.box_id}"
         data-slot="${slot.local_slot}"
+        data-material="${slot.material_type || ""}"
         ${raw(isAdmin ? "" : "disabled")}
       >
         ${icon(assignment ? "pencil" : "plus")}
@@ -159,7 +160,8 @@ export function renderAceSection(ctx) {
  * how you correct the drift when you happen to have the scale out.
  */
 export function slotDialogBody(values, context) {
-  const { candidates, loading, assignment, needsTare, materialType } = context;
+  const { candidates, loading, assignment, needsTare, materialType, showingAll } =
+    context;
 
   if (loading) {
     return html`<div class="empty">${t("app.loading")}</div>`;
@@ -198,7 +200,14 @@ export function slotDialogBody(values, context) {
         options,
       })}
       ${!options.length
-        ? html`<div class="hint">${t("ace.no_candidates")}</div>`
+        ? html`<div class="hint">
+            ${showingAll ? t("ace.no_candidates_at_all") : t("ace.no_candidates")}
+            ${showingAll
+              ? ""
+              : html`<button class="btn text" data-action="slot-show-all">
+                  ${t("ace.show_all")}
+                </button>`}
+          </div>`
         : ""}
     </div>
 

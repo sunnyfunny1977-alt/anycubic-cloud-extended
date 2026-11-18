@@ -165,6 +165,11 @@ konkreten Rolle aus dem Bestand:
 
 - Die Liste ist auf das gefiltert, was tatsächlich im Slot steckt. Meldet der
   ACE `PLA`, erscheinen `PLA`, `PLA+`, `Silk PLA` und `Wood PLA` — kein PETG.
+  Sortiert wird nach Namen; Umlaute stehen bei ihrem Grundbuchstaben, `Öko`
+  also unter O und nicht hinter Z.
+- Bleibt nach dem Filtern nichts übrig, bietet der Dialog **Trotzdem alle
+  anzeigen** an. Ein Materialname, den die automatische Zuordnung nicht
+  einordnen kann, ist damit lästig, aber keine Sackgasse.
 - Passt die automatische Zuordnung bei einem eigenen Materialnamen nicht, lässt
   sich im Admin-Bereich pro Material ein **ACE-Materialtyp** hinterlegen. Leer
   bedeutet „aus dem Namen ableiten", was für alle mitgelieferten Materialien

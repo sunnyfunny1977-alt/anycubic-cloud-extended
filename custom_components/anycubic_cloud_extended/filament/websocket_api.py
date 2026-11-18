@@ -11,6 +11,7 @@ number, and the client overwrites any ``id`` a caller puts in the payload. The p
 
 from __future__ import annotations
 
+import unicodedata
 from collections.abc import Callable, Mapping
 from typing import Any
 
@@ -577,6 +578,13 @@ def _candidate(
     return out
 
 
+def _sort_key(label: str) -> tuple[str, str]:
+    """Case- and accent-insensitive sort key, with the original as tiebreak."""
+    folded = unicodedata.normalize("NFKD", label).casefold()
+    stripped = "".join(ch for ch in folded if not unicodedata.combining(ch))
+    return (stripped, label)
+
+
 @websocket_api.websocket_command(
     {
         vol.Required("type"): f"{WS_PREFIX}/slot/candidates",
@@ -618,10 +626,11 @@ def handle_slot_candidates(
             continue
         candidates.extend(_candidate(store, item, ranks[material_id]))
 
-    # Best match first, then the fullest roll, then alphabetically.
-    candidates.sort(
-        key=lambda c: (-c["match_rank"], -(c["remaining_grams"] or 0), c["label"].lower())
-    )
+    # By name. The list only holds materials that fit the slot, so the match
+    # rank barely varies within it, and a name is what somebody scans a
+    # dropdown for. Accents fold into their base letter first, so Ökofilament
+    # sorts under O rather than after Z.
+    candidates.sort(key=lambda c: _sort_key(c["label"]))
 
     assignment = store.find_assignment(
         msg["printer_id"], msg["box_id"], msg["local_slot"]

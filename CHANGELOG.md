@@ -12,6 +12,21 @@
   binding stale a second after it was made; a stale binding is deliberately
   never charged. An empty signature now means nobody has recorded the slot yet,
   so the current one is adopted. A real swap is still caught.
+- **The roll list in the panel is filtered by what the slot reports.** The
+  server has filtered by material since 2.0.0 and the Lovelace card passes the
+  slot's type, but the Filament Manager panel never did. The matcher reads a
+  missing type as "empty slot, everything is a candidate", so the panel offered
+  the whole cupboard -- PETG for a slot holding PLA. It now sends the type the
+  slot reports, which is the one already shown on the card.
+  - Ordering moves from best-match-first to by name. Once the list only holds
+    materials that fit, the rank barely varies within it, and a name is what
+    somebody scans a dropdown for. Accents fold into their base letter, so
+    Ökofilament sorts under O rather than after Z. This applies to the Lovelace
+    card as well, which shares the command.
+  - When filtering leaves nothing, the dialog offers **Trotzdem alle anzeigen**
+    rather than a dead end, and says the cupboard holds nothing matching
+    instead of telling the user to add a roll they may well already own.
+
 
 ### Added
 
