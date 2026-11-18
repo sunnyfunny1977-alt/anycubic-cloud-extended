@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased
+## 2.1.0
+
+Two halves of the ACE binding that did not work in practice -- nothing was
+ever deducted, and the roll list was not filtered -- plus the two buttons
+the warnings were missing.
 
 ### Fixed
 

@@ -14,7 +14,7 @@ Die Integration wird ueber HACS als benutzerdefiniertes Repository installiert.
 
 > **Eigenstaendige Fork-Linie.** Dieses Repository hat ab **1.0.0** eine eigene Versionszaehlung und ist bewusst von der Nummerierung des Ursprungs-Forks entkoppelt, damit sich Releases und Tags nicht gegenseitig ueberschreiben. Der Funktionsstand entspricht 0.3.8 dieses Repositorys zuzueglich der ACE-Erweiterungen. Releases aus [ljschmitt/hass-anycubic_cloud_v3](https://github.com/ljschmitt/hass-anycubic_cloud_v3) mit gleicher Nummer sind **nicht** identisch.
 
-> 🗓️ **Aktuelles Release: 2.0.0**
+> 🗓️ **Aktuelles Release: 2.1.0**
 >
 > - Die Integrationen `anycubic_ha_integration` und `filament_manager` sind zu einer
 >   Integration `anycubic_cloud_extended` zusammengefuehrt.
