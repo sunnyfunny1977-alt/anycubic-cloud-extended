@@ -327,6 +327,9 @@
       "ace_current_temperature": {
         "name": "ACE Current Temperature"
       },
+      "ace_current_humidity": {
+        "name": "ACE Current Humidity"
+      },
       "dry_status_target_temperature": {
         "name": "Drying Target Temperature"
       },
@@ -356,6 +359,9 @@
       },
       "secondary_ace_current_temperature": {
         "name": "Secondary ACE Current Temperature"
+      },
+      "secondary_ace_current_humidity": {
+        "name": "Secondary ACE Current Humidity"
       },
       "secondary_dry_status_target_temperature": {
         "name": "Secondary Drying Target Temperature"

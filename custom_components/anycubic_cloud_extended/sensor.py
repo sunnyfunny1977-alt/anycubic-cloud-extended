@@ -56,6 +56,14 @@ PRIMARY_MULTI_COLOR_BOX_SENSOR_TYPES: list[AnycubicSensorEntityDescription] = li
         printer_entity_type=PrinterEntityType.ACE_PRIMARY,
     ),
     AnycubicSensorEntityDescription(
+        key="ace_current_humidity",
+        translation_key="ace_current_humidity",
+        native_unit_of_measurement=PERCENTAGE,
+        device_class=SensorDeviceClass.HUMIDITY,
+        printer_entity_type=PrinterEntityType.ACE_PRIMARY,
+        create_when_available=True,
+    ),
+    AnycubicSensorEntityDescription(
         key="ace_spools",
         translation_key="ace_spools",
         printer_entity_type=PrinterEntityType.ACE_PRIMARY,
@@ -92,6 +100,14 @@ SECONDARY_MULTI_COLOR_BOX_SENSOR_TYPES: list[AnycubicSensorEntityDescription] = 
         translation_key="secondary_ace_current_temperature",
         native_unit_of_measurement=UnitOfTemperature.CELSIUS,
         printer_entity_type=PrinterEntityType.ACE_SECONDARY,
+    ),
+    AnycubicSensorEntityDescription(
+        key="secondary_ace_current_humidity",
+        translation_key="secondary_ace_current_humidity",
+        native_unit_of_measurement=PERCENTAGE,
+        device_class=SensorDeviceClass.HUMIDITY,
+        printer_entity_type=PrinterEntityType.ACE_SECONDARY,
+        create_when_available=True,
     ),
     AnycubicSensorEntityDescription(
         key="secondary_ace_spools",

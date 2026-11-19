@@ -1119,6 +1119,8 @@ class AnycubicPrinter:
 
                 assert self._multi_color_box
                 self._multi_color_box[box_index].set_current_temperature(box['temp'])
+                if 'humidity' in box:
+                    self._multi_color_box[box_index].set_current_humidity(box['humidity'])
                 self._multi_color_box[box_index].set_drying_status(box['drying_status'])
             return
         elif action == 'feedFilament' and state == 'done':
@@ -1890,6 +1892,13 @@ class AnycubicPrinter:
         return 0
 
     @property
+    def primary_multi_color_box_current_humidity(self) -> int | None:
+        if self.primary_multi_color_box:
+            return self.primary_multi_color_box.current_humidity
+
+        return None
+
+    @property
     def primary_multi_color_box_loaded_slot(self) -> int | None:
         if self.primary_multi_color_box:
             return self.primary_multi_color_box.loaded_slot
@@ -2041,6 +2050,13 @@ class AnycubicPrinter:
             return self.secondary_multi_color_box.current_temperature
 
         return 0
+
+    @property
+    def secondary_multi_color_box_current_humidity(self) -> int | None:
+        if self.secondary_multi_color_box:
+            return self.secondary_multi_color_box.current_humidity
+
+        return None
 
     @property
     def secondary_drying_status_is_drying(self) -> bool | None:

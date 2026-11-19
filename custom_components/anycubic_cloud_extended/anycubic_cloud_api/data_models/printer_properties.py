@@ -527,6 +527,7 @@ class AnycubicMultiColorBox:
         "_active_slot",
         "_feed_status",
         "_temp",
+        "_humidity",
         "_drying_status",
         "_curr_nozzle_temp",
         "_target_nozzle_temp",
@@ -542,6 +543,7 @@ class AnycubicMultiColorBox:
         loaded_slot: int,
         feed_status: dict[str, Any] | None,
         temp: int,
+        humidity: int | None,
         drying_status: dict[str, Any] | None,
         curr_nozzle_temp: int | None,
         target_nozzle_temp: int | None,
@@ -555,6 +557,7 @@ class AnycubicMultiColorBox:
         self._active_slot: int | None = self._loaded_slot if self._loaded_slot >= 0 else None
         self.set_feed_status(feed_status)
         self.set_current_temperature(temp)
+        self.set_current_humidity(humidity)
         self.set_drying_status(drying_status)
         self._curr_nozzle_temp: int | None = int(curr_nozzle_temp) if curr_nozzle_temp is not None else None
         self._target_nozzle_temp: int | None = int(target_nozzle_temp) if target_nozzle_temp is not None else None
@@ -581,6 +584,11 @@ class AnycubicMultiColorBox:
 
     def set_current_temperature(self, temp: int) -> None:
         self._temp = int(temp)
+
+    def set_current_humidity(self, humidity: int | None) -> None:
+        # None is a box that does not report it, which is not the same as a
+        # box reporting zero per cent.
+        self._humidity = int(humidity) if humidity is not None else None
 
     def update_slots_with_mqtt_data(self, slot_list: list[dict[str, Any]] | None) -> None:
         if slot_list is None:
@@ -636,6 +644,7 @@ class AnycubicMultiColorBox:
             loaded_slot=data['loaded_slot'],
             feed_status=data['feed_status'],
             temp=data['temp'],
+            humidity=data.get('humidity'),
             drying_status=data['drying_status'],
             curr_nozzle_temp=data.get('curr_nozzle_temp'),
             target_nozzle_temp=data.get('target_nozzle_temp'),
@@ -645,6 +654,10 @@ class AnycubicMultiColorBox:
     @property
     def current_temperature(self) -> int:
         return self._temp
+
+    @property
+    def current_humidity(self) -> int | None:
+        return self._humidity
 
     @property
     def box_id(self) -> int:
@@ -712,7 +725,8 @@ class AnycubicMultiColorBox:
         return (
             f"AnycubicMultiColorBox(id={self._id}, status={self._status}, model_id={self._model_id}, auto_feed={self._auto_feed}, "
             f"loaded_slot={self._loaded_slot},\n "
-            f"temp={self._temp}, curr_nozzle_temp={self._curr_nozzle_temp}, target_nozzle_temp={self._target_nozzle_temp},\n "
+            f"temp={self._temp}, humidity={self._humidity},\n "
+            f"curr_nozzle_temp={self._curr_nozzle_temp}, target_nozzle_temp={self._target_nozzle_temp},\n "
             f"feed_status={self._feed_status},\n "
             f"drying_status={self._drying_status},\n "
             f"slots={self._slots})"

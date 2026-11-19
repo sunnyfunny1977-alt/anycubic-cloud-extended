@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **ACE box humidity.** The box payload has carried a `humidity` reading all
+  along, next to the temperature that was already surfaced. The model picks
+  its fields by name, so the value was dropped without a trace. It is now a
+  sensor per box: `sensor.<printer>_ace_current_humidity`, in per cent, with
+  `device_class: humidity` so it reaches statistics and the usual cards.
+  - A box that does not report one answers unknown rather than zero. Claiming
+    the drying chamber is bone dry would be worse than admitting nothing is
+    known, so the entity is only created when a reading is actually there.
+  - The MQTT drying message repeats the box state. Humidity rides along on
+    some firmware and not on others, so only a key that is really present
+    overwrites what the poll established.
+
 ## 2.1.0
 
 Two halves of the ACE binding that did not work in practice -- nothing was

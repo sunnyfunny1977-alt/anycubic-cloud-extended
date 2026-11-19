@@ -13,6 +13,7 @@
     "drying": "Drying",
     "drying_preset": "[%key:common::drying%] Preset",
     "dry_preset": "Dry Preset",
+    "humidity": "Humidity",
     "temperature": "Temperature",
     "duration": "Duration",
     "firmware": "Firmware",
@@ -498,6 +499,9 @@
       "ace_current_temperature": {
         "name": "ACE Current [%key:common::temperature%]"
       },
+      "ace_current_humidity": {
+        "name": "ACE Current [%key:common::humidity%]"
+      },
       "dry_status_target_temperature": {
         "name": "[%key:common::drying%] [%key:common::target%] [%key:common::temperature%]"
       },
@@ -527,6 +531,9 @@
       },
       "secondary_ace_current_temperature": {
         "name": "[%key:common::secondary%] ACE Current [%key:common::temperature%]"
+      },
+      "secondary_ace_current_humidity": {
+        "name": "[%key:common::secondary%] ACE Current [%key:common::humidity%]"
       },
       "secondary_dry_status_target_temperature": {
         "name": "[%key:common::secondary%] [%key:common::drying%] [%key:common::target%] [%key:common::temperature%]"
