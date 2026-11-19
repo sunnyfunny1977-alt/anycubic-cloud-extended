@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+### Fixed
+
+- **ACE temperature and humidity could stand still for hours.** The cloud
+  answers an info poll with the box block the printer last pushed to it, not
+  with what the box reads now -- in one and the same response the nozzle
+  temperature moved every minute while the ACE values had not changed in
+  forty-eight. Polling harder would have changed nothing; the answer is the
+  same answer.
+  - The printer itself can be asked, and the order to do it was already
+    wired up -- sent once, on MQTT subscribe, and only when the slot info was
+    missing altogether. It now goes out with every poll, and the printer
+    answers over MQTT with current values.
+  - Only when MQTT is already connected. Connecting for this would override
+    the MQTT connection mode, which exists precisely to say when a standing
+    cloud connection is wanted. In `Printing Only` the values follow the box
+    while a job runs; `Device Online` makes that every minute.
+
 ### Added
 
 - **Drying can be started with values given at call time.** Until now the only

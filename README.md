@@ -227,6 +227,33 @@ belegten Slot ein **Löschen**-Button. Er entfernt nur die Zuordnung — die Rol
 bleibt mit dem Restgewicht im Bestand, das der automatische Abzug bis dahin
 errechnet hat.
 
+### Warum Temperatur und Feuchte der ACE stehen bleiben konnten
+
+Die Cloud beantwortet den Info-Poll mit dem Box-Block, den der Drucker ihr
+zuletzt gemeldet hat — nicht mit dem, was die Box gerade misst. In **derselben**
+Antwort bewegt sich die Duesentemperatur jede Minute, waehrend `temp` und
+`humidity` stundenlang stehen bleiben. Haeufiger pollen hilft deshalb nicht:
+die Antwort ist dieselbe.
+
+Der Drucker laesst sich aber direkt fragen. Die Integration schickt bei jedem
+Poll einen `MULTI_COLOR_BOX_GET_INFO`-Auftrag, den der Drucker ueber MQTT mit
+aktuellen Werten beantwortet — bis dahin wurde der nur einmal beim Verbinden
+gesendet, und auch nur, wenn die Slot-Daten ganz fehlten.
+
+Das setzt eine stehende MQTT-Verbindung voraus, und die haengt am
+**MQTT-Verbindungsmodus** in den Optionen:
+
+| Modus | Wirkung auf die ACE-Werte |
+|---|---|
+| `Printing Only` (Standard) | folgen der Box waehrend eines Druckjobs, sonst Stand der Cloud |
+| `Printing & Drying` | zusaetzlich waehrend der Trocknung |
+| `Device Online` | minuetlich, solange der Drucker online ist |
+| `Always` | minuetlich, auch bei offline gemeldetem Drucker |
+
+Verbunden wird nur, wenn der gewaehlte Modus es ohnehin vorsieht. Eine
+Verbindung allein fuer diese Abfrage aufzubauen wuerde den Modus uebergehen,
+und genau der sagt ja, wann eine stehende Cloud-Verbindung erwuenscht ist.
+
 ### Trocknung starten
 
 Bis 2.1.0 liess sich die Trocknung nur ueber die vier Presets starten, deren

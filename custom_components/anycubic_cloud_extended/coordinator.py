@@ -1159,20 +1159,55 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
                 "Anycubic MQTT Timed out waiting for connection, try manually enabling MQTT."
             )
 
+    def _printer_has_multi_color_box(
+        self,
+        printer: AnycubicPrinter,
+    ) -> bool:
+        """Whether this printer has an ACE worth asking about."""
+        return bool(
+            printer.printer_online and
+            printer.supports_function_multi_color_box and
+            (printer.has_peripheral_multi_color_box or printer.is_kobra_x)
+        )
+
+    async def _request_fresh_multi_color_box_info(self) -> None:
+        """Ask each printer for its current ACE state, once per poll.
+
+        The cloud answers an info poll with the box block the printer last
+        pushed to it, which is not the same as what the box reads now: in one
+        and the same response the nozzle temperature moves every minute while
+        the ACE temperature and humidity stand still for an hour. The order
+        sent here goes to the printer, and the printer answers over MQTT with
+        current values.
+
+        Only when MQTT is already up. Connecting for this would override the
+        connection mode, which exists precisely to say when a standing cloud
+        connection is wanted -- so in Printing Only the values follow the box
+        while a job runs, and otherwise stay as the cloud last saw them.
+
+        A failure here is not worth an update error: the poll's own data has
+        already arrived, and the next cycle asks again.
+        """
+        if not self.anycubic_api.mqtt_is_started:
+            return
+
+        for printer in self._anycubic_printers.values():
+            if not self._printer_has_multi_color_box(printer):
+                continue
+
+            try:
+                await printer.multi_color_box_request_info()
+            except Exception as error:
+                LOGGER.debug(f"Anycubic ACE info request failed: {error}")
+
     def _printer_needs_multi_color_info_request(
         self,
         printer: AnycubicPrinter,
     ) -> bool:
-        if not printer.printer_online:
-            return False
-
-        if not printer.supports_function_multi_color_box:
+        if not self._printer_has_multi_color_box(printer):
             return False
 
         if printer.primary_multi_color_box_spool_info_object:
-            return False
-
-        if not (printer.has_peripheral_multi_color_box or printer.is_kobra_x):
             return False
 
         last_request = self._mqtt_last_multi_color_info_request.get(printer.id)
@@ -1245,6 +1280,7 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
             await self._request_missing_multi_color_box_info()
             await self._check_anycubic_mqtt_connection()
+            await self._request_fresh_multi_color_box_info()
 
         except ConfigEntryAuthFailed:
             raise
