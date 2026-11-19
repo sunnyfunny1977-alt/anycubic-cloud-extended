@@ -674,6 +674,30 @@ sections:
         - color: '#4fc3f7'
         - width: 24px
     - type: custom:button-card
+      entity: sensor.anycubic_kobra_s1_ace_current_humidity
+      name: ACE Feuchte
+      icon: mdi:water-percent
+      show_state: true
+      tap_action:
+        action: none
+      styles:
+        card:
+        - background: '#2c2c2e'
+        - border-radius: 12px
+        - padding: 14px
+        name:
+        - color: '#888'
+        - font-size: 11px
+        - text-transform: uppercase
+        - letter-spacing: 1px
+        state:
+        - font-size: 22px
+        - color: '#fff'
+        - font-weight: 700
+        icon:
+        - color: '#4fc3f7'
+        - width: 24px
+    - type: custom:button-card
       entity: sensor.anycubic_kobra_s1_ace_spools
       name: ACE Spools
       icon: mdi:filmstrip
