@@ -4,6 +4,18 @@
 
 ### Added
 
+- **Drying can be started with values given at call time.** Until now the only
+  way in was one of four presets whose duration and temperature live in the
+  config entry's options, so any other combination meant editing the
+  integration's settings first. `multi_color_box_drying_start` takes both
+  numbers directly, and `multi_color_box_drying_stop` ends a run; the printer's
+  own order always accepted them.
+  - `duration` is in minutes, 1 to 480. The cloud documents no unit for it and
+    nothing in the payload converts one, so it was read off a running cycle:
+    the remaining value falls by one per minute.
+  - `target_temperature` is capped at 65, the ACE Pro 2's maximum. No floor is
+    invented -- the hardware knows its own, and guessing one here would only
+    reject a value the box would have taken.
 - **ACE box humidity.** The box payload has carried a `humidity` reading all
   along, next to the temperature that was already surfaced. The model picks
   its fields by name, so the value was dropped without a trace. It is now a

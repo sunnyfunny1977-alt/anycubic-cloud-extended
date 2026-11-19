@@ -41,6 +41,14 @@
         "name": "ACE Filament Retract",
         "description": "Activate filament retract on ACE."
       },
+      "ace_drying_start": {
+        "name": "ACE Start Drying",
+        "description": "Start drying with a duration and temperature of your own, rather than one of the presets."
+      },
+      "ace_drying_stop": {
+        "name": "ACE Stop Drying",
+        "description": "Stop drying."
+      },
       "print_save_in_cloud": {
         "name": "Print and upload (save in user cloud).",
         "description": "Print and upload, save in user cloud store."
@@ -90,6 +98,14 @@
       "box_id": {
         "name": "Box ID",
         "description": "Box ID (0-1)."
+      },
+      "drying_duration": {
+        "name": "Duration",
+        "description": "How long to dry, in minutes. One minute to eight hours."
+      },
+      "drying_target_temperature": {
+        "name": "Target Temperature",
+        "description": "Chamber temperature to dry at, in degrees Celsius. The ACE Pro 2 allows up to 65."
       },
       "slot_number#single": {
         "name": "Slot Number",
@@ -689,6 +705,34 @@
     "multi_color_box_filament_retract": {
       "name": "[%key:common::service_meta::ace_filament_retract::name%]",
       "description": "[%key:common::service_meta::ace_filament_retract::description%]",
+      "fields": {
+        "[%dictkey:common::service_fields::config_entry%]": {},
+        "[%dictkey:common::service_fields::device_id%]": {},
+        "[%dictkey:common::service_fields::printer_id%]": {},
+        "[%dictkey:common::service_fields::box_id%]": {}
+      }
+    },
+    "multi_color_box_drying_start": {
+      "name": "[%key:common::service_meta::ace_drying_start::name%]",
+      "description": "[%key:common::service_meta::ace_drying_start::description%]",
+      "fields": {
+        "[%dictkey:common::service_fields::config_entry%]": {},
+        "[%dictkey:common::service_fields::device_id%]": {},
+        "[%dictkey:common::service_fields::printer_id%]": {},
+        "[%dictkey:common::service_fields::box_id%]": {},
+        "duration": {
+          "name": "[%key:common::service_fields::drying_duration::name%]",
+          "description": "[%key:common::service_fields::drying_duration::description%]"
+        },
+        "target_temperature": {
+          "name": "[%key:common::service_fields::drying_target_temperature::name%]",
+          "description": "[%key:common::service_fields::drying_target_temperature::description%]"
+        }
+      }
+    },
+    "multi_color_box_drying_stop": {
+      "name": "[%key:common::service_meta::ace_drying_stop::name%]",
+      "description": "[%key:common::service_meta::ace_drying_stop::description%]",
       "fields": {
         "[%dictkey:common::service_fields::config_entry%]": {},
         "[%dictkey:common::service_fields::device_id%]": {},

@@ -227,6 +227,27 @@ belegten Slot ein **Löschen**-Button. Er entfernt nur die Zuordnung — die Rol
 bleibt mit dem Restgewicht im Bestand, das der automatische Abzug bis dahin
 errechnet hat.
 
+### Trocknung starten
+
+Bis 2.1.0 liess sich die Trocknung nur ueber die vier Presets starten, deren
+Dauer und Temperatur in den Optionen der Integration stehen. Alles andere
+hiess: erst die Einstellungen aendern. Zwei Services nehmen die Werte jetzt
+direkt entgegen:
+
+| Service | Zweck |
+|---|---|
+| `anycubic_cloud_extended.multi_color_box_drying_start` | Trocknung mit `duration` und `target_temperature` starten |
+| `anycubic_cloud_extended.multi_color_box_drying_stop` | Laufende Trocknung beenden |
+
+`duration` ist in **Minuten**, 1 bis 480 (acht Stunden). `target_temperature`
+ist in Grad Celsius, bis 65 — das Maximum des ACE Pro 2. Die Einheit der Dauer
+dokumentiert die Cloud nirgends; sie wurde an einem laufenden Trocknungsgang
+abgelesen, bei dem der Restwert pro Minute um eins faellt.
+
+Damit laesst sich die Trocknung aus einem Dashboard heraus einstellen, etwa
+ueber zwei `input_number`-Helfer und ein Skript, das beide Werte an den Service
+weiterreicht.
+
 ### Services
 
 Für Automationen und NFC-Tags stehen dieselben Aktionen als Services bereit:

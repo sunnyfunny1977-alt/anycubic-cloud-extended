@@ -851,6 +851,58 @@
         }
       }
     },
+    "multi_color_box_drying_start": {
+      "name": "ACE Start Drying",
+      "description": "Start drying with a duration and temperature of your own, rather than one of the presets.",
+      "fields": {
+        "config_entry": {
+          "name": "Config Entry",
+          "description": "The config entry to use for this service."
+        },
+        "device_id": {
+          "name": "Printer Device",
+          "description": "Printer Device (if not using ID)."
+        },
+        "printer_id": {
+          "name": "Printer ID",
+          "description": "Printer ID (if not using device)."
+        },
+        "box_id": {
+          "name": "Box ID",
+          "description": "Box ID (0-1)."
+        },
+        "duration": {
+          "name": "Duration",
+          "description": "How long to dry, in minutes. One minute to eight hours."
+        },
+        "target_temperature": {
+          "name": "Target Temperature",
+          "description": "Chamber temperature to dry at, in degrees Celsius. The ACE Pro 2 allows up to 65."
+        }
+      }
+    },
+    "multi_color_box_drying_stop": {
+      "name": "ACE Stop Drying",
+      "description": "Stop drying.",
+      "fields": {
+        "config_entry": {
+          "name": "Config Entry",
+          "description": "The config entry to use for this service."
+        },
+        "device_id": {
+          "name": "Printer Device",
+          "description": "Printer Device (if not using ID)."
+        },
+        "printer_id": {
+          "name": "Printer ID",
+          "description": "Printer ID (if not using device)."
+        },
+        "box_id": {
+          "name": "Box ID",
+          "description": "Box ID (0-1)."
+        }
+      }
+    },
     "print_and_upload_save_in_cloud": {
       "name": "Print and upload (save in user cloud).",
       "description": "Print and upload, save in user cloud store.",

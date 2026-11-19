@@ -53,6 +53,8 @@ CONF_SLOT_COLOR_RED = "slot_color_red"
 CONF_SLOT_COLOR_GREEN = "slot_color_green"
 CONF_SLOT_COLOR_BLUE = "slot_color_blue"
 CONF_BOX_ID = "box_id"
+CONF_DRYING_DURATION = "duration"
+CONF_DRYING_TARGET_TEMPERATURE = "target_temperature"
 CONF_FINISHED = "finished"
 CONF_MQTT_CONNECT_MODE = "mqtt_connect_mode"
 CONF_CARD_CONFIG = "card_config"
@@ -138,6 +140,10 @@ MAX_FILE_UPLOAD_RETRIES = 3
 PRINT_JOB_STARTED_UPDATE_DELAY = 5
 
 MAX_DRYING_PRESETS = 4
+
+# The ACE Pro 2's own limits: 65 C, and one minute to eight hours.
+MAX_DRYING_TEMPERATURE = 65
+MAX_DRYING_DURATION_MINUTES = 8 * 60
 MAX_ACE_SLOTS = 4
 
 

@@ -29,6 +29,8 @@ from .const import (
     ATTR_ANYCUBIC_EVENT,
     ATTR_CONFIG_ENTRY,
     CONF_BOX_ID,
+    CONF_DRYING_DURATION,
+    CONF_DRYING_TARGET_TEMPERATURE,
     CONF_FILE_ID,
     CONF_FILE_PATH,
     CONF_FINISHED,
@@ -50,6 +52,8 @@ from .const import (
     COORDINATOR,
     DOMAIN,
     LOGGER,
+    MAX_DRYING_DURATION_MINUTES,
+    MAX_DRYING_TEMPERATURE,
     MAX_FILE_UPLOAD_RETRIES,
 )
 from .helpers import printer_entity_suggested_object_id, printer_state_for_key
@@ -479,6 +483,59 @@ class MultiColorBoxFilamentExtrude(AnycubicCloudServiceCall):
             slot_index=slot_index,
             box_id=box_id,
             finish=bool(finished)
+        )
+
+
+class MultiColorBoxDryingStart(AnycubicCloudServiceCall):
+    """Start drying with a duration and temperature given by the caller.
+
+    The preset buttons cover the four combinations kept in the integration's
+    options. This is the same order with the numbers supplied per call, so a
+    dashboard can ask for them without anybody editing settings first.
+    """
+
+    schema = build_anycubic_service_schema(
+        input_service_schema={
+            vol.Required(CONF_DRYING_DURATION): vol.All(
+                vol.Coerce(int), vol.Range(min=1, max=MAX_DRYING_DURATION_MINUTES)
+            ),
+            vol.Required(CONF_DRYING_TARGET_TEMPERATURE): vol.All(
+                vol.Coerce(int), vol.Range(min=1, max=MAX_DRYING_TEMPERATURE)
+            ),
+        },
+        with_opt_box=True,
+    )
+
+    async def async_call_service(self, service: ServiceCall) -> None:
+        """Execute service call."""
+
+        printer = self._get_printer(service)
+        box_id = self._get_box_id(service)
+        await printer.multi_color_box_drying_start(
+            duration=service.data[CONF_DRYING_DURATION],
+            target_temp=service.data[CONF_DRYING_TARGET_TEMPERATURE],
+            box_id=box_id,
+        )
+
+
+class MultiColorBoxDryingStop(AnycubicCloudServiceCall):
+    """Stop drying.
+
+    The stop button does this for the box it belongs to; as a service it can
+    also be reached from a script or a dashboard, next to the start above.
+    """
+
+    schema = build_anycubic_service_schema(
+        with_opt_box=True,
+    )
+
+    async def async_call_service(self, service: ServiceCall) -> None:
+        """Execute service call."""
+
+        printer = self._get_printer(service)
+        box_id = self._get_box_id(service)
+        await printer.multi_color_box_drying_stop(
+            box_id=box_id,
         )
 
 
@@ -1136,6 +1193,8 @@ SERVICES = (
     ("multi_color_box_set_slot_pla_se", MultiColorBoxSetSlotPlaSe),
     ("multi_color_box_filament_extrude", MultiColorBoxFilamentExtrude),
     ("multi_color_box_filament_retract", MultiColorBoxFilamentRetract),
+    ("multi_color_box_drying_start", MultiColorBoxDryingStart),
+    ("multi_color_box_drying_stop", MultiColorBoxDryingStop),
     ("print_and_upload_save_in_cloud", PrintAndUploadSaveInCloud),
     ("print_and_upload_no_cloud_save", PrintAndUploadNoCloudSave),
     ("request_file_list_local", RequestFileListLocal),

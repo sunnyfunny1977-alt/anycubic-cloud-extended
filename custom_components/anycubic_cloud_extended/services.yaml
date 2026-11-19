@@ -103,6 +103,38 @@ multi_color_box_filament_retract:
     device_id: *device_id
     printer_id: *printer_id
     box_id: *box_id
+multi_color_box_drying_start:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    box_id: *box_id
+    duration:
+      required: true
+      example: 360
+      selector:
+        number:
+          min: 1
+          max: 480
+          step: 1
+          unit_of_measurement: min
+          mode: box
+    target_temperature:
+      required: true
+      example: 55
+      selector:
+        number:
+          min: 1
+          max: 65
+          step: 1
+          unit_of_measurement: "\u00b0C"
+          mode: box
+multi_color_box_drying_stop:
+  fields:
+    config_entry: *anycubic_config_entry
+    device_id: *device_id
+    printer_id: *printer_id
+    box_id: *box_id
 print_and_upload_save_in_cloud:
   fields:
     config_entry: *anycubic_config_entry
