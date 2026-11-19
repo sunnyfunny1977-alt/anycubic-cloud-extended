@@ -245,8 +245,10 @@ dokumentiert die Cloud nirgends; sie wurde an einem laufenden Trocknungsgang
 abgelesen, bei dem der Restwert pro Minute um eins faellt.
 
 Damit laesst sich die Trocknung aus einem Dashboard heraus einstellen, etwa
-ueber zwei `input_number`-Helfer und ein Skript, das beide Werte an den Service
-weiterreicht.
+ueber einen `input_number`-Helfer fuer die Temperatur, einen `input_datetime`
+im Nur-Zeit-Modus fuer die Dauer als Std.:Min. und ein Skript, das beides an
+den Service weiterreicht. Die Dauer kommt dabei als `timestamp`-Attribut in
+Sekunden heraus, also `timestamp // 60` fuer die Minuten.
 
 ### Services
 
