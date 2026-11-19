@@ -18,6 +18,12 @@
     the MQTT connection mode, which exists precisely to say when a standing
     cloud connection is wanted. In `Printing Only` the values follow the box
     while a job runs; `Device Online` makes that every minute.
+  - The order is sent from a task of its own, never awaited by the update
+    loop. It asks for a push and the answer arrives over MQTT regardless, so
+    there is nothing to wait for -- and waiting put it on the critical path:
+    the first build stopped every entity of the integration the moment MQTT
+    came up and the request began to fire. Bounded by a timeout so a stuck
+    request cannot pile up a task per poll.
 
 ### Added
 

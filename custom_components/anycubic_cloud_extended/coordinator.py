@@ -30,6 +30,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from .anycubic_cloud_api.anycubic_api import AnycubicMQTTAPI as AnycubicAPI
 from .anycubic_cloud_api.exceptions.exceptions import AnycubicAPIError, AnycubicAPIParsingError
 from .const import (
+    ACE_INFO_REQUEST_TIMEOUT,
     ACE_STATE_SAVE_DELAY,
     API_SETUP_RETRIES,
     API_SETUP_RETRY_INTERVAL_SECONDS,
@@ -1170,7 +1171,7 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             (printer.has_peripheral_multi_color_box or printer.is_kobra_x)
         )
 
-    async def _request_fresh_multi_color_box_info(self) -> None:
+    def _request_fresh_multi_color_box_info(self) -> None:
         """Ask each printer for its current ACE state, once per poll.
 
         The cloud answers an info poll with the box block the printer last
@@ -1185,8 +1186,11 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
         connection is wanted -- so in Printing Only the values follow the box
         while a job runs, and otherwise stay as the cloud last saw them.
 
-        A failure here is not worth an update error: the poll's own data has
-        already arrived, and the next cycle asks again.
+        Sent from a task of its own rather than awaited here. This is a
+        request for a push -- the answer comes over MQTT whenever the printer
+        gets round to it -- so there is nothing to wait for, and waiting put
+        it on the critical path: an order that did not come back took every
+        entity of the integration down with it.
         """
         if not self.anycubic_api.mqtt_is_started:
             return
@@ -1195,10 +1199,26 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
             if not self._printer_has_multi_color_box(printer):
                 continue
 
-            try:
+            self.hass.create_task(
+                self._async_request_multi_color_box_info(printer),
+                f"Anycubic ACE info request {printer.id}",
+            )
+
+    async def _async_request_multi_color_box_info(
+        self,
+        printer: AnycubicPrinter,
+    ) -> None:
+        """Send one ACE info order, and let any trouble end here.
+
+        Bounded, because a request that never returns would otherwise pile up
+        a task per poll for as long as it lasts. The next cycle asks again, so
+        a dropped one costs a minute.
+        """
+        try:
+            async with asyncio.timeout(ACE_INFO_REQUEST_TIMEOUT):
                 await printer.multi_color_box_request_info()
-            except Exception as error:
-                LOGGER.debug(f"Anycubic ACE info request failed: {error}")
+        except Exception as error:
+            LOGGER.debug(f"Anycubic ACE info request failed: {error}")
 
     def _printer_needs_multi_color_info_request(
         self,
@@ -1280,7 +1300,7 @@ class AnycubicCloudDataUpdateCoordinator(DataUpdateCoordinator[dict[str, Any]]):
 
             await self._request_missing_multi_color_box_info()
             await self._check_anycubic_mqtt_connection()
-            await self._request_fresh_multi_color_box_info()
+            self._request_fresh_multi_color_box_info()
 
         except ConfigEntryAuthFailed:
             raise
